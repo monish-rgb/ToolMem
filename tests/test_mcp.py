@@ -24,3 +24,25 @@ async def test_both_local_mcp_servers(tmp_path):
         result = await memory.call_tool("get_guidance", {"task": "normalize text"})
         assert result.structured_content["playbook"][0]["tool"] == "normalize_text"
 
+        batch = await memory.call_tool(
+            "remember_rollouts",
+            {
+                "task_id": "batch",
+                "summary": "Normalize repeated text",
+                "rollouts": [
+                    {
+                        "steps": [{"tool": "normalize_text", "rationale": "normalize text"}],
+                        "resolved": True,
+                        "verifier_type": "exact_match",
+                    },
+                    {
+                        "steps": [{"tool": "normalize_text", "rationale": "normalize text"}],
+                        "resolved": False,
+                        "observation": "input was unsupported",
+                        "verifier_type": "exact_match",
+                    },
+                ],
+            },
+        )
+        assert batch.structured_content["success_count"] == 1
+        assert batch.structured_content["failure_count"] == 1

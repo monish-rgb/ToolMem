@@ -1,21 +1,32 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import threading
+import uuid
 from dataclasses import asdict
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
 from .models import (
     EvidenceEntry,
+    ExecutionRecord,
     ExecutionStep,
     Rollout,
     StrategyNode,
     ToolNode,
     ToolSpec,
     TraceNode,
+    utc_now,
 )
 from .similarity import cosine_text, tokens
+from .storage import SCHEMA_VERSION, SQLiteStore
+
+ALLOWED_STATUSES = {"active", "stale", "invalid", "quarantined"}
+GOVERNANCE_STATUSES = ALLOWED_STATUSES - {"active"}
+DEFAULT_MAX_AGE_DAYS = 30
 
 
 def _unique(values: Iterable[str]) -> list[str]:
@@ -23,146 +34,395 @@ def _unique(values: Iterable[str]) -> list[str]:
 
 
 def _generic_rationale(text: str) -> str:
-    """Remove environment-specific literals while preserving tool-use intent."""
+    """Remove common environment-specific literals from reusable memory."""
     text = re.sub(r"(?:[A-Za-z]:)?[/\\][\w./\\-]+", "<path>", text)
     text = re.sub(r"(['\"]).*?\1", "<value>", text)
     text = re.sub(r"\b\d+(?:\.\d+)?\b", "<value>", text)
-    return " ".join(text.split()).strip()
+    return " ".join(text.split()).strip()[:1000]
+
+
+def _fingerprint(spec: ToolSpec) -> str:
+    canonical = json.dumps(
+        {
+            "name": spec.name,
+            "description": spec.description,
+            "input_schema": spec.input_schema,
+            "version": spec.version,
+            "provider": spec.provider,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
+def _confidence(successes: int, failures: int, *, boundary: bool = False) -> float:
+    supporting = failures if boundary else successes
+    return round((supporting + 1) / (successes + failures + 2), 4)
 
 
 class ToolMemory:
-    """Persistent three-layer ToolAtlas graph with deterministic induction."""
+    """Lifecycle-aware, provider-side ToolAtlas graph stored in SQLite."""
 
     def __init__(self, path: str | Path | None = None) -> None:
         self.path = Path(path) if path else None
+        self._lock = threading.RLock()
+        self._store = SQLiteStore(self.path) if self.path else None
         self.tools: dict[str, ToolNode] = {}
         self.traces: dict[str, TraceNode] = {}
         self.strategies: dict[str, StrategyNode] = {}
-        if self.path and self.path.exists():
+        self.executions: dict[str, ExecutionRecord] = {}
+        if self._store:
             self._load()
 
     def register_tools(self, specs: Iterable[ToolSpec]) -> None:
-        for spec in specs:
-            node = self.tools.setdefault(spec.name, ToolNode(name=spec.name))
-            node.description = spec.description
-        self.save()
+        """Register schemas and invalidate knowledge learned against older ones."""
+        with self._lock:
+            for spec in specs:
+                fingerprint = _fingerprint(spec)
+                node = self.tools.get(spec.name)
+                if node and node.schema_fingerprint and node.schema_fingerprint != fingerprint:
+                    self._mark_tool_memory_stale(spec.name)
+                if node is None:
+                    node = ToolNode(name=spec.name)
+                    self.tools[spec.name] = node
+                node.description = spec.description
+                node.input_schema = spec.input_schema
+                node.version = spec.version
+                node.provider = spec.provider
+                node.schema_fingerprint = fingerprint
+                node.status = "active"
+            self.save()
 
     def induce(self, task_id: str, summary: str, rollouts: list[Rollout]) -> TraceNode:
-        """Compress verified rollouts and update trace, capability, and strategy layers."""
+        """Compress a verified rollout batch and update all three graph layers."""
         if not rollouts:
             raise ValueError("at least one rollout is required")
-        successful = [r for r in rollouts if r.resolved]
-        backbone = min(successful or rollouts, key=lambda r: len(r.steps))
-        neutral_steps = [
-            ExecutionStep(step.tool, _generic_rationale(step.rationale))
-            for step in backbone.steps
-        ]
-        used_tools = _unique(step.tool for r in rollouts for step in r.steps)
-        tips = self._distill_tips(rollouts)
-        trace = TraceNode(task_id, summary, neutral_steps, tips, used_tools)
-        self.traces[task_id] = trace
+        if not task_id.strip() or not summary.strip():
+            raise ValueError("task_id and summary are required")
+        with self._lock:
+            for rollout in rollouts:
+                if not rollout.verifier_type.strip():
+                    raise ValueError("every rollout requires a verifier_type")
+                if not rollout.execution_id:
+                    rollout.execution_id = f"run_{uuid.uuid4().hex}"
+                self.executions[rollout.execution_id] = ExecutionRecord(
+                    execution_id=rollout.execution_id,
+                    task_id=task_id,
+                    resolved=rollout.resolved,
+                    verifier_type=rollout.verifier_type,
+                    verified_at=rollout.verified_at,
+                    observation=_generic_rationale(rollout.observation),
+                )
 
-        for tool_name in used_tools:
-            node = self.tools.setdefault(tool_name, ToolNode(name=tool_name))
-            if task_id not in node.traces:
-                node.traces.append(task_id)
-            successful_steps = [
-                step for r in successful for step in r.steps if step.tool == tool_name
+            successful = [rollout for rollout in rollouts if rollout.resolved]
+            backbone = min(successful or rollouts, key=lambda rollout: len(rollout.steps))
+            neutral_steps = [
+                ExecutionStep(step.tool, _generic_rationale(step.rationale))
+                for step in backbone.steps
             ]
-            for step in successful_steps:
-                self._merge_entry(
-                    node.affordances,
-                    f"Reliably supports workflows that {_generic_rationale(step.rationale).lower()}",
-                    task_id,
-                )
-            failed = [r for r in rollouts if not r.resolved and tool_name in {s.tool for s in r.steps}]
-            for rollout in failed:
-                caution = _generic_rationale(rollout.observation or "the attempted inputs were not supported")
-                self._merge_entry(node.boundaries, f"Avoid or validate when {caution.lower()}", task_id)
+            used_tools = _unique(step.tool for rollout in rollouts for step in rollout.steps)
+            success_count = len(successful)
+            failure_count = len(rollouts) - success_count
+            fingerprints = {
+                name: self.tools.get(name, ToolNode(name=name)).schema_fingerprint
+                for name in used_tools
+            }
+            trace = TraceNode(
+                qid=task_id,
+                summary=summary,
+                agent_neutral_trace=neutral_steps,
+                task_level_tips=self._distill_tips(rollouts),
+                tools=used_tools,
+                source_executions=[rollout.execution_id for rollout in rollouts],
+                success_count=success_count,
+                failure_count=failure_count,
+                confidence=_confidence(success_count, failure_count),
+                status="active",
+                tool_fingerprints=fingerprints,
+                last_verified_at=max(rollout.verified_at for rollout in rollouts),
+            )
+            self.traces[task_id] = trace
 
-        if len(used_tools) > 1:
             for tool_name in used_tools:
-                peers = [name for name in used_tools if name != tool_name]
-                self._merge_entry(
-                    self.tools[tool_name].co_usage,
-                    f"Compose with {', '.join(peers)} for multi-step workflows",
-                    task_id,
-                    peers,
-                )
+                node = self.tools.setdefault(tool_name, ToolNode(name=tool_name))
+                if task_id not in node.traces:
+                    node.traces.append(task_id)
+                successful_steps = [
+                    step for rollout in successful for step in rollout.steps if step.tool == tool_name
+                ]
+                sources = [
+                    rollout.execution_id for rollout in successful
+                    if tool_name in {candidate.tool for candidate in rollout.steps}
+                ]
+                for step in successful_steps:
+                    self._merge_entry(
+                        node.affordances,
+                        f"Reliably supports workflows that {_generic_rationale(step.rationale).lower()}",
+                        task_id,
+                        sources,
+                        successes=1,
+                        failures=0,
+                        fingerprint=node.schema_fingerprint,
+                    )
+                failed = [
+                    rollout for rollout in rollouts
+                    if not rollout.resolved and tool_name in {step.tool for step in rollout.steps}
+                ]
+                for rollout in failed:
+                    caution = _generic_rationale(
+                        rollout.observation or "the attempted inputs were not supported"
+                    )
+                    self._merge_entry(
+                        node.boundaries,
+                        f"Avoid or validate when {caution.lower()}",
+                        task_id,
+                        [rollout.execution_id],
+                        successes=0,
+                        failures=1,
+                        fingerprint=node.schema_fingerprint,
+                        boundary=True,
+                    )
 
-        self._rebuild_trace_edges()
-        self._induce_strategies()
-        self.save()
-        return trace
+            successful_tools = _unique(
+                step.tool for rollout in successful for step in rollout.steps
+            )
+            if len(successful_tools) > 1:
+                successful_ids = [rollout.execution_id for rollout in successful]
+                for tool_name in successful_tools:
+                    peers = [name for name in successful_tools if name != tool_name]
+                    self._merge_entry(
+                        self.tools[tool_name].co_usage,
+                        f"Compose with {', '.join(peers)} for multi-step workflows",
+                        task_id,
+                        successful_ids,
+                        successes=max(1, success_count),
+                        failures=0,
+                        fingerprint=self.tools[tool_name].schema_fingerprint,
+                        related_tools=peers,
+                    )
 
-    def guide(self, task: str, top_k: int = 3, read_budget: int = 8) -> dict[str, Any]:
-        """Perform a bounded graph traversal and return task-conditioned guidance."""
-        if top_k < 1 or read_budget < 1:
-            raise ValueError("top_k and read_budget must be positive")
-        ranked = sorted(
-            ((cosine_text(task, node.summary), qid) for qid, node in self.traces.items()),
-            reverse=True,
-        )
-        seeds = [(sim, qid) for sim, qid in ranked[:top_k] if sim > 0]
-        if not seeds:
-            return {"seed_candidates": [], "playbook": [], "strategy": [], "tool_tips": []}
+            self._rebuild_trace_edges()
+            self._induce_strategies()
+            self.save()
+            return trace
 
-        selected: list[str] = []
-        reads = 0
-        frontier = [qid for _, qid in seeds]
-        while frontier and reads < read_budget:
-            qid = frontier.pop(0)
-            if qid in selected:
-                continue
-            selected.append(qid)  # ReadTrace
-            reads += 1
-            if reads >= read_budget:
-                break
-            for neighbor in self.traces[qid].neighbors:  # Expand
-                if neighbor not in selected and neighbor not in frontier:
-                    frontier.append(neighbor)
-
-        task_terms = set(tokens(task))
-        relevant_tools = _unique(
-            tool for qid in selected for tool in self.traces[qid].tools
-        )
-        playbook: list[dict[str, str]] = []
-        seen_steps: set[tuple[str, str]] = set()
-        for qid in selected:
-            for step in self.traces[qid].agent_neutral_trace:
-                key = (step.tool, step.rationale)
-                if key not in seen_steps:
-                    playbook.append({"tool": step.tool, "rationale": step.rationale})
-                    seen_steps.add(key)
-
-        strategy = []
-        for node in self.strategies.values():
-            if any(qid in selected for qid in node.source_queries):
-                strategy.append({"text": node.text, "source_strategy_id": node.sid})
-
-        tool_tips: list[dict[str, str]] = []
-        for tool_name in relevant_tools:
-            if reads >= read_budget:
-                break
-            reads += 1  # ReadTool
-            node = self.tools[tool_name]
-            entries = node.affordances + node.boundaries + node.co_usage
-            ranked_entries = sorted(
-                entries,
-                key=lambda e: (len(task_terms & set(tokens(e.text))), len(e.source_queries)),
+    def guide(
+        self,
+        task: str,
+        top_k: int = 3,
+        read_budget: int = 8,
+        max_age_days: int = DEFAULT_MAX_AGE_DAYS,
+    ) -> dict[str, Any]:
+        """Perform an auditable bounded traversal over currently valid memory."""
+        if top_k < 1 or read_budget < 1 or max_age_days < 1:
+            raise ValueError("top_k, read_budget, and max_age_days must be positive")
+        with self._lock:
+            candidates = [
+                node for node in self.traces.values()
+                if self._trace_is_current(node, max_age_days=max_age_days)
+            ]
+            ranked = sorted(
+                ((cosine_text(task, node.summary), node.confidence, node.qid) for node in candidates),
                 reverse=True,
             )
-            for entry in ranked_entries[:2]:
-                tool_tips.append({"tool": tool_name, "tip": entry.text})
+            seeds = [(sim, confidence, qid) for sim, confidence, qid in ranked[:top_k] if sim > 0]
+            if not seeds:
+                return self._empty_guidance(read_budget)
 
+            operations: list[dict[str, str]] = []
+            selected: list[str] = []
+            for _, _, qid in seeds:
+                if len(operations) >= read_budget:
+                    break
+                selected.append(qid)
+                operations.append({"action": "ReadTrace", "target": qid})
+
+            if len(operations) + 2 <= read_budget:
+                seed = self.traces[selected[0]]
+                neighbors = [
+                    qid for qid in seed.neighbors
+                    if qid not in selected
+                    and self._trace_is_current(self.traces[qid], max_age_days=max_age_days)
+                ]
+                neighbors.sort(key=lambda qid: cosine_text(task, self.traces[qid].summary), reverse=True)
+                if neighbors and cosine_text(task, self.traces[neighbors[0]].summary) > 0:
+                    operations.append({"action": "Expand", "target": seed.qid})
+                    selected.append(neighbors[0])
+                    operations.append({"action": "ReadTrace", "target": neighbors[0]})
+
+            relevant_tools = _unique(
+                tool for qid in selected for tool in self.traces[qid].tools
+                if tool in self.tools and self.tools[tool].status == "active"
+            )
+            task_terms = set(tokens(task))
+            tool_tips: list[dict[str, Any]] = []
+            for tool_name in relevant_tools:
+                if len(operations) >= read_budget:
+                    break
+                operations.append({"action": "ReadTool", "target": tool_name})
+                entries = [
+                    entry for entry in (
+                        self.tools[tool_name].affordances
+                        + self.tools[tool_name].boundaries
+                        + self.tools[tool_name].co_usage
+                    ) if entry.status == "active"
+                ]
+                entries.sort(
+                    key=lambda entry: (
+                        len(task_terms & set(tokens(entry.text))),
+                        entry.confidence,
+                        len(entry.source_executions),
+                    ),
+                    reverse=True,
+                )
+                for entry in entries[:2]:
+                    tool_tips.append(
+                        {
+                            "tool": tool_name,
+                            "tip": entry.text,
+                            "confidence": entry.confidence,
+                            "evidence_count": len(entry.source_executions),
+                            "source_queries": entry.source_queries,
+                        }
+                    )
+
+            strategy: list[dict[str, Any]] = []
+            for node in self.strategies.values():
+                if len(operations) >= read_budget:
+                    break
+                if node.status == "active" and any(qid in selected for qid in node.source_queries):
+                    operations.append({"action": "ReadStrategy", "target": node.sid})
+                    strategy.append(
+                        {
+                            "text": node.text,
+                            "source_strategy_id": node.sid,
+                            "confidence": node.confidence,
+                        }
+                    )
+
+            successful_selected = [
+                self.traces[qid] for qid in selected if self.traces[qid].success_count > 0
+            ]
+            playbook: list[dict[str, Any]] = []
+            seen_steps: set[tuple[str, str]] = set()
+            for trace in successful_selected:
+                for step in trace.agent_neutral_trace:
+                    key = (step.tool, step.rationale)
+                    if step.tool in relevant_tools and key not in seen_steps:
+                        playbook.append(
+                            {
+                                "tool": step.tool,
+                                "rationale": step.rationale,
+                                "confidence": trace.confidence,
+                                "source_trace": trace.qid,
+                            }
+                        )
+                        seen_steps.add(key)
+
+            operations.append({"action": "Done", "target": "guidance"})
+            return {
+                "schema_version": SCHEMA_VERSION,
+                "seed_candidates": [
+                    {
+                        "qid": qid,
+                        "sim": round(sim, 4),
+                        "confidence": confidence,
+                        "summary": self.traces[qid].summary,
+                    }
+                    for sim, confidence, qid in seeds
+                ],
+                "playbook": playbook,
+                "strategy": strategy,
+                "tool_tips": tool_tips,
+                "traversal": {
+                    "operations": operations,
+                    "reads_used": sum(op["action"] != "Done" for op in operations),
+                    "read_budget": read_budget,
+                },
+            }
+
+    def reverify_trace(
+        self, task_id: str, resolved: bool, verifier_type: str, observation: str = ""
+    ) -> TraceNode:
+        """Refresh a trace against current tool schemas after external verification."""
+        if not verifier_type.strip():
+            raise ValueError("verifier_type is required")
+        with self._lock:
+            trace = self.traces.get(task_id)
+            if not trace:
+                raise ValueError(f"unknown trace: {task_id}")
+            execution_id = f"run_{uuid.uuid4().hex}"
+            now = utc_now()
+            self.executions[execution_id] = ExecutionRecord(
+                execution_id, task_id, resolved, verifier_type, now,
+                _generic_rationale(observation),
+            )
+            trace.source_executions.append(execution_id)
+            trace.success_count += int(resolved)
+            trace.failure_count += int(not resolved)
+            trace.confidence = _confidence(trace.success_count, trace.failure_count)
+            trace.last_verified_at = now
+            trace.status = "active" if resolved else "invalid"
+            trace.status_reason = "" if resolved else (observation or "re-verification failed")
+            trace.tool_fingerprints = {
+                tool: self.tools[tool].schema_fingerprint
+                for tool in trace.tools if tool in self.tools
+            }
+            for tool_name in trace.tools:
+                node = self.tools.get(tool_name)
+                if not node:
+                    continue
+                for entry in node.affordances + node.boundaries + node.co_usage:
+                    if task_id in entry.source_queries:
+                        entry.source_executions.append(execution_id)
+                        entry.success_count += int(resolved)
+                        entry.failure_count += int(not resolved)
+                        entry.confidence = _confidence(
+                            entry.success_count,
+                            entry.failure_count,
+                            boundary=entry in node.boundaries,
+                        )
+                        entry.status = "active" if resolved else "invalid"
+                        entry.last_verified_at = now
+                        entry.tool_fingerprint = node.schema_fingerprint
+            self._induce_strategies()
+            self.save()
+            return trace
+
+    def set_trace_status(self, task_id: str, status: str, reason: str) -> TraceNode:
+        """Governance hook to quarantine or invalidate memory with an audit reason."""
+        if status not in GOVERNANCE_STATUSES:
+            raise ValueError(f"status must be one of {sorted(GOVERNANCE_STATUSES)}")
+        if not reason.strip():
+            raise ValueError("a governance reason is required")
+        with self._lock:
+            if task_id not in self.traces:
+                raise ValueError(f"unknown trace: {task_id}")
+            self.traces[task_id].status = status
+            self.traces[task_id].status_reason = _generic_rationale(reason)
+            self._induce_strategies()
+            self.save()
+            return self.traces[task_id]
+
+    def refresh_status(self, max_age_days: int = DEFAULT_MAX_AGE_DAYS) -> dict[str, Any]:
+        if max_age_days < 1:
+            raise ValueError("max_age_days must be positive")
+        stale_traces = [
+            qid for qid, trace in self.traces.items()
+            if not self._trace_is_current(trace, max_age_days=max_age_days)
+        ]
         return {
-            "seed_candidates": [
-                {"qid": qid, "sim": round(sim, 4), "summary": self.traces[qid].summary}
-                for sim, qid in seeds
+            "stale_or_blocked_traces": stale_traces,
+            "stale_tools": [name for name, node in self.tools.items() if node.status == "stale"],
+            "refresh_candidates": [
+                {
+                    "qid": qid,
+                    "summary": self.traces[qid].summary,
+                    "reason": self._refresh_reason(self.traces[qid], max_age_days),
+                }
+                for qid in stale_traces
             ],
-            "playbook": playbook,
-            "strategy": strategy,
-            "tool_tips": tool_tips,
         }
 
     def stats(self) -> dict[str, int]:
@@ -170,49 +430,54 @@ class ToolMemory:
             "tools": len(self.tools),
             "traces": len(self.traces),
             "strategies": len(self.strategies),
-            "trace_edges": sum(len(t.neighbors) for t in self.traces.values()) // 2,
+            "trace_edges": sum(len(trace.neighbors) for trace in self.traces.values()) // 2,
+            "executions": len(self.executions),
+            "stale_traces": sum(not self._trace_is_current(trace) for trace in self.traces.values()),
+            "refresh_due": sum(
+                not self._trace_is_current(trace, max_age_days=DEFAULT_MAX_AGE_DAYS)
+                for trace in self.traces.values()
+            ),
         }
 
     def tool_details(self, name: str) -> dict[str, Any] | None:
         node = self.tools.get(name)
         return asdict(node) if node else None
 
-    def suggest_probes(self, name: str) -> dict[str, list[dict[str, str]]]:
-        """Propose cheap outward/inward probes from current capability coverage."""
+    def suggest_probes(self, name: str) -> dict[str, Any]:
         node = self.tools.get(name)
         if not node:
             raise ValueError(f"unknown tool: {name}")
         peers = _unique(peer for entry in node.co_usage for peer in entry.related_tools)
-        composition = (
-            f"Verify a realistic workflow that combines {name} with {peers[0]}."
-            if peers
-            else f"Verify a representative successful use of {name} not covered by existing traces."
-        )
         return {
-            "boundary": [
-                {
-                    "direction": "outward",
-                    "task": f"Test {name} with empty, malformed, and unusually large inputs; verify graceful failure.",
-                }
-            ],
-            "affordance": [{"direction": "inward", "task": composition}],
+            "tool_fingerprint": node.schema_fingerprint,
+            "boundary": [{
+                "direction": "outward",
+                "task": f"Test {name} with empty, malformed, unauthorized, and unusually large inputs.",
+            }],
+            "affordance": [{
+                "direction": "inward",
+                "task": (
+                    f"Verify a realistic workflow that combines {name} with {peers[0]}."
+                    if peers else f"Verify a representative use of {name} not covered by existing traces."
+                ),
+            }],
         }
 
     def save(self) -> None:
-        if not self.path:
+        if not self._store:
             return
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        payload = {
-            "tools": {key: asdict(value) for key, value in self.tools.items()},
-            "traces": {key: asdict(value) for key, value in self.traces.items()},
-            "strategies": {key: asdict(value) for key, value in self.strategies.items()},
-        }
-        temporary = self.path.with_suffix(self.path.suffix + ".tmp")
-        temporary.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        temporary.replace(self.path)
+        self._store.save(
+            {
+                "tools": {key: asdict(value) for key, value in self.tools.items()},
+                "traces": {key: asdict(value) for key, value in self.traces.items()},
+                "strategies": {key: asdict(value) for key, value in self.strategies.items()},
+                "executions": {key: asdict(value) for key, value in self.executions.items()},
+            }
+        )
 
     def _load(self) -> None:
-        payload = json.loads(self.path.read_text(encoding="utf-8"))
+        assert self._store is not None
+        payload = self._store.load()
         self.tools = {
             key: ToolNode(
                 name=value["name"],
@@ -221,8 +486,13 @@ class ToolMemory:
                 boundaries=[EvidenceEntry(**entry) for entry in value.get("boundaries", [])],
                 co_usage=[EvidenceEntry(**entry) for entry in value.get("co_usage", [])],
                 traces=value.get("traces", []),
+                input_schema=value.get("input_schema", {}),
+                version=value.get("version", "unknown"),
+                provider=value.get("provider", "local"),
+                schema_fingerprint=value.get("schema_fingerprint", ""),
+                status=value.get("status", "active"),
             )
-            for key, value in payload.get("tools", {}).items()
+            for key, value in payload["tools"].items()
         }
         self.traces = {
             key: TraceNode(
@@ -232,28 +502,88 @@ class ToolMemory:
                 task_level_tips=value.get("task_level_tips", []),
                 tools=value.get("tools", []),
                 neighbors=value.get("neighbors", []),
+                source_executions=value.get("source_executions", []),
+                success_count=value.get("success_count", 0),
+                failure_count=value.get("failure_count", 0),
+                confidence=value.get("confidence", 0.5),
+                status=value.get("status", "active"),
+                status_reason=value.get("status_reason", ""),
+                tool_fingerprints=value.get("tool_fingerprints", {}),
+                last_verified_at=value.get("last_verified_at", utc_now()),
             )
-            for key, value in payload.get("traces", {}).items()
+            for key, value in payload["traces"].items()
         }
-        self.strategies = {
-            key: StrategyNode(**value) for key, value in payload.get("strategies", {}).items()
+        self.strategies = {key: StrategyNode(**value) for key, value in payload["strategies"].items()}
+        self.executions = {
+            key: ExecutionRecord(**value) for key, value in payload["executions"].items()
         }
+
+    def _mark_tool_memory_stale(self, tool_name: str) -> None:
+        node = self.tools[tool_name]
+        for entry in node.affordances + node.boundaries + node.co_usage:
+            entry.status = "stale"
+        for trace in self.traces.values():
+            if tool_name in trace.tools:
+                trace.status = "stale"
+                trace.status_reason = f"tool schema changed: {tool_name}"
+        for strategy in self.strategies.values():
+            if tool_name in strategy.tool_sequence:
+                strategy.status = "stale"
+
+    def _trace_is_current(self, trace: TraceNode, max_age_days: int | None = None) -> bool:
+        if trace.status != "active":
+            return False
+        schemas_current = all(
+            tool in self.tools
+            and self.tools[tool].status == "active"
+            and trace.tool_fingerprints.get(tool) == self.tools[tool].schema_fingerprint
+            for tool in trace.tools
+        )
+        if not schemas_current:
+            return False
+        if max_age_days is None:
+            return True
+        try:
+            verified_at = datetime.fromisoformat(trace.last_verified_at)
+            if verified_at.tzinfo is None:
+                verified_at = verified_at.replace(tzinfo=UTC)
+        except ValueError:
+            return False
+        return verified_at >= datetime.now(UTC) - timedelta(days=max_age_days)
+
+    def _refresh_reason(self, trace: TraceNode, max_age_days: int) -> str:
+        if trace.status != "active":
+            return trace.status_reason or trace.status
+        if not self._trace_is_current(trace):
+            return "tool_schema_changed"
+        if not self._trace_is_current(trace, max_age_days=max_age_days):
+            return "verification_expired"
+        return "current"
 
     @staticmethod
     def _merge_entry(
-        entries: list[EvidenceEntry], text: str, task_id: str, related_tools: list[str] | None = None
+        entries: list[EvidenceEntry], text: str, task_id: str, execution_ids: list[str], *,
+        successes: int, failures: int, fingerprint: str, boundary: bool = False,
+        related_tools: list[str] | None = None,
     ) -> None:
-        for entry in entries:
-            if entry.text == text:
-                if task_id not in entry.source_queries:
-                    entry.source_queries.append(task_id)
-                return
-        entries.append(EvidenceEntry(text, [task_id], related_tools or []))
+        entry = next((candidate for candidate in entries if candidate.text == text), None)
+        if entry is None:
+            entry = EvidenceEntry(text=text, related_tools=related_tools or [])
+            entries.append(entry)
+        if task_id not in entry.source_queries:
+            entry.source_queries.append(task_id)
+        entry.source_executions = _unique(entry.source_executions + execution_ids)
+        entry.success_count += successes
+        entry.failure_count += failures
+        entry.confidence = _confidence(entry.success_count, entry.failure_count, boundary=boundary)
+        entry.status = "active"
+        entry.last_verified_at = utc_now()
+        entry.tool_fingerprint = fingerprint
 
     @staticmethod
     def _distill_tips(rollouts: list[Rollout]) -> list[str]:
         tips: list[str] = []
-        if any(r.resolved for r in rollouts):
+        if any(rollout.resolved for rollout in rollouts):
             tips.append("Verify the final tool result against the task requirement.")
         for rollout in rollouts:
             if not rollout.resolved and rollout.observation:
@@ -265,12 +595,12 @@ class ToolMemory:
             node.neighbors = []
         ids = list(self.traces)
         for index, left_id in enumerate(ids):
-            scores = []
-            for right_id in ids[index + 1 :]:
+            scores: list[tuple[float, str]] = []
+            for right_id in ids[index + 1:]:
                 left, right = self.traces[left_id], self.traces[right_id]
-                semantic = cosine_text(left.summary, right.summary)
-                shared_tools = len(set(left.tools) & set(right.tools))
-                score = semantic + (0.25 if shared_tools else 0.0)
+                score = cosine_text(left.summary, right.summary)
+                if set(left.tools) & set(right.tools):
+                    score += 0.25
                 if score > 0.2:
                     scores.append((score, right_id))
             for _, right_id in sorted(scores, reverse=True)[:3]:
@@ -281,15 +611,30 @@ class ToolMemory:
         sequences: dict[tuple[str, ...], list[str]] = {}
         for qid, trace in self.traces.items():
             sequence = tuple(step.tool for step in trace.agent_neutral_trace)
-            if len(sequence) > 1:
+            if len(sequence) > 1 and trace.success_count > 0 and self._trace_is_current(trace):
                 sequences.setdefault(sequence, []).append(qid)
         self.strategies = {}
         for sequence, qids in sequences.items():
             if len(qids) >= 2:
+                confidence = round(sum(self.traces[qid].confidence for qid in qids) / len(qids), 4)
                 sid = f"strategy_{len(self.strategies) + 1}"
                 self.strategies[sid] = StrategyNode(
                     sid=sid,
                     text=f"Apply {' then '.join(sequence)} and verify the composed result.",
                     source_queries=qids,
                     tool_sequence=list(sequence),
+                    confidence=confidence,
+                    status="active",
                 )
+
+    @staticmethod
+    def _empty_guidance(read_budget: int) -> dict[str, Any]:
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "seed_candidates": [], "playbook": [], "strategy": [], "tool_tips": [],
+            "traversal": {
+                "operations": [{"action": "Done", "target": "no_relevant_current_memory"}],
+                "reads_used": 0,
+                "read_budget": read_budget,
+            },
+        }

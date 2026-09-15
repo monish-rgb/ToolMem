@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+        "${workspaceFolder}\\mcp-sandbox"
+      ]
+    },
+    "toolatlas-memory": {
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "toolatlas.memory_server"],
+      "env": {
+        "TOOLATLAS_MEMORY_PATH": "${workspaceFolder}\\.toolatlas\\filesystem-memory.db"
+      }
+    }
+  }
+}

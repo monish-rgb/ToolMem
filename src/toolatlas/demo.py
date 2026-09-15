@@ -82,10 +82,9 @@ async def run_demo(memory_path: Path) -> dict:
 
 
 def main() -> None:
-    output = asyncio.run(run_demo(Path("demo-memory.json")))
+    output = asyncio.run(run_demo(Path("demo-memory.db")))
     print(json.dumps(output, indent=2))
 
 
 if __name__ == "__main__":
     main()
-
