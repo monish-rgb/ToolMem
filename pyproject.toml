@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mini-toolatlas"
+version = "0.1.0"
+description = "A minimal, local implementation of ToolAtlas tool-side memory"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "mcp>=2.0,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.25"]
+
+[project.scripts]
+toolatlas-demo = "toolatlas.demo:main"
+toolatlas-memory-server = "toolatlas.memory_server:main"
+toolatlas-text-server = "toolatlas.text_tools_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/toolatlas"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
