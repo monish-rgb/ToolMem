@@ -20,6 +20,7 @@ toolatlas-demo = "toolatlas.demo:main"
 toolatlas-memory-server = "toolatlas.memory_server:main"
 toolatlas-text-server = "toolatlas.text_tools_server:main"
 toolatlas-filesystem-demo = "toolatlas.filesystem_demo:main"
+toolatlas-readonly-ab = "toolatlas.readonly_benchmark:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/toolatlas"]

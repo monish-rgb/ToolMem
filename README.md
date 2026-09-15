@@ -41,6 +41,34 @@ The real integration scopes Filesystem MCP to `mcp-sandbox`, discovers its live 
 
 The server was checked before connection through PolicyLayer. Its identity was verified, but it received grade D because its 14-tool surface includes four write-capable tools and had recently changed. For that reason, this repository pins the tested package version, invokes the installed entry point without runtime downloads, and restricts it to `mcp-sandbox`. See the [registry record](https://policylayer.com/tools/filesystem).
 
+## Live read-only A/B comparison
+
+Run the same verified task with a baseline agent and a ToolAtlas-assisted agent:
+
+```powershell
+npm install
+.\.venv\Scripts\python -m toolatlas.readonly_benchmark
+```
+
+Or run it as a test:
+
+```powershell
+.\.venv\Scripts\python -m pytest tests/test_readonly_ab.py -v
+```
+
+The benchmark launches the real pinned Filesystem MCP subprocess against static files in `tests/fixtures/readonly_workspace`. A client-side allowlist permits only read operations and raises immediately on any write-capable tool call.
+
+The controlled task asks both agents to find a deployment policy and report a setting. The current expected comparison is:
+
+| Variant | Result | Filesystem calls | Tool sequence |
+|---|---:|---:|---|
+| Baseline without ToolAtlas | Pass | 4 | `list_directory → directory_tree → search_files → read_text_file` |
+| Agent with ToolAtlas | Pass | 2 | `search_files → read_text_file` |
+
+Training calls used to bootstrap provider memory are reported separately and excluded from the comparison. Wall-clock latency is recorded but not asserted because process scheduling varies.
+
+This is a deterministic control experiment over a live MCP server, not an LLM-quality benchmark. It isolates whether retrieved provider memory can reduce exploration calls. For an LLM comparison, use the same model, prompt, temperature, task set, and verifier in both arms; enable only the ToolAtlas memory server in the assisted arm.
+
 ## Connect the servers to an MCP host
 
 The repository now includes two ready project configurations:

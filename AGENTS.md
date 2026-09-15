@@ -25,6 +25,7 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 - `src/toolatlas/demo.py`: real stdio subprocess flow via `mcp.Client` + `StdioServerParameters`: list → `register_tools` → 2 verified `normalize_text→keyword_count` learns → 1 empty-keyword probe → `get_guidance`. Writes `demo-memory.db`.
 - `tests/test_memory.py`: pure `ToolMemory` persistence/traversal. `tests/test_mcp.py`: in-process `Client(server)` (no subprocess, unlike demo).
 - `tests/test_real_filesystem_mcp.py`: live stdio test of the locally installed official Filesystem server, including sandbox-denial verification.
+- `src/toolatlas/readonly_benchmark.py` and `tests/test_readonly_ab.py`: live read-only deterministic A/B comparison. It must never call tools outside `READ_ONLY_TOOLS`.
 
 ## Rules that are easy to break
 
@@ -44,4 +45,4 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 
 Rerun `pytest -q` after touching `memory.py`, `models.py`, either server, or `similarity.py`; run `toolatlas-demo` after changing the MCP loop or persistence.
 
-Current full suite: 8 tests. `npm install` is required to execute rather than skip the real Filesystem integration.
+Current full suite: 9 tests. `npm install` is required to execute rather than skip the real Filesystem integrations.
