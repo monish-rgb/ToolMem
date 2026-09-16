@@ -41,6 +41,29 @@ The real integration scopes Filesystem MCP to `mcp-sandbox`, discovers its live 
 
 The server was checked before connection through PolicyLayer. Its identity was verified, but it received grade D because its 14-tool surface includes four write-capable tools and had recently changed. For that reason, this repository pins the tested package version, invokes the installed entry point without runtime downloads, and restricts it to `mcp-sandbox`. See the [registry record](https://policylayer.com/tools/filesystem).
 
+## Everything MCP protocol integration
+
+The pinned Everything server exercises MCP tools plus roots, sampling, elicitation,
+resources, logging, and tasks. It is a protocol test server rather than a filesystem
+server: `--root` is advertised through MCP roots and used as the subprocess working
+directory, but the server does not read or edit that directory.
+
+```powershell
+npm install
+.\.venv\Scripts\python -m toolatlas.everything_demo --root "C:\path\to\project"
+.\.venv\Scripts\python -m pytest tests/test_everything_mcp.py -v
+```
+
+The integration calls every tool discovered in the live handshake. Its subprocess
+receives a sanitized environment so the server's `get-env` test tool cannot reveal
+credentials. Sampling is deterministic, and elicitation is declined automatically;
+no browser is opened and no user information is collected.
+
+PolicyLayer reported an unverified identity, grade D, and a recent grade change
+for this server; the connection was made only after explicit approval. The
+package is pinned and the integration avoids inherited credentials. See the
+[registry record](https://policylayer.com/tools/server-everything).
+
 ## Live read-only A/B comparison
 
 Run the same verified task with a baseline agent and a ToolAtlas-assisted agent:
@@ -55,6 +78,10 @@ Or run it as a test:
 ```powershell
 .\.venv\Scripts\python -m pytest tests/test_readonly_ab.py -v
 ```
+
+Both benchmark CLIs create a uniquely named database under `.toolatlas/` when
+`--memory` is omitted. Pass `--memory <path>` only when intentionally testing
+reuse across runs. The selected database path is included in the JSON output.
 
 The benchmark launches the real pinned Filesystem MCP subprocess against static files in `tests/fixtures/readonly_workspace`. A client-side allowlist permits only read operations and raises immediately on any write-capable tool call.
 

@@ -18,6 +18,7 @@ from .filesystem_demo import (
     filesystem_server_path,
 )
 from .memory_server import create_memory_server
+from .memory_paths import fresh_memory_path
 
 READ_ONLY_TOOLS = {
     "read_file",
@@ -197,6 +198,7 @@ async def run_readonly_ab(project_root: Path, memory_path: Path) -> dict[str, An
     assisted = _metrics("agent_with_toolatlas", toolatlas_answer, expected, toolatlas_audit, toolatlas_elapsed)
     return {
         "benchmark": "live_readonly_filesystem_ab",
+        "memory_db": str(memory_path.resolve()),
         "filesystem_server": f"{FILESYSTEM_PROVIDER}@{FILESYSTEM_PACKAGE_VERSION}",
         "root": str(root),
         "read_only_tools": sorted(READ_ONLY_TOOLS),
@@ -218,9 +220,14 @@ async def run_readonly_ab(project_root: Path, memory_path: Path) -> dict[str, An
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run a live read-only baseline vs ToolAtlas A/B test")
-    parser.add_argument("--memory", type=Path, default=Path(".toolatlas/readonly-benchmark.db"))
+    parser.add_argument(
+        "--memory",
+        type=Path,
+        help="database to reuse; omit for a fresh, uniquely named database",
+    )
     args = parser.parse_args()
-    result = asyncio.run(run_readonly_ab(Path.cwd(), args.memory))
+    memory_path = args.memory or fresh_memory_path("readonly-benchmark")
+    result = asyncio.run(run_readonly_ab(Path.cwd(), memory_path))
     print(json.dumps(result, indent=2))
 
 

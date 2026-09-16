@@ -23,6 +23,10 @@ toolatlas-text-server = "toolatlas.text_tools_server:main"
 toolatlas-filesystem-demo = "toolatlas.filesystem_demo:main"
 toolatlas-readonly-ab = "toolatlas.readonly_benchmark:main"
 toolatlas-nim-ab = "toolatlas.llm_ab_nim:main"
+toolatlas-everything-demo = "toolatlas.everything_demo:main"
+toolatlas-everything-nim-ab = "toolatlas.llm_ab_everything:main"
+toolatlas-github-demo = "toolatlas.github_demo:main"
+toolatlas-github-nim-ab = "toolatlas.llm_ab_github:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/toolatlas"]

@@ -19,6 +19,7 @@ from .filesystem_demo import (
     filesystem_server_path,
 )
 from .memory_server import create_memory_server
+from .memory_paths import fresh_memory_path
 from .readonly_benchmark import READ_ONLY_TOOLS, _extract_integer, _first_path, _value
 
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
@@ -298,6 +299,7 @@ async def run_nim_ab(
             per_task.append({"baseline": baseline_m, "toolatlas": assisted_m})
     return {
         "benchmark": "nim_llm_filesystem_ab",
+        "memory_db": str(memory_path.resolve()),
         "model": model,
         "temperature": temperature,
         "tasks": [t["task"] for t in TASKS],
@@ -324,13 +326,18 @@ async def run_nim_ab(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="True LLM A/B with NVIDIA NIM + live Filesystem MCP")
-    parser.add_argument("--memory", type=Path, default=Path(".toolatlas/nim-benchmark.db"))
+    parser.add_argument(
+        "--memory",
+        type=Path,
+        help="database to reuse; omit for a fresh, uniquely named database",
+    )
     parser.add_argument("--model", default=os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
     parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
     parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS)
     parser.add_argument("--workspace", default="complex_workspace")
     args = parser.parse_args()
-    result = asyncio.run(run_nim_ab(Path.cwd(), args.memory, args.model, args.temperature, args.max_steps, args.workspace))
+    memory_path = args.memory or fresh_memory_path("nim-benchmark")
+    result = asyncio.run(run_nim_ab(Path.cwd(), memory_path, args.model, args.temperature, args.max_steps, args.workspace))
     print(json.dumps(result, indent=2))
 
 

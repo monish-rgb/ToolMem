@@ -3,6 +3,8 @@
   "private": true,
   "description": "Pinned real MCP servers used by the ToolAtlas integration tests",
   "dependencies": {
-    "@modelcontextprotocol/server-filesystem": "2026.8.31"
+    "@modelcontextprotocol/server-everything": "2026.8.31",
+    "@modelcontextprotocol/server-filesystem": "2026.8.31",
+    "@modelcontextprotocol/server-github": "2025.4.8"
   }
 }
