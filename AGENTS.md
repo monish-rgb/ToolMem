@@ -11,13 +11,19 @@ Minimal, local prototype of ToolAtlas provider-side memory (arXiv:2607.11126). T
 .\.venv\Scripts\toolatlas-demo
 ```
 
-Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".[dev]"`. Requires Python >=3.11. Only runtime dep is `mcp>=2.0,<3` (`pyproject.toml`).
+Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".[dev]"`. Requires Python >=3.11. Only runtime dep is `mcp>=2.0,<3` (`pyproject.toml`); `.[nim]` adds `openai>=1.0` for the NIM A/B harnesses.
 
 ## Architecture
 
 - `src/toolatlas/text_tools_server.py`: ordinary MCP tools `normalize_text`, `word_count`, `keyword_count`. Empty keyword raises `ToolError` — intentional boundary probe, not a bug.
 - `src/toolatlas/filesystem_demo.py`: end-to-end integration with the pinned official Filesystem MCP server. It must remain restricted to `mcp-sandbox` (or a test temporary directory).
-- `package.json` pins `@modelcontextprotocol/server-filesystem`; `.mcp.json` and `.vscode/mcp.json` configure Filesystem + ToolAtlas Memory as the repository defaults.
+- `src/toolatlas/everything_demo.py`: end-to-end integration with the pinned official Everything MCP server (protocol test incl. roots/sampling/elicitation). Subprocess gets a sanitized env so `get-env` cannot reveal credentials.
+- `src/toolatlas/github_demo.py`: read-only integration with the pinned official GitHub MCP server (`@modelcontextprotocol/server-github@2025.4.8`, 26 tools, 14 registered). PAT scoped to one test repo via `GITHUB_TEST_REPOSITORY`; write-capable tools are never called (`READ_ONLY_GITHUB_TOOLS`).
+- `src/toolatlas/llm_ab_nim.py`: true LLM A/B on Filesystem (`--workspace complex_workspace` default; `readonly_workspace` via flag). Neutral baseline prompt; only Arm B gets the playbook. 3 tasks.
+- `src/toolatlas/llm_ab_everything.py`: true LLM A/B on Everything (3 echo+sum tasks; 2-call floor means easy tasks tie).
+- `src/toolatlas/llm_ab_github.py`: true LLM A/B on GitHub (3 count tasks; expected counts resolved by independent direct read at runtime).
+- `src/toolatlas/memory_paths.py`: fresh timestamped database paths under `.toolatlas/` unless `--memory` reuse is intentional.
+- `package.json` pins `@modelcontextprotocol/server-filesystem`, `server-everything`, `server-github`; `.mcp.json` and `.vscode/mcp.json` configure Filesystem + ToolAtlas Memory as the repository defaults (GitHub omitted: needs a PAT).
 - `src/toolatlas/memory_server.py`: `create_memory_server(path)` factory + module-level `mcp` reading `TOOLATLAS_MEMORY_PATH` (default `.toolatlas/memory.db`). Tools cover single/batch ingestion, guidance, probes, refresh, re-verification, governance, inspection, and stats.
 - `src/toolatlas/memory.py`: lifecycle-aware `ToolMemory`; shortest successful rollout is the trace backbone. Guidance includes provenance, confidence, expiry filtering, and an explicit traversal audit.
 - `src/toolatlas/storage.py`: SQLite/WAL persistence. Use one writer service per database in production.
@@ -26,11 +32,17 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 - `tests/test_memory.py`: pure `ToolMemory` persistence/traversal. `tests/test_mcp.py`: in-process `Client(server)` (no subprocess, unlike demo).
 - `tests/test_real_filesystem_mcp.py`: live stdio test of the locally installed official Filesystem server, including sandbox-denial verification.
 - `src/toolatlas/readonly_benchmark.py` and `tests/test_readonly_ab.py`: live read-only deterministic A/B comparison. It must never call tools outside `READ_ONLY_TOOLS`.
+- `tests/fixtures/complex_workspace`: distractor-rich FS for the NIM A/B (staging/US/archive decoys, deploy-checklist runbook). Baseline prompt is neutral on purpose; the search hint lives only in Arm B memory.
+- `tests/test_github_mcp.py`: live GitHub test; skips without server install, `GITHUB_PERSONAL_ACCESS_TOKEN`, or `GITHUB_TEST_REPOSITORY`.
 
 ## Rules that are easy to break
 
 - Keep MCP stdio end-to-end; do not collapse demo/tests to direct Python calls.
 - Do not broaden the Filesystem MCP allowlist beyond `mcp-sandbox` without explicit user approval.
+- Never log, print, or commit `GITHUB_PERSONAL_ACCESS_TOKEN` / `NVIDIA_API_KEY`; pass only via process env to the server subprocess. Memory entries must never contain them either.
+- GitHub + Everything NIM harnesses stay read-only (`READ_ONLY_GITHUB_TOOLS`; Everything test tools are safe by design). GitHub `get_file_contents` on a missing path raises `MCPError` instead of returning `is_error` — treat the exception as denial.
+- Use a fresh `--memory` database per A/B comparison; reuse accumulates evidence counts by design and weakens the comparison.
+- GitHub count tasks resolve expected values by independent direct read at runtime; `expected: null` means the count parse failed and only required-tool use was verified — say so, don't claim a count match.
 - Demo stderr `Tool 'keyword_count' failed: ... keyword must not be empty` is expected. A Python traceback is not.
 - `demo-memory.db*`, `.toolatlas/`, `paper.*` are gitignored.
 - `remember_execution` only with verified `resolved` + agent-neutral rationale (intent, not chain-of-thought). Entries must stay environment-invariant: no secrets, PII, literal user data, paths, or agent syntax — `_generic_rationale()` strips paths/quotes/numbers.
@@ -45,4 +57,4 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 
 Rerun `pytest -q` after touching `memory.py`, `models.py`, either server, or `similarity.py`; run `toolatlas-demo` after changing the MCP loop or persistence.
 
-Current full suite: 9 tests. `npm install` is required to execute rather than skip the real Filesystem integrations.
+Current full suite: 11 tests (GitHub live test skips without server install, PAT, or test repo). `npm install` is required to execute rather than skip the real Filesystem/Everything integrations.

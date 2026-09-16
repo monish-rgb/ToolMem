@@ -11,7 +11,7 @@ This is intentionally a teaching prototype, not a reproduction of the paper's fu
 - **Provider-side persistence:** memory is stored in a SQLite/WAL database owned by the MCP tool provider and reused by different clients or agents.
 - **Lifecycle management:** schema fingerprints, verification age, confidence, provenance, refresh candidates, and governance status prevent outdated memory from being served silently.
 
-The expensive LLM proposer/reflection and embedding model from the research system are replaced with deterministic rules and local bag-of-words similarity. This keeps the end-to-end mechanism inspectable and API-key free.
+The expensive LLM proposer/reflection and embedding model from the research system are replaced with deterministic rules and local bag-of-words similarity. This keeps the end-to-end mechanism inspectable. The deterministic core is API-key free; only the optional NIM LLM comparisons and the GitHub integration need keys (`NVIDIA_API_KEY`, `GITHUB_PERSONAL_ACCESS_TOKEN`), always via environment variables, never committed.
 
 ## Run on Windows PowerShell
 
@@ -20,6 +20,12 @@ python -m venv .venv
 .\.venv\Scripts\python -m pip install -e ".[dev]"
 .\.venv\Scripts\python -m pytest
 .\.venv\Scripts\toolatlas-demo
+```
+
+For the optional NIM true-model comparisons (same model/prompt/temperature both arms):
+
+```powershell
+.\.venv\Scripts\python -m pip install -e ".[nim]"
 ```
 
 The small demo starts two local **stdio MCP servers**:
@@ -64,6 +70,30 @@ for this server; the connection was made only after explicit approval. The
 package is pinned and the integration avoids inherited credentials. See the
 [registry record](https://policylayer.com/tools/server-everything).
 
+## GitHub MCP integration (read-only)
+
+The pinned `@modelcontextprotocol/server-github@2025.4.8` server is exercised
+read-only against a single test repository. Write-capable tools
+(create/update/merge/push/...) are never called; a client-side allowlist
+(`READ_ONLY_GITHUB_TOOLS`) blocks them. The PAT needs only read scopes on the
+test repo and is passed solely to the server subprocess environment — it is
+never logged or stored in memory.
+
+```powershell
+npm install
+$env:GITHUB_PERSONAL_ACCESS_TOKEN="<pat>"
+$env:GITHUB_TEST_REPOSITORY="owner/repo"
+.\.venv\Scripts\python -m pytest tests/test_github_mcp.py -v
+.\.venv\Scripts\python -m toolatlas.github_demo
+```
+
+The demo verifies repository access via a direct read (search is not used as a
+gate because the search index misses private/forked repos), runs two composed
+`list_issues → list_commits` overviews so a strategy forms, probes a missing
+file path as a boundary (this server raises `MCPError: Not Found` instead of
+returning an error flag, which the harness treats as denial), and retrieves a
+`list_issues → list_commits` playbook. Without a token the test skips.
+
 ## Live read-only A/B comparison
 
 Run the same verified task with a baseline agent and a ToolAtlas-assisted agent:
@@ -96,6 +126,49 @@ Training calls used to bootstrap provider memory are reported separately and exc
 
 This is a deterministic control experiment over a live MCP server, not an LLM-quality benchmark. It isolates whether retrieved provider memory can reduce exploration calls. For an LLM comparison, use the same model, prompt, temperature, task set, and verifier in both arms; enable only the ToolAtlas memory server in the assisted arm.
 
+## True LLM A/B comparisons (NVIDIA NIM)
+
+Three harnesses run Arm A (provider tools only) vs Arm B (`get_guidance` once,
+then the same tools) with the same model, neutral system prompt, temperature,
+tasks, and verifier. The baseline prompt carries no strategy hint; only Arm B
+receives the learned playbook. Set credentials per window (PowerShell shown;
+in `cmd` use `set VAR=value` instead of `$env:VAR="value"`):
+
+```powershell
+$env:NVIDIA_API_KEY="<nim-key>"
+$env:NVIDIA_BASE_URL="https://integrate.api.nvidia.com/v1"
+$env:NVIDIA_MODEL="moonshotai/kimi-k3"
+```
+
+Filesystem with distractors (`tests/fixtures/complex_workspace`: staging/US/
+archive decoys plus a deploy-checklist runbook; 3 tasks):
+
+```powershell
+.\.venv\Scripts\python -m toolatlas.llm_ab_nim --workspace complex_workspace --memory .toolatlas\nim-complex.db --temperature 0
+```
+
+Everything protocol server (3 `echo label + sum` tasks, optimal floor is 2
+calls, so expect ties on easy tasks):
+
+```powershell
+.\.venv\Scripts\python -m toolatlas.llm_ab_everything --root mcp-sandbox --memory .toolatlas\everything-nim.db --temperature 0
+```
+
+GitHub read-only (3 count tasks on the test repo; expected counts are resolved
+by an independent direct read at runtime because repos change; a `null`
+expected value means the count check was skipped and only required-tool use
+was verified):
+
+```powershell
+$env:GITHUB_PERSONAL_ACCESS_TOKEN="<pat>"
+$env:GITHUB_TEST_REPOSITORY="owner/repo"
+.\.venv\Scripts\python -m toolatlas.llm_ab_github --memory .toolatlas\github-nim.db --temperature 0
+```
+
+Use a fresh `--memory` database per comparison run; reuse accumulates evidence
+counts across runs by design. Redirect output to a file (`> run.json 2>&1`)
+since `cmd` truncates long output.
+
 ## Connect the servers to an MCP host
 
 The repository now includes two ready project configurations:
@@ -103,7 +176,7 @@ The repository now includes two ready project configurations:
 - `.mcp.json` for clients that support the common project MCP format and launch from the repository root.
 - `.vscode/mcp.json` for VS Code with `${workspaceFolder}` paths.
 
-Both configurations expose the installed official Filesystem server and ToolAtlas memory server. The toy text server is retained only for the small demo and unit tests.
+Both configurations expose the installed official Filesystem server and ToolAtlas memory server. The toy text server is retained only for the small demo and unit tests. GitHub is intentionally omitted from the committed configs because it requires a PAT; pass the token via the environment when running the GitHub demo/harness.
 
 Equivalent configuration:
 
