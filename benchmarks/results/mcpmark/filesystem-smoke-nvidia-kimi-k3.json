@@ -1,0 +1,73 @@
+{
+  "benchmark": "MCPMark",
+  "claim_scope": "official_mcpmark_filesystem_smoke_baseline_only",
+  "is_toolatlas_assisted": false,
+  "date": "2026-09-16",
+  "mcpmark": {
+    "repository": "https://github.com/eval-sys/mcpmark",
+    "commit": "cd45b7f57923b9b3985467f5139927575f83141c",
+    "docs": [
+      "https://mcpmark.ai/docs/introduction#running-mcp-mark",
+      "https://mcpmark.ai/docs/mcp/filesystem"
+    ],
+    "docker_image": "evalsysorg/mcpmark:latest",
+    "docker_digest": "evalsysorg/mcpmark@sha256:05379ddb62790d9037a5521c46155b92304d95ae192caa76edfc5b8d2ac5474f"
+  },
+  "run": {
+    "exp_name": "toolatlas-mcpmark-smoke",
+    "mcp": "filesystem",
+    "model_name": "nvidia-kimi-k3",
+    "provider": "nvidia_nim_openai_compatible",
+    "reasoning_effort": "default",
+    "tasks": [
+      "file_property/size_classification"
+    ],
+    "k": 1,
+    "timeout_seconds": 900,
+    "sanitized_command": "python3 -m pipeline --mcp filesystem --models nvidia-kimi-k3 --exp-name toolatlas-mcpmark-smoke --tasks file_property/size_classification --k 1 --timeout 900",
+    "notes": [
+      "The MCPMark model config was patched in a temporary checkout only to route the model through NVIDIA's OpenAI-compatible endpoint.",
+      "Secrets were passed through process environment variables and are not present in this artifact.",
+      "The raw MCPMark transcript was not stored because it contains environment-specific absolute paths."
+    ]
+  },
+  "result": {
+    "total_tasks": 1,
+    "successful_tasks": 1,
+    "failed_tasks": 0,
+    "success_rate_percent": 100.0,
+    "task_execution_time_seconds": 673.4957797527313,
+    "agent_execution_time_seconds": 667.4080677032471,
+    "turns": 6,
+    "tokens": {
+      "input": 18855,
+      "output": 1326,
+      "total": 20181,
+      "reasoning": 0
+    },
+    "mcp_tool_calls": {
+      "total": 15,
+      "by_tool": {
+        "list_allowed_directories": 1,
+        "list_directory": 1,
+        "list_directory_with_sizes": 1,
+        "create_directory": 3,
+        "move_file": 9
+      }
+    },
+    "verification": {
+      "success": true,
+      "checks": [
+        "required directories exist",
+        "all files are correctly classified",
+        "no files remain in the root directory",
+        "file sizes match the expected categories",
+        "total file count is 8"
+      ]
+    }
+  },
+  "interpretation": {
+    "what_this_proves": "The official MCPMark Docker path, Filesystem MCP server, NVIDIA NIM-compatible model routing, and verifier work on this machine for one standard Filesystem task.",
+    "what_this_does_not_prove": "This is not a ToolAtlas production benchmark and does not measure tool-call reduction. A reduction claim requires a matched ToolAtlas-assisted arm using the same MCPMark task set, k=4 rollouts, frozen memory after training, token accounting, and verifier-passed runs."
+  }
+}

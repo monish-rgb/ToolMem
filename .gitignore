@@ -11,3 +11,4 @@ mcp-sandbox/*
 !mcp-sandbox/.gitkeep
 paper.html
 paper.pdf
+.env

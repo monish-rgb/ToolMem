@@ -169,6 +169,26 @@ Use a fresh `--memory` database per comparison run; reuse accumulates evidence
 counts across runs by design. Redirect output to a file (`> run.json 2>&1`)
 since `cmd` truncates long output.
 
+## Paper-protocol benchmark
+
+Run the stored, deterministic Filesystem control using the evaluation shape from
+the ToolAtlas paper (disjoint 1:2 train/test tasks, frozen memory, same- and
+cross-environment splits, four runs per task, pass@1/pass@4, and cost metrics):
+
+```powershell
+.\.venv\Scripts\python -m toolatlas.paper_benchmark
+```
+
+Results are written to `benchmarks/results/paper-protocol-filesystem.json` and
+`.md`. The report separates provider calls from the `get_guidance` memory call,
+so it cannot hide retrieval overhead. It also reports memory-construction cost
+and the number of evaluation runs required to amortize that cost.
+
+This is a paper-aligned local control, not the full paper reproduction. The full
+evaluation requires MCPMark and MCP-Universe environments across eight services,
+their task snapshots and verifiers, four independent LLM rollouts per task, and
+inference-token accounting.
+
 ## Connect the servers to an MCP host
 
 The repository now includes two ready project configurations:
