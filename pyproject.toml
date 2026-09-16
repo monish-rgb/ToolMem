@@ -14,6 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3", "pytest-asyncio>=0.25"]
+nim = ["openai>=1.0"]
 
 [project.scripts]
 toolatlas-demo = "toolatlas.demo:main"
@@ -21,6 +22,7 @@ toolatlas-memory-server = "toolatlas.memory_server:main"
 toolatlas-text-server = "toolatlas.text_tools_server:main"
 toolatlas-filesystem-demo = "toolatlas.filesystem_demo:main"
 toolatlas-readonly-ab = "toolatlas.readonly_benchmark:main"
+toolatlas-nim-ab = "toolatlas.llm_ab_nim:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/toolatlas"]
