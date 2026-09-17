@@ -1,0 +1,130 @@
+{
+  "stats": {
+    "tools": 3,
+    "traces": 3,
+    "strategies": 1,
+    "trace_edges": 3,
+    "executions": 3,
+    "stale_traces": 0,
+    "refresh_due": 0
+  },
+  "guidance": {
+    "schema_version": "2",
+    "seed_candidates": [
+      {
+        "qid": "q_normalize_count",
+        "sim": 0.5893,
+        "confidence": 0.6667,
+        "summary": "Normalize text and count a keyword"
+      },
+      {
+        "qid": "q_clean_frequency",
+        "sim": 0.3273,
+        "confidence": 0.6667,
+        "summary": "Clean noisy text and compute keyword frequency"
+      },
+      {
+        "qid": "q_empty_keyword_boundary",
+        "sim": 0.2357,
+        "confidence": 0.3333,
+        "summary": "Count an empty keyword in text"
+      }
+    ],
+    "playbook": [
+      {
+        "tool": "normalize_text",
+        "rationale": "normalize text before analysis",
+        "confidence": 0.6667,
+        "source_trace": "q_normalize_count"
+      },
+      {
+        "tool": "keyword_count",
+        "rationale": "count a target keyword in normalized text",
+        "confidence": 0.6667,
+        "source_trace": "q_normalize_count"
+      }
+    ],
+    "strategy": [
+      {
+        "text": "Apply normalize_text then keyword_count and verify the composed result.",
+        "source_strategy_id": "strategy_1",
+        "confidence": 0.6667
+      }
+    ],
+    "tool_tips": [
+      {
+        "tool": "normalize_text",
+        "tip": "Reliably supports workflows that normalize text before analysis",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "q_normalize_count",
+          "q_clean_frequency"
+        ]
+      },
+      {
+        "tool": "normalize_text",
+        "tip": "Compose with keyword_count for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "q_normalize_count",
+          "q_clean_frequency"
+        ]
+      },
+      {
+        "tool": "keyword_count",
+        "tip": "Reliably supports workflows that count a target keyword in normalized text",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "q_normalize_count",
+          "q_clean_frequency"
+        ]
+      },
+      {
+        "tool": "keyword_count",
+        "tip": "Avoid or validate when an empty keyword is rejected and must be validated",
+        "confidence": 0.6667,
+        "evidence_count": 1,
+        "source_queries": [
+          "q_empty_keyword_boundary"
+        ]
+      }
+    ],
+    "traversal": {
+      "operations": [
+        {
+          "action": "ReadTrace",
+          "target": "q_normalize_count"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "q_clean_frequency"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "q_empty_keyword_boundary"
+        },
+        {
+          "action": "ReadTool",
+          "target": "normalize_text"
+        },
+        {
+          "action": "ReadTool",
+          "target": "keyword_count"
+        },
+        {
+          "action": "ReadStrategy",
+          "target": "strategy_1"
+        },
+        {
+          "action": "Done",
+          "target": "guidance"
+        }
+      ],
+      "reads_used": 6,
+      "read_budget": 8
+    }
+  }
+}

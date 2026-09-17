@@ -1,0 +1,162 @@
+{
+  "benchmark": "live_readonly_filesystem_ab",
+  "memory_db": "/work/project/.toolatlas/readonly-benchmark-20260917T042216-bb209fdd.db",
+  "filesystem_server": "io.github.modelcontextprotocol/server-filesystem@2026.8.31",
+  "root": "/work/project/tests/fixtures/readonly_workspace",
+  "read_only_tools": [
+    "directory_tree",
+    "get_file_info",
+    "list_allowed_directories",
+    "list_directory",
+    "list_directory_with_sizes",
+    "read_file",
+    "read_media_file",
+    "read_multiple_files",
+    "read_text_file",
+    "search_files"
+  ],
+  "training_calls_excluded_from_comparison": 4,
+  "baseline": {
+    "agent": "baseline_without_toolatlas",
+    "passed": true,
+    "answer": 20,
+    "expected": 20,
+    "filesystem_tool_calls": 4,
+    "tools_used": [
+      "list_directory",
+      "directory_tree",
+      "search_files",
+      "read_text_file"
+    ],
+    "forbidden_write_attempts": 0,
+    "elapsed_ms": 21.024
+  },
+  "toolatlas": {
+    "agent": "agent_with_toolatlas",
+    "passed": true,
+    "answer": 20,
+    "expected": 20,
+    "filesystem_tool_calls": 2,
+    "tools_used": [
+      "search_files",
+      "read_text_file"
+    ],
+    "forbidden_write_attempts": 0,
+    "elapsed_ms": 13.364
+  },
+  "comparison": {
+    "both_passed": true,
+    "filesystem_calls_saved": 2,
+    "call_reduction_percent": 50.0
+  },
+  "retrieved_guidance": {
+    "schema_version": "2",
+    "seed_candidates": [
+      {
+        "qid": "readonly_timeout_policy",
+        "sim": 0.6674,
+        "confidence": 0.6667,
+        "summary": "Find a timeout policy file and report its configured setting"
+      },
+      {
+        "qid": "readonly_retry_policy",
+        "sim": 0.6674,
+        "confidence": 0.6667,
+        "summary": "Find a retry policy file and report its configured setting"
+      }
+    ],
+    "playbook": [
+      {
+        "tool": "search_files",
+        "rationale": "locate the requested policy file recursively",
+        "confidence": 0.6667,
+        "source_trace": "readonly_timeout_policy"
+      },
+      {
+        "tool": "read_text_file",
+        "rationale": "read the matching policy file and extract the requested setting",
+        "confidence": 0.6667,
+        "source_trace": "readonly_timeout_policy"
+      }
+    ],
+    "strategy": [
+      {
+        "text": "Apply search_files then read_text_file and verify the composed result.",
+        "source_strategy_id": "strategy_1",
+        "confidence": 0.6667
+      }
+    ],
+    "tool_tips": [
+      {
+        "tool": "search_files",
+        "tip": "Reliably supports workflows that locate the requested policy file recursively",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "readonly_retry_policy",
+          "readonly_timeout_policy"
+        ]
+      },
+      {
+        "tool": "search_files",
+        "tip": "Compose with read_text_file for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "readonly_retry_policy",
+          "readonly_timeout_policy"
+        ]
+      },
+      {
+        "tool": "read_text_file",
+        "tip": "Reliably supports workflows that read the matching policy file and extract the requested setting",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "readonly_retry_policy",
+          "readonly_timeout_policy"
+        ]
+      },
+      {
+        "tool": "read_text_file",
+        "tip": "Compose with search_files for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "readonly_retry_policy",
+          "readonly_timeout_policy"
+        ]
+      }
+    ],
+    "traversal": {
+      "operations": [
+        {
+          "action": "ReadTrace",
+          "target": "readonly_timeout_policy"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "readonly_retry_policy"
+        },
+        {
+          "action": "ReadTool",
+          "target": "search_files"
+        },
+        {
+          "action": "ReadTool",
+          "target": "read_text_file"
+        },
+        {
+          "action": "ReadStrategy",
+          "target": "strategy_1"
+        },
+        {
+          "action": "Done",
+          "target": "guidance"
+        }
+      ],
+      "reads_used": 5,
+      "read_budget": 6
+    }
+  }
+}

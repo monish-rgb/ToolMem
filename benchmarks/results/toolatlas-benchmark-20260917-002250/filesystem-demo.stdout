@@ -1,0 +1,135 @@
+{
+  "filesystem_server": "io.github.modelcontextprotocol/server-filesystem@2026.8.31",
+  "sandbox": "/work/project/mcp-sandbox",
+  "discovered_tool_count": 14,
+  "out_of_sandbox_read_denied": true,
+  "stats": {
+    "tools": 14,
+    "traces": 4,
+    "strategies": 1,
+    "trace_edges": 4,
+    "executions": 4,
+    "stale_traces": 0,
+    "refresh_due": 0
+  },
+  "guidance": {
+    "schema_version": "2",
+    "seed_candidates": [
+      {
+        "qid": "fs_write_read_2",
+        "sim": 0.6124,
+        "confidence": 0.6667,
+        "summary": "Write a text file and verify its contents"
+      },
+      {
+        "qid": "fs_write_read_1",
+        "sim": 0.6124,
+        "confidence": 0.6667,
+        "summary": "Write a text file and verify its contents"
+      },
+      {
+        "qid": "fs_outside_sandbox_boundary",
+        "sim": 0.2182,
+        "confidence": 0.3333,
+        "summary": "Read a file outside the allowed directory"
+      }
+    ],
+    "playbook": [
+      {
+        "tool": "write_file",
+        "rationale": "write required content to an allowed file",
+        "confidence": 0.6667,
+        "source_trace": "fs_write_read_2"
+      },
+      {
+        "tool": "read_text_file",
+        "rationale": "read the file back to verify exact contents",
+        "confidence": 0.6667,
+        "source_trace": "fs_write_read_2"
+      }
+    ],
+    "strategy": [
+      {
+        "text": "Apply write_file then read_text_file and verify the composed result.",
+        "source_strategy_id": "strategy_1",
+        "confidence": 0.6667
+      }
+    ],
+    "tool_tips": [
+      {
+        "tool": "write_file",
+        "tip": "Reliably supports workflows that write required content to an allowed file",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "fs_write_read_1",
+          "fs_write_read_2"
+        ]
+      },
+      {
+        "tool": "write_file",
+        "tip": "Compose with read_text_file for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "fs_write_read_1",
+          "fs_write_read_2"
+        ]
+      },
+      {
+        "tool": "read_text_file",
+        "tip": "Reliably supports workflows that read the file back to verify exact contents",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "fs_write_read_1",
+          "fs_write_read_2"
+        ]
+      },
+      {
+        "tool": "read_text_file",
+        "tip": "Compose with write_file for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "fs_write_read_1",
+          "fs_write_read_2"
+        ]
+      }
+    ],
+    "traversal": {
+      "operations": [
+        {
+          "action": "ReadTrace",
+          "target": "fs_write_read_2"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "fs_write_read_1"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "fs_outside_sandbox_boundary"
+        },
+        {
+          "action": "ReadTool",
+          "target": "write_file"
+        },
+        {
+          "action": "ReadTool",
+          "target": "read_text_file"
+        },
+        {
+          "action": "ReadStrategy",
+          "target": "strategy_1"
+        },
+        {
+          "action": "Done",
+          "target": "guidance"
+        }
+      ],
+      "reads_used": 6,
+      "read_budget": 8
+    }
+  }
+}

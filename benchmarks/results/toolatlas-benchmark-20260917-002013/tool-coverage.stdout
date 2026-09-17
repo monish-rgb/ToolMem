@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "calls": [
+    {
+      "server": "memory",
+      "tool": "register_tools",
+      "seconds": 0.147995
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.009998
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.007694
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.00851
+    },
+    {
+      "server": "memory",
+      "tool": "remember_execution",
+      "seconds": 0.017249
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.006306
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.005316
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.005473
+    },
+    {
+      "server": "memory",
+      "tool": "remember_rollouts",
+      "seconds": 0.02305
+    },
+    {
+      "server": "memory",
+      "tool": "get_guidance",
+      "seconds": 0.006893
+    },
+    {
+      "server": "memory",
+      "tool": "inspect_tool",
+      "seconds": 0.007413
+    },
+    {
+      "server": "memory",
+      "tool": "suggest_probes",
+      "seconds": 0.00696
+    },
+    {
+      "server": "memory",
+      "tool": "set_trace_status",
+      "seconds": 0.012496
+    },
+    {
+      "server": "memory",
+      "tool": "refresh_status",
+      "seconds": 0.006335
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.005182
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.004783
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.004286
+    },
+    {
+      "server": "memory",
+      "tool": "reverify_trace",
+      "seconds": 0.013353
+    },
+    {
+      "server": "memory",
+      "tool": "memory_stats",
+      "seconds": 0.006908
+    }
+  ]
+}

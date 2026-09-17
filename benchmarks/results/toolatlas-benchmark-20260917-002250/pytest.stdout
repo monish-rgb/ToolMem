@@ -1,0 +1,4 @@
+.s...........                                                            [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_github_mcp.py:15: set GITHUB_PERSONAL_ACCESS_TOKEN to run the GitHub integration
+12 passed, 1 skipped in 16.07s

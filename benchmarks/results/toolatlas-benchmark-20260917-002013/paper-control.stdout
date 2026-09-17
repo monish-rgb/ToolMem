@@ -1,0 +1,44 @@
+{
+  "json_result": "/work/results/paper-protocol-filesystem.json",
+  "markdown_report": "/work/results/paper-protocol-filesystem.md",
+  "splits": [
+    {
+      "split": "same_environment",
+      "comparison": {
+        "provider_tool_calls": {
+          "baseline": 96,
+          "toolatlas": 48,
+          "saved": 48,
+          "percent": 50.0
+        },
+        "total_mcp_calls_including_memory": {
+          "baseline": 96,
+          "toolatlas": 72,
+          "saved": 24,
+          "percent": 25.0
+        },
+        "pass_at_1_delta": 0.0,
+        "pass_at_k_delta": 0.0
+      }
+    },
+    {
+      "split": "cross_environment",
+      "comparison": {
+        "provider_tool_calls": {
+          "baseline": 96,
+          "toolatlas": 48,
+          "saved": 48,
+          "percent": 50.0
+        },
+        "total_mcp_calls_including_memory": {
+          "baseline": 96,
+          "toolatlas": 72,
+          "saved": 24,
+          "percent": 25.0
+        },
+        "pass_at_1_delta": 0.0,
+        "pass_at_k_delta": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "passed": true,
+  "filesystem_boundary_denied": true,
+  "calls": [
+    {
+      "server": "memory",
+      "tool": "register_tools",
+      "seconds": 0.115653
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.007561
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.005287
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.005676
+    },
+    {
+      "server": "memory",
+      "tool": "remember_execution",
+      "seconds": 0.012383
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.00473
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.004267
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.003474
+    },
+    {
+      "server": "memory",
+      "tool": "remember_rollouts",
+      "seconds": 0.018031
+    },
+    {
+      "server": "memory",
+      "tool": "get_guidance",
+      "seconds": 0.005498
+    },
+    {
+      "server": "memory",
+      "tool": "inspect_tool",
+      "seconds": 0.004746
+    },
+    {
+      "server": "memory",
+      "tool": "suggest_probes",
+      "seconds": 0.004593
+    },
+    {
+      "server": "memory",
+      "tool": "set_trace_status",
+      "seconds": 0.00996
+    },
+    {
+      "server": "memory",
+      "tool": "refresh_status",
+      "seconds": 0.005318
+    },
+    {
+      "server": "text",
+      "tool": "normalize_text",
+      "seconds": 0.003846
+    },
+    {
+      "server": "text",
+      "tool": "word_count",
+      "seconds": 0.003622
+    },
+    {
+      "server": "text",
+      "tool": "keyword_count",
+      "seconds": 0.003391
+    },
+    {
+      "server": "memory",
+      "tool": "reverify_trace",
+      "seconds": 0.010798
+    },
+    {
+      "server": "memory",
+      "tool": "memory_stats",
+      "seconds": 0.005016
+    },
+    {
+      "server": "filesystem",
+      "tool": "list_allowed_directories",
+      "seconds": 0.007575
+    },
+    {
+      "server": "filesystem",
+      "tool": "write_file",
+      "seconds": 0.00675
+    },
+    {
+      "server": "filesystem",
+      "tool": "read_file",
+      "seconds": 0.004632
+    },
+    {
+      "server": "filesystem",
+      "tool": "read_text_file",
+      "seconds": 0.004278
+    },
+    {
+      "server": "filesystem",
+      "tool": "read_multiple_files",
+      "seconds": 0.004277
+    },
+    {
+      "server": "filesystem",
+      "tool": "read_media_file",
+      "seconds": 0.010183
+    },
+    {
+      "server": "filesystem",
+      "tool": "edit_file",
+      "seconds": 0.009122
+    },
+    {
+      "server": "filesystem",
+      "tool": "create_directory",
+      "seconds": 0.005481
+    },
+    {
+      "server": "filesystem",
+      "tool": "list_directory",
+      "seconds": 0.003897
+    },
+    {
+      "server": "filesystem",
+      "tool": "list_directory_with_sizes",
+      "seconds": 0.018062
+    },
+    {
+      "server": "filesystem",
+      "tool": "directory_tree",
+      "seconds": 0.003953
+    },
+    {
+      "server": "filesystem",
+      "tool": "search_files",
+      "seconds": 0.008328
+    },
+    {
+      "server": "filesystem",
+      "tool": "get_file_info",
+      "seconds": 0.003621
+    },
+    {
+      "server": "filesystem",
+      "tool": "move_file",
+      "seconds": 0.004714
+    }
+  ]
+}

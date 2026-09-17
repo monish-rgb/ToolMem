@@ -1,0 +1,5177 @@
+{
+  "schema_version": "1",
+  "benchmark": "toolatlas_paper_protocol_filesystem_control",
+  "paper": "arxiv:2607.11126",
+  "generated_at": "2026-09-17T04:24:06.707881+00:00",
+  "runner": "deterministic_read_only_control",
+  "claim_scope": "local_filesystem_control_not_full_paper_reproduction",
+  "protocol": {
+    "runs_per_task": 4,
+    "primary_success_metrics": [
+      "pass_at_1",
+      "pass_at_4"
+    ],
+    "cost_metrics": [
+      "provider_tool_calls",
+      "memory_tool_calls",
+      "total_mcp_calls",
+      "latency_ms"
+    ],
+    "train_test_ratio": "1:2 (3 train, 6 test tasks per split)",
+    "memory_frozen_before_test": true,
+    "programmatic_verifier": "exact integer field match"
+  },
+  "filesystem_server": "io.github.modelcontextprotocol/server-filesystem@2026.8.31",
+  "splits": [
+    {
+      "split": "same_environment",
+      "train_environment": "complex_workspace",
+      "test_environment": "complex_workspace",
+      "memory_frozen_during_evaluation": true,
+      "train_tasks": [
+        {
+          "task_id": "train_retry",
+          "summary": "Find a retry policy file and report its configured setting",
+          "filename": "retry-policy.md",
+          "field": "max_attempts",
+          "expected": 5
+        },
+        {
+          "task_id": "train_timeout",
+          "summary": "Find a timeout policy file and report its configured setting",
+          "filename": "timeout-policy.md",
+          "field": "request_timeout_seconds",
+          "expected": 30
+        },
+        {
+          "task_id": "train_billing",
+          "summary": "Find an approved billing policy file and report its configured setting",
+          "filename": "billing-policy.md",
+          "field": "invoice_retries",
+          "expected": 4
+        }
+      ],
+      "test_task_count": 6,
+      "training_cost": {
+        "provider_tool_calls": 6,
+        "memory_tool_calls": 4,
+        "total_mcp_calls": 10,
+        "excluded_from_inference_comparison": true,
+        "break_even_evaluation_runs_for_total_mcp_calls": 10
+      },
+      "baseline": {
+        "metrics": {
+          "tasks": 6,
+          "runs_per_task": 4,
+          "pass_at_1": 1.0,
+          "pass_at_k": 1.0,
+          "k": 4,
+          "successful_runs": 24,
+          "total_runs": 24,
+          "provider_tool_calls": 96,
+          "memory_tool_calls": 0,
+          "total_mcp_calls": 96,
+          "mean_provider_tool_calls_per_run": 4.0,
+          "mean_total_mcp_calls_per_run": 4.0,
+          "median_elapsed_ms": 38.194
+        },
+        "tasks": [
+          {
+            "task": {
+              "task_id": "test_cache_ttl",
+              "summary": "Find the cache policy file and report its configured ttl setting",
+              "filename": "cache-policy.md",
+              "field": "ttl_seconds",
+              "expected": 600
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 50.78
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 32.835
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 38.999
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 41.666
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_cache_capacity",
+              "summary": "Find the cache policy file and report its configured capacity setting",
+              "filename": "cache-policy.md",
+              "field": "max_entries",
+              "expected": 1000
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 37.038
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 39.221
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 37.389
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 41.438
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_attempts",
+              "summary": "Find the active auth policy file and report its configured attempt setting",
+              "filename": "auth-policy.md",
+              "field": "max_attempts",
+              "expected": 7
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 28.765
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 27.628
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.901
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 36.443
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_lockout",
+              "summary": "Find the active auth policy file and report its configured lockout setting",
+              "filename": "auth-policy.md",
+              "field": "lockout_minutes",
+              "expected": 15
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 45.163
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 50.96
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 58.14
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 43.723
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_rollout",
+              "summary": "Find the production EU deployment policy file and report its rollout setting",
+              "filename": "deployment-policy.md",
+              "field": "rollout_window_minutes",
+              "expected": 20
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 35.435
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 33.115
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 48.317
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 42.785
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_health",
+              "summary": "Find the production EU deployment policy file and report its health setting",
+              "filename": "deployment-policy.md",
+              "field": "minimum_healthy_percent",
+              "expected": 90
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 32.439
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 27.922
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 30.639
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 40.052
+              }
+            ]
+          }
+        ]
+      },
+      "toolatlas": {
+        "metrics": {
+          "tasks": 6,
+          "runs_per_task": 4,
+          "pass_at_1": 1.0,
+          "pass_at_k": 1.0,
+          "k": 4,
+          "successful_runs": 24,
+          "total_runs": 24,
+          "provider_tool_calls": 48,
+          "memory_tool_calls": 24,
+          "total_mcp_calls": 72,
+          "mean_provider_tool_calls_per_run": 2.0,
+          "mean_total_mcp_calls_per_run": 3.0,
+          "median_elapsed_ms": 24.236
+        },
+        "tasks": [
+          {
+            "task": {
+              "task_id": "test_cache_ttl",
+              "summary": "Find the cache policy file and report its configured ttl setting",
+              "filename": "cache-policy.md",
+              "field": "ttl_seconds",
+              "expected": 600
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 28.253,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.429,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 22.509,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.124,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_cache_capacity",
+              "summary": "Find the cache policy file and report its configured capacity setting",
+              "filename": "cache-policy.md",
+              "field": "max_entries",
+              "expected": 1000
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.25,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.037,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.151,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.323,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.7273,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_attempts",
+              "summary": "Find the active auth policy file and report its configured attempt setting",
+              "filename": "auth-policy.md",
+              "field": "max_attempts",
+              "expected": 7
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.148,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 26.28,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 25.372,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.349,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_lockout",
+              "summary": "Find the active auth policy file and report its configured lockout setting",
+              "filename": "auth-policy.md",
+              "field": "lockout_minutes",
+              "expected": 15
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 28.521,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 25.749,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.888,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.631,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6963,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_rollout",
+              "summary": "Find the production EU deployment policy file and report its rollout setting",
+              "filename": "deployment-policy.md",
+              "field": "rollout_window_minutes",
+              "expected": 20
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.774,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.904,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.423,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 22.897,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_health",
+              "summary": "Find the production EU deployment policy file and report its health setting",
+              "filename": "deployment-policy.md",
+              "field": "minimum_healthy_percent",
+              "expected": 90
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.854,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 28.71,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 26.975,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 20.769,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_billing",
+                      "sim": 0.6093,
+                      "confidence": 0.6667,
+                      "summary": "Find an approved billing policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_billing"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "comparison": {
+        "provider_tool_calls": {
+          "baseline": 96,
+          "toolatlas": 48,
+          "saved": 48,
+          "percent": 50.0
+        },
+        "total_mcp_calls_including_memory": {
+          "baseline": 96,
+          "toolatlas": 72,
+          "saved": 24,
+          "percent": 25.0
+        },
+        "pass_at_1_delta": 0.0,
+        "pass_at_k_delta": 0.0
+      }
+    },
+    {
+      "split": "cross_environment",
+      "train_environment": "readonly_workspace",
+      "test_environment": "complex_workspace",
+      "memory_frozen_during_evaluation": true,
+      "train_tasks": [
+        {
+          "task_id": "train_retry",
+          "summary": "Find a retry policy file and report its configured setting",
+          "filename": "retry-policy.md",
+          "field": "max_attempts",
+          "expected": 5
+        },
+        {
+          "task_id": "train_timeout",
+          "summary": "Find a timeout policy file and report its configured setting",
+          "filename": "timeout-policy.md",
+          "field": "request_timeout_seconds",
+          "expected": 30
+        },
+        {
+          "task_id": "train_deployment",
+          "summary": "Find a deployment policy file and report its configured setting",
+          "filename": "deployment-policy.md",
+          "field": "rollout_window_minutes",
+          "expected": 20
+        }
+      ],
+      "test_task_count": 6,
+      "training_cost": {
+        "provider_tool_calls": 6,
+        "memory_tool_calls": 4,
+        "total_mcp_calls": 10,
+        "excluded_from_inference_comparison": true,
+        "break_even_evaluation_runs_for_total_mcp_calls": 10
+      },
+      "baseline": {
+        "metrics": {
+          "tasks": 6,
+          "runs_per_task": 4,
+          "pass_at_1": 1.0,
+          "pass_at_k": 1.0,
+          "k": 4,
+          "successful_runs": 24,
+          "total_runs": 24,
+          "provider_tool_calls": 96,
+          "memory_tool_calls": 0,
+          "total_mcp_calls": 96,
+          "mean_provider_tool_calls_per_run": 4.0,
+          "mean_total_mcp_calls_per_run": 4.0,
+          "median_elapsed_ms": 33.625
+        },
+        "tasks": [
+          {
+            "task": {
+              "task_id": "test_cache_ttl",
+              "summary": "Find the cache policy file and report its configured ttl setting",
+              "filename": "cache-policy.md",
+              "field": "ttl_seconds",
+              "expected": 600
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 53.43
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 42.179
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 43.328
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 41.826
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_cache_capacity",
+              "summary": "Find the cache policy file and report its configured capacity setting",
+              "filename": "cache-policy.md",
+              "field": "max_entries",
+              "expected": 1000
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 34.132
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 36.039
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 44.984
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 40.746
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_attempts",
+              "summary": "Find the active auth policy file and report its configured attempt setting",
+              "filename": "auth-policy.md",
+              "field": "max_attempts",
+              "expected": 7
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 38.531
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 36.057
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 36.406
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 30.75
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_lockout",
+              "summary": "Find the active auth policy file and report its configured lockout setting",
+              "filename": "auth-policy.md",
+              "field": "lockout_minutes",
+              "expected": 15
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.035
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.371
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 33.118
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 35.213
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_rollout",
+              "summary": "Find the production EU deployment policy file and report its rollout setting",
+              "filename": "deployment-policy.md",
+              "field": "rollout_window_minutes",
+              "expected": 20
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.782
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.773
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 30.801
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 32.057
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_health",
+              "summary": "Find the production EU deployment policy file and report its health setting",
+              "filename": "deployment-policy.md",
+              "field": "minimum_healthy_percent",
+              "expected": 90
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 32.168
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 30.851
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.371
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 4,
+                "memory_tool_calls": 0,
+                "total_mcp_calls": 4,
+                "tools_used": [
+                  "list_directory",
+                  "directory_tree",
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 31.171
+              }
+            ]
+          }
+        ]
+      },
+      "toolatlas": {
+        "metrics": {
+          "tasks": 6,
+          "runs_per_task": 4,
+          "pass_at_1": 1.0,
+          "pass_at_k": 1.0,
+          "k": 4,
+          "successful_runs": 24,
+          "total_runs": 24,
+          "provider_tool_calls": 48,
+          "memory_tool_calls": 24,
+          "total_mcp_calls": 72,
+          "mean_provider_tool_calls_per_run": 2.0,
+          "mean_total_mcp_calls_per_run": 3.0,
+          "median_elapsed_ms": 24.127
+        },
+        "tasks": [
+          {
+            "task": {
+              "task_id": "test_cache_ttl",
+              "summary": "Find the cache policy file and report its configured ttl setting",
+              "filename": "cache-policy.md",
+              "field": "ttl_seconds",
+              "expected": 600
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 28.483,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 25.347,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.354,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 600,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 24.556,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_cache_capacity",
+              "summary": "Find the cache policy file and report its configured capacity setting",
+              "filename": "cache-policy.md",
+              "field": "max_entries",
+              "expected": 1000
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.702,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 38.726,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 32.067,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 1000,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 29.236,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7628,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_attempts",
+              "summary": "Find the active auth policy file and report its configured attempt setting",
+              "filename": "auth-policy.md",
+              "field": "max_attempts",
+              "expected": 7
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.863,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.635,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 25.187,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 7,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 25.013,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_auth_lockout",
+              "summary": "Find the active auth policy file and report its configured lockout setting",
+              "filename": "auth-policy.md",
+              "field": "lockout_minutes",
+              "expected": 15
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 22.466,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.245,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 22.055,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 15,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 22.797,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_timeout"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_rollout",
+              "summary": "Find the production EU deployment policy file and report its rollout setting",
+              "filename": "deployment-policy.md",
+              "field": "rollout_window_minutes",
+              "expected": 20
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 27.945,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 26.593,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.416,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 20,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 21.788,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "task": {
+              "task_id": "test_eu_health",
+              "summary": "Find the production EU deployment policy file and report its health setting",
+              "filename": "deployment-policy.md",
+              "field": "minimum_healthy_percent",
+              "expected": 90
+            },
+            "runs": [
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 26.001,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.899,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.671,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              },
+              {
+                "passed": true,
+                "answer": 90,
+                "provider_tool_calls": 2,
+                "memory_tool_calls": 1,
+                "total_mcp_calls": 3,
+                "tools_used": [
+                  "search_files",
+                  "read_text_file"
+                ],
+                "forbidden_write_attempts": 0,
+                "elapsed_ms": 23.779,
+                "guidance": {
+                  "seed_candidates": [
+                    {
+                      "qid": "train_deployment",
+                      "sim": 0.7303,
+                      "confidence": 0.6667,
+                      "summary": "Find a deployment policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_timeout",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a timeout policy file and report its configured setting"
+                    },
+                    {
+                      "qid": "train_retry",
+                      "sim": 0.639,
+                      "confidence": 0.6667,
+                      "summary": "Find a retry policy file and report its configured setting"
+                    }
+                  ],
+                  "playbook": [
+                    {
+                      "tool": "search_files",
+                      "rationale": "locate the requested policy file recursively",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    },
+                    {
+                      "tool": "read_text_file",
+                      "rationale": "read the matching policy file and extract the requested setting",
+                      "confidence": 0.6667,
+                      "source_trace": "train_deployment"
+                    }
+                  ],
+                  "traversal": {
+                    "operations": [
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_deployment"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_timeout"
+                      },
+                      {
+                        "action": "ReadTrace",
+                        "target": "train_retry"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "search_files"
+                      },
+                      {
+                        "action": "ReadTool",
+                        "target": "read_text_file"
+                      },
+                      {
+                        "action": "ReadStrategy",
+                        "target": "strategy_1"
+                      },
+                      {
+                        "action": "Done",
+                        "target": "guidance"
+                      }
+                    ],
+                    "reads_used": 6,
+                    "read_budget": 8
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "comparison": {
+        "provider_tool_calls": {
+          "baseline": 96,
+          "toolatlas": 48,
+          "saved": 48,
+          "percent": 50.0
+        },
+        "total_mcp_calls_including_memory": {
+          "baseline": 96,
+          "toolatlas": 72,
+          "saved": 24,
+          "percent": 25.0
+        },
+        "pass_at_1_delta": 0.0,
+        "pass_at_k_delta": 0.0
+      }
+    }
+  ]
+}

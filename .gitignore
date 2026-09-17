@@ -12,3 +12,4 @@ mcp-sandbox/*
 paper.html
 paper.pdf
 .env
+.firecrawl/

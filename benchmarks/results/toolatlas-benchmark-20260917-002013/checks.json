@@ -1,0 +1,42 @@
+[
+  {
+    "check": "tool-coverage",
+    "exit_code": 0,
+    "seconds": 8.876
+  },
+  {
+    "check": "pytest",
+    "exit_code": 0,
+    "seconds": 19.08
+  },
+  {
+    "check": "compile",
+    "exit_code": 0,
+    "seconds": 0.22
+  },
+  {
+    "check": "text-demo",
+    "exit_code": 0,
+    "seconds": 7.293
+  },
+  {
+    "check": "filesystem-demo",
+    "exit_code": 0,
+    "seconds": 5.565
+  },
+  {
+    "check": "everything-demo",
+    "exit_code": 0,
+    "seconds": 9.871
+  },
+  {
+    "check": "readonly-ab",
+    "exit_code": 0,
+    "seconds": 3.038
+  },
+  {
+    "check": "paper-control",
+    "exit_code": 0,
+    "seconds": 8.021
+  }
+]

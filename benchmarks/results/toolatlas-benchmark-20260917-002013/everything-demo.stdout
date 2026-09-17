@@ -1,0 +1,212 @@
+{
+  "everything_server": "io.github.modelcontextprotocol/server-everything@2026.8.31",
+  "client_root": "/work/project/mcp-sandbox",
+  "memory_db": "/work/project/.toolatlas/everything-demo-20260917T042206-49958237.db",
+  "discovered_tool_count": 17,
+  "tools": [
+    {
+      "tool": "echo",
+      "passed": true
+    },
+    {
+      "tool": "get-annotated-message",
+      "passed": true
+    },
+    {
+      "tool": "get-env",
+      "passed": true
+    },
+    {
+      "tool": "get-resource-links",
+      "passed": true
+    },
+    {
+      "tool": "get-resource-reference",
+      "passed": true
+    },
+    {
+      "tool": "get-structured-content",
+      "passed": true
+    },
+    {
+      "tool": "get-sum",
+      "passed": true
+    },
+    {
+      "tool": "get-tiny-image",
+      "passed": true
+    },
+    {
+      "tool": "gzip-file-as-resource",
+      "passed": true
+    },
+    {
+      "tool": "toggle-simulated-logging",
+      "passed": true
+    },
+    {
+      "tool": "toggle-subscriber-updates",
+      "passed": true
+    },
+    {
+      "tool": "trigger-long-running-operation",
+      "passed": true
+    },
+    {
+      "tool": "get-roots-list",
+      "passed": true
+    },
+    {
+      "tool": "trigger-elicitation-request",
+      "passed": true
+    },
+    {
+      "tool": "trigger-url-elicitation",
+      "passed": true
+    },
+    {
+      "tool": "trigger-sampling-request",
+      "passed": true
+    },
+    {
+      "tool": "simulate-research-query",
+      "passed": true
+    }
+  ],
+  "all_tools_passed": true,
+  "environment_sanitized": true,
+  "stats": {
+    "tools": 17,
+    "traces": 19,
+    "strategies": 1,
+    "trace_edges": 46,
+    "executions": 19,
+    "stale_traces": 0,
+    "refresh_due": 0
+  },
+  "guidance": {
+    "schema_version": "2",
+    "seed_candidates": [
+      {
+        "qid": "everything_composed_2",
+        "sim": 0.8,
+        "confidence": 0.6667,
+        "summary": "Echo a label and calculate the sum of two numbers"
+      },
+      {
+        "qid": "everything_composed_1",
+        "sim": 0.8,
+        "confidence": 0.6667,
+        "summary": "Echo a label and calculate the sum of two numbers"
+      },
+      {
+        "qid": "everything_tool_1",
+        "sim": 0.239,
+        "confidence": 0.6667,
+        "summary": "Exercise the echo capability with deterministic input"
+      }
+    ],
+    "playbook": [
+      {
+        "tool": "echo",
+        "rationale": "echo the requested label for confirmation",
+        "confidence": 0.6667,
+        "source_trace": "everything_composed_2"
+      },
+      {
+        "tool": "get-sum",
+        "rationale": "calculate the requested numeric sum",
+        "confidence": 0.6667,
+        "source_trace": "everything_composed_2"
+      },
+      {
+        "tool": "echo",
+        "rationale": "exercise the capability with deterministic test input",
+        "confidence": 0.6667,
+        "source_trace": "everything_tool_1"
+      }
+    ],
+    "strategy": [
+      {
+        "text": "Apply echo then get-sum and verify the composed result.",
+        "source_strategy_id": "strategy_1",
+        "confidence": 0.6667
+      }
+    ],
+    "tool_tips": [
+      {
+        "tool": "echo",
+        "tip": "Reliably supports workflows that echo the requested label for confirmation",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "everything_composed_1",
+          "everything_composed_2"
+        ]
+      },
+      {
+        "tool": "echo",
+        "tip": "Reliably supports workflows that exercise the capability with deterministic test input",
+        "confidence": 0.6667,
+        "evidence_count": 1,
+        "source_queries": [
+          "everything_tool_1"
+        ]
+      },
+      {
+        "tool": "get-sum",
+        "tip": "Reliably supports workflows that calculate the requested numeric sum",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "everything_composed_1",
+          "everything_composed_2"
+        ]
+      },
+      {
+        "tool": "get-sum",
+        "tip": "Compose with echo for multi-step workflows",
+        "confidence": 0.75,
+        "evidence_count": 2,
+        "source_queries": [
+          "everything_composed_1",
+          "everything_composed_2"
+        ]
+      }
+    ],
+    "traversal": {
+      "operations": [
+        {
+          "action": "ReadTrace",
+          "target": "everything_composed_2"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "everything_composed_1"
+        },
+        {
+          "action": "ReadTrace",
+          "target": "everything_tool_1"
+        },
+        {
+          "action": "ReadTool",
+          "target": "echo"
+        },
+        {
+          "action": "ReadTool",
+          "target": "get-sum"
+        },
+        {
+          "action": "ReadStrategy",
+          "target": "strategy_1"
+        },
+        {
+          "action": "Done",
+          "target": "guidance"
+        }
+      ],
+      "reads_used": 6,
+      "read_budget": 8
+    }
+  }
+}

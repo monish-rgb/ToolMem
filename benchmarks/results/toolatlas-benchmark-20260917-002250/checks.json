@@ -1,0 +1,47 @@
+[
+  {
+    "check": "mcpmark-size-replay",
+    "exit_code": 0,
+    "seconds": 7.519
+  },
+  {
+    "check": "tool-coverage",
+    "exit_code": 0,
+    "seconds": 7.49
+  },
+  {
+    "check": "pytest",
+    "exit_code": 0,
+    "seconds": 17.58
+  },
+  {
+    "check": "compile",
+    "exit_code": 0,
+    "seconds": 0.166
+  },
+  {
+    "check": "text-demo",
+    "exit_code": 0,
+    "seconds": 6.629
+  },
+  {
+    "check": "filesystem-demo",
+    "exit_code": 0,
+    "seconds": 5.214
+  },
+  {
+    "check": "everything-demo",
+    "exit_code": 0,
+    "seconds": 9.496
+  },
+  {
+    "check": "readonly-ab",
+    "exit_code": 0,
+    "seconds": 3.398
+  },
+  {
+    "check": "paper-control",
+    "exit_code": 0,
+    "seconds": 9.549
+  }
+]

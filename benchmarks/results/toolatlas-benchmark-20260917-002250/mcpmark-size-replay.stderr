@@ -1,0 +1,8 @@
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/mcp-sandbox/mcpmark-size-0' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/mcp-sandbox/mcpmark-size-1' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/mcp-sandbox/mcpmark-size-2' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/mcp-sandbox/mcpmark-size-3' ]

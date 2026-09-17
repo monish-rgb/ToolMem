@@ -1,0 +1,8 @@
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/tests/fixtures/complex_workspace' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/tests/fixtures/complex_workspace' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/tests/fixtures/readonly_workspace' ]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/work/project/tests/fixtures/complex_workspace' ]
