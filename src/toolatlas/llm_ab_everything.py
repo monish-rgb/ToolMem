@@ -236,7 +236,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="True LLM A/B with NVIDIA NIM + live Everything MCP")
     parser.add_argument("--root", type=Path, default=Path("mcp-sandbox"))
     parser.add_argument("--memory", type=Path, default=Path(".toolatlas/everything-nim-benchmark.db"))
-    parser.add_argument("--model", default=os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
+    parser.add_argument("--model", default=os.environ.get("LLM_MODEL") or os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
     parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
     parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS)
     args = parser.parse_args()

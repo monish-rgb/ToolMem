@@ -251,7 +251,7 @@ def main() -> None:
     parser.add_argument("--memory", type=Path, default=Path(".toolatlas/github-nim-benchmark.db"))
     parser.add_argument("--owner", default="")
     parser.add_argument("--repo", default="")
-    parser.add_argument("--model", default=os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
+    parser.add_argument("--model", default=os.environ.get("LLM_MODEL") or os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
     parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
     parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS)
     args = parser.parse_args()

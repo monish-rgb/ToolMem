@@ -1,0 +1,151 @@
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\probe'
+]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\train-size_classification-1'
+]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\train-size_classification-2'
+]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\train-time_classification-1'
+]
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\train-time_classification-2'
+]
+[size_classification baseline k=1/4] running...
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  'C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\mcpmark\\file-property-gemini35flash-k4\\size_classification-baseline-k1'
+]
+HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 400 Bad Request"
+  + Exception Group Traceback (most recent call last):
+  |   File "<frozen runpy>", line 198, in _run_module_as_main
+  |   File "<frozen runpy>", line 88, in _run_code
+  |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 570, in <module>
+  |     main()
+  |     ~~~~^^
+  |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 565, in main
+  |     report = asyncio.run(main_async(args))
+  |   File "C:\Python313\Lib\asyncio\runners.py", line 195, in run
+  |     return runner.run(main)
+  |            ~~~~~~~~~~^^^^^^
+  |   File "C:\Python313\Lib\asyncio\runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  |   File "C:\Python313\Lib\asyncio\base_events.py", line 719, in run_until_complete
+  |     return future.result()
+  |            ~~~~~~~~~~~~~^^
+  |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 510, in main_async
+  |     record = await eval_attempt(
+  |              ^^^^^^^^^^^^^^^^^^^
+  |         task, arm, attempt, args.model, args.temperature,
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |         snapshot, out_root, frozen_db, out_root)
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 312, in eval_attempt
+  |     async with Client(fs_params) as client, Client(memory_server) as memory:
+  |                ~~~~~~^^^^^^^^^^^
+  |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\client.py", line 475, in __aexit__
+  |     await self._exit_stack.__aexit__(exc_type, exc_val, exc_tb)
+  |   File "C:\Python313\Lib\contextlib.py", line 768, in __aexit__
+  |     raise exc
+  |   File "C:\Python313\Lib\contextlib.py", line 751, in __aexit__
+  |     cb_suppress = await cb(*exc_details)
+  |                   ^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Python313\Lib\contextlib.py", line 235, in __aexit__
+  |     await self.gen.athrow(value)
+  |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\stdio.py", line 200, in stdio_client
+  |     async with anyio.create_task_group() as tg:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\stdio.py", line 204, in stdio_client
+    |     yield read_stream, write_stream
+    |   File "C:\Python313\Lib\contextlib.py", line 751, in __aexit__
+    |     cb_suppress = await cb(*exc_details)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\session.py", line 514, in __aexit__
+    |     result = await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    |         "unhandled errors in a TaskGroup", self._exceptions
+    |     ) from None
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Exception Group Traceback (most recent call last):
+      |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 312, in eval_attempt
+      |     async with Client(fs_params) as client, Client(memory_server) as memory:
+      |                                             ~~~~~~^^^^^^^^^^^^^^^
+      |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\client.py", line 475, in __aexit__
+      |     await self._exit_stack.__aexit__(exc_type, exc_val, exc_tb)
+      |   File "C:\Python313\Lib\contextlib.py", line 768, in __aexit__
+      |     raise exc
+      |   File "C:\Python313\Lib\contextlib.py", line 751, in __aexit__
+      |     cb_suppress = await cb(*exc_details)
+      |                   ^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+      |     raise BaseExceptionGroup(
+      |         "unhandled errors in a TaskGroup", self._exceptions
+      |     ) from None
+      | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+      +-+---------------- 1 ----------------
+        | Exception Group Traceback (most recent call last):
+        |   File "C:\Python313\Lib\contextlib.py", line 751, in __aexit__
+        |     cb_suppress = await cb(*exc_details)
+        |                   ^^^^^^^^^^^^^^^^^^^^^^
+        |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\mcp\client\session.py", line 514, in __aexit__
+        |     result = await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+        |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 847, in __aexit__
+        |     raise BaseExceptionGroup(
+        |         "unhandled errors in a TaskGroup", self._exceptions
+        |     ) from None
+        | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+        +-+---------------- 1 ----------------
+          | Traceback (most recent call last):
+          |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 324, in eval_attempt
+          |     log, final = await run_llm_agent(model, temperature, 30, prompt, openai_tools, client, task_text, root)
+          |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          |   File "C:\Users\MONISH\Downloads\ToolMem\src\toolatlas\mcpmark_file_property_ab.py", line 270, in run_llm_agent
+          |     response = await asyncio.to_thread(
+          |                ^^^^^^^^^^^^^^^^^^^^^^^^
+          |     ...<2 lines>...
+          |         temperature=temperature, max_tokens=1024)
+          |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          |   File "C:\Python313\Lib\asyncio\threads.py", line 25, in to_thread
+          |     return await loop.run_in_executor(None, func_call)
+          |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          |   File "C:\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+          |     result = self.fn(*self.args, **self.kwargs)
+          |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+          |     return func(*args, **kwargs)
+          |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1308, in create
+          |     return self._post(
+          |            ~~~~~~~~~~^
+          |         "/chat/completions",
+          |         ^^^^^^^^^^^^^^^^^^^^
+          |     ...<53 lines>...
+          |         stream_cls=Stream[ChatCompletionChunk],
+          |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          |     )
+          |     ^
+          |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\openai\_base_client.py", line 1368, in post
+          |     return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+          |                            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          |   File "C:\Users\MONISH\Downloads\ToolMem\.venv\Lib\site-packages\openai\_base_client.py", line 1141, in request
+          |     raise self._make_status_error_from_response(err.response) from None
+          | openai.BadRequestError: Error code: 400 - [{'error': {'code': 400, 'message': 'Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:list_allowed_directories` , position 2. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details.', 'status': 'INVALID_ARGUMENT'}}]
+          +------------------------------------

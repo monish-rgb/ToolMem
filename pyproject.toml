@@ -27,6 +27,7 @@ toolatlas-everything-demo = "toolatlas.everything_demo:main"
 toolatlas-everything-nim-ab = "toolatlas.llm_ab_everything:main"
 toolatlas-github-demo = "toolatlas.github_demo:main"
 toolatlas-github-nim-ab = "toolatlas.llm_ab_github:main"
+toolatlas-mcpmark-fp-ab = "toolatlas.mcpmark_file_property_ab:main"
 toolatlas-paper-benchmark = "toolatlas.paper_benchmark:main"
 
 [tool.hatch.build.targets.wheel]

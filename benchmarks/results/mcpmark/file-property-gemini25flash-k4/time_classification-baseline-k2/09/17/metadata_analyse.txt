@@ -1,0 +1,2 @@
+Oldest filename: file1.txt, creation time: Thu Sep 17 2026 13:01:14 GMT-0400 (Eastern Daylight Time)
+Latest filename: file3.txt, creation time: Thu Sep 17 2026 13:01:14 GMT-0400 (Eastern Daylight Time)

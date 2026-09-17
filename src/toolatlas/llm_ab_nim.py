@@ -105,10 +105,15 @@ def _openai_client():
         from openai import OpenAI
     except ImportError as exc:
         raise RuntimeError("pip install openai>=1.0 to run the NIM A/B harness") from exc
-    base_url = os.environ.get("NVIDIA_BASE_URL", DEFAULT_BASE_URL)
-    api_key = os.environ.get("NVIDIA_API_KEY", "")
+    # Generic LLM_* wins; NVIDIA_* kept as fallback. Works for NIM or any
+    # OpenAI-compatible endpoint (e.g. DeepSeek native API).
+    base_url = os.environ.get("LLM_BASE_URL") or os.environ.get("NVIDIA_BASE_URL", DEFAULT_BASE_URL)
+    base_url = base_url.strip().strip('"').strip("'")
+    api_key = os.environ.get("LLM_API_KEY") or os.environ.get("NVIDIA_API_KEY", "")
+    api_key = api_key.strip().strip('"').strip("'")
+    model_hint = os.environ.get("LLM_MODEL") or os.environ.get("NVIDIA_MODEL", "")
     if not api_key:
-        raise RuntimeError("set $env:NVIDIA_API_KEY before running the NIM A/B harness")
+        raise RuntimeError("set $env:LLM_API_KEY (or $env:NVIDIA_API_KEY) before running the harness")
     return OpenAI(base_url=base_url, api_key=api_key)
 
 
@@ -331,7 +336,7 @@ def main() -> None:
         type=Path,
         help="database to reuse; omit for a fresh, uniquely named database",
     )
-    parser.add_argument("--model", default=os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
+    parser.add_argument("--model", default=os.environ.get("LLM_MODEL") or os.environ.get("NVIDIA_MODEL", DEFAULT_MODEL))
     parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
     parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS)
     parser.add_argument("--workspace", default="complex_workspace")
