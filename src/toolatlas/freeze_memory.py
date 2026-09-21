@@ -71,10 +71,21 @@ def freeze_memory(source: str | Path, output: str | Path) -> dict:
         try:
             with target:
                 connection.backup(target)
+            # Keep the frozen copy in rollback-journal mode so no WAL/SHM
+            # sidecars accompany it; evaluation rejects sidecars if present.
+            target.execute("PRAGMA journal_mode=DELETE")
+            target.execute("PRAGMA wal_checkpoint(TRUNCATE)")
         finally:
             target.close()
     finally:
         connection.close()
+    for sidecar in (dst.parent / f"{dst.name}{suffix}"
+                    for suffix in ("-wal", "-shm", "-journal")):
+        try:
+            if sidecar.exists():
+                sidecar.unlink()
+        except OSError:
+            pass
 
     frozen = sqlite3.connect(f"file:{dst.resolve()}?mode=ro", uri=True, timeout=10)
     try:
@@ -94,6 +105,40 @@ def freeze_memory(source: str | Path, output: str | Path) -> dict:
         "stats": _logical_stats(dst),
     }
     return record
+
+
+def sidecar_paths(path: str | Path) -> list[Path]:
+    """WAL/SHM/journal sidecars that must not exist for a frozen database."""
+    base = Path(path)
+    return [base.parent / f"{base.name}{suffix}" for suffix in ("-wal", "-shm", "-journal")]
+
+
+def check_no_sidecars(path: str | Path) -> list[str]:
+    """Return sidecar names present next to a frozen database (empty is good)."""
+    return [str(p) for p in sidecar_paths(path) if p.exists()]
+
+
+def verify_frozen_unchanged(path: str | Path, expected_sha256: str) -> dict:
+    """Reject evaluation when the frozen DB hash changes or sidecars appear."""
+    target = Path(path)
+    if not target.is_file():
+        raise FileNotFoundError(f"frozen database not found: {target}")
+    actual = _sha256(target)
+    sidecars = check_no_sidecars(target)
+    if actual != expected_sha256:
+        raise RuntimeError(
+            f"frozen memory changed during evaluation: expected {expected_sha256}, got {actual}")
+    if sidecars:
+        raise RuntimeError(f"frozen memory sidecars appeared: {sidecars}")
+    frozen = sqlite3.connect(f"file:{target.resolve()}?mode=ro", uri=True, timeout=10)
+    try:
+        frozen.execute("PRAGMA query_only=ON")
+        integrity = frozen.execute("PRAGMA integrity_check").fetchall()
+    finally:
+        frozen.close()
+    if integrity != [("ok",)]:
+        raise RuntimeError(f"frozen database failed integrity_check: {integrity!r}")
+    return {"frozen_sha256": actual, "integrity_check": "ok", "sidecars": sidecars}
 
 
 def main(argv: list[str] | None = None) -> int:

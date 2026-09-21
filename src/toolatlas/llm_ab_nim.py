@@ -21,6 +21,7 @@ from .filesystem_demo import (
 from .memory_server import create_memory_server
 from .memory_paths import fresh_memory_path
 from .readonly_benchmark import READ_ONLY_TOOLS, _extract_integer, _first_path, _value
+from .tool_filter import filter_tools_by_playbook
 
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_MODEL = "moonshotai/kimi-k3"
@@ -279,7 +280,7 @@ async def run_nim_ab(
             )
             baseline_elapsed = time.perf_counter() - started
 
-            # Arm B: get_guidance once before acting, then same read tools.
+            # Arm B: get_guidance once before acting, then pruned read tools.
             guidance_result = await memory.call_tool(
                 "get_guidance", {"task": task_def["task"], "top_k": 2, "read_budget": 6}
             )
@@ -287,10 +288,11 @@ async def run_nim_ab(
             last_guidance = guidance
             playbook = guidance.get("playbook", [])
             assisted_prompt = SYSTEM_PROMPT + f"\nLearned playbook for this task: {json.dumps(playbook)}"
+            toolatlas_tools, _ = filter_tools_by_playbook(openai_tools, guidance)
             toolatlas_audit = NIMReadOnlyAudit(filesystem)
             started = time.perf_counter()
             assisted = await _run_llm_agent(
-                model, temperature, max_steps, assisted_prompt, openai_tools,
+                model, temperature, max_steps, assisted_prompt, toolatlas_tools,
                 toolatlas_audit, root, task_def["task"], task_def["field"],
             )
             toolatlas_elapsed = time.perf_counter() - started

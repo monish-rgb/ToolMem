@@ -1,0 +1,2 @@
+Oldest filename: bear.jpg, Creation time: Mon Sep 21 2026 05:38:43 GMT-0400 (Eastern Daylight Time)
+Latest filename: sg.jpg, Creation time: Mon Sep 21 2026 05:38:43 GMT-0400 (Eastern Daylight Time)

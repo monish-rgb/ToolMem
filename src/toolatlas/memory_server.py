@@ -46,7 +46,7 @@ candidates and is safe to expose.
 def create_memory_server(
     path: str | Path | None = None, read_only: bool = False
 ) -> MCPServer:
-    store = ToolMemory(path)
+    store = ToolMemory(path, read_only=read_only)
     server = MCPServer("toolatlas-memory")
 
     if not read_only:
@@ -112,19 +112,69 @@ def create_memory_server(
                 "execution_ids": trace.source_executions,
             }
 
+        @server.tool()
+        def induce_reflected(
+            task_id: str,
+            summary: str,
+            rollouts: list[dict[str, Any]],
+            task_level_tips: list[str] | None = None,
+            step_rationales: list[str] | None = None,
+            known_tools: list[str] | None = None,
+        ) -> dict[str, Any]:
+            """Induce one trace with LLM-reflected rationales and tips.
+
+            Write path only: excluded from the read-only evaluation profile.
+            Reflected content is re-sanitized and grounded by the store;
+            ungrounded entries are rejected, never stored.
+            """
+            trace = store.induce(
+                task_id,
+                summary,
+                [_rollout(task_id, summary, item) for item in rollouts],
+                task_level_tips=task_level_tips,
+                step_rationales=step_rationales,
+                induction="llm-reflected",
+                known_tools=known_tools,
+            )
+            return {
+                "schema_version": SCHEMA_VERSION,
+                "qid": trace.qid,
+                "confidence": trace.confidence,
+                "induction": trace.induction,
+                "success_count": trace.success_count,
+                "failure_count": trace.failure_count,
+                "execution_ids": trace.source_executions,
+            }
+
     @server.tool()
     def get_guidance(
         task: str,
         top_k: int = 3,
         read_budget: int = 8,
         max_age_days: int = 30,
+        token_budget: int = 384,
+        embed_mode: str = "lexical",
     ) -> dict[str, Any]:
-        """Traverse tool-side memory and return task-conditioned tool guidance."""
+        """Traverse tool-side memory and return task-conditioned tool guidance.
+
+        ``token_budget`` caps the rendered guidance size so online input
+        cost stays bounded (plan Phase 2). Empty retrieval stays empty:
+        no generic advice is ever invented. ``embed_mode="embedding"`` ranks
+        seeds with the deterministic credential-free hash embedder blended
+        with lexical scores; the mode is recorded in the traversal audit.
+        """
+        embedder: Any = None
+        if embed_mode == "embedding":
+            from .embeddings import HashEmbedder
+            embedder = HashEmbedder()
         return store.guide(
             task,
             top_k=top_k,
             read_budget=read_budget,
             max_age_days=max_age_days,
+            token_budget=token_budget,
+            embed_mode=embed_mode,
+            embedder=embedder,
         )
 
     @server.tool()

@@ -43,6 +43,10 @@ from .filesystem_demo import filesystem_server_path
 from .llm_ab_nim import _openai_client
 from .memory_server import create_memory_server
 from .readonly_benchmark import _value
+from .guidance_render import estimate_tokens as estimate_guidance_tokens
+from .guidance_render import render_compact_block
+from .result_limit import truncate_result
+from .tool_filter import estimate_schema_tokens, filter_tools_by_playbook
 
 SNAPSHOT_SHA256 = "99d5449cef45bfcda6e5260f6ef4cd356bdbae59818d37ffa840054cdee19ec4"
 PROVIDER = "io.github.modelcontextprotocol/server-filesystem"
@@ -63,13 +67,19 @@ TRAIN_SUMMARIES = {
 @dataclass
 class CallLog:
     calls: list[str] = field(default_factory=list)
+    failed_provider_calls: list[str] = field(default_factory=list)
     prompt_tokens: int = 0
     completion_tokens: int = 0
     raw_usage: list[dict[str, Any]] = field(default_factory=list)
+    request_rows: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def total_tokens(self) -> int:
         return self.prompt_tokens + self.completion_tokens
+
+    @property
+    def failed_calls(self) -> int:
+        return len(self.failed_provider_calls)
 
 
 def _content(result: Any) -> str:
@@ -223,23 +233,52 @@ TASKS_DIR: Path = Path("")
 
 async def run_llm_agent(model: str, temperature: float, max_steps: int, system_prompt: str,
                         openai_tools: list[dict[str, Any]], client: Client,
-                        task_text: str, root: Path) -> tuple[CallLog, str]:
+                        task_text: str, root: Path,
+                        ledger_context: dict[str, Any] | None = None,
+                        result_limit: int = 8000) -> tuple[CallLog, str]:
     from .gemini_rest import GeminiRestClient, provider_name
-    use_gemini = provider_name() == "gemini"
+    from .token_usage import RequestLedger, as_token_usage
+    provider = provider_name()
+    use_gemini = provider == "gemini"
     llm = GeminiRestClient(model=model) if use_gemini else _openai_client()
     log = CallLog()
+    ledger = RequestLedger()
+    ctx = ledger_context or {}
+    experiment_id = str(ctx.get("experiment_id", "mcpmark_file_property_ab"))
+    ledger_task = str(ctx.get("task_id", ""))
+    arm = str(ctx.get("arm", ""))
+    attempt_no = int(ctx.get("attempt", 0))
+
+    def _record_request(payload: Any, *, ok: bool = True, error: str = "",
+                        is_retry: bool = False) -> None:
+        usage = as_token_usage(payload, provider)
+        record = ledger.log(
+            experiment_id=experiment_id, task_id=ledger_task, arm=arm,
+            attempt=attempt_no, model=model, provider=provider,
+            usage=usage, ok=ok, is_retry=is_retry, error=error)
+        log.request_rows.append(record.to_dict())
+        log.raw_usage.append(usage.to_dict())
+        if usage.is_complete:
+            log.prompt_tokens += usage.input_tokens or 0
+            log.completion_tokens += usage.output_tokens or 0
+
     if use_gemini:
         contents: list[dict[str, Any]] = [
             {"role": "user", "parts": [{"text": f"{task_text}\n\nWorkspace root: {root}"}]}]
         steps = 0
         while steps < max_steps:
             steps += 1
-            response = await asyncio.to_thread(
-                llm.generate, system_prompt, contents, openai_tools, temperature, 1024)
-            log.prompt_tokens += response["prompt_tokens"]
-            log.completion_tokens += response["completion_tokens"]
-            log.raw_usage.append({"prompt_tokens": response["prompt_tokens"],
-                                  "completion_tokens": response["completion_tokens"]})
+            try:
+                response = await asyncio.to_thread(
+                    llm.generate, system_prompt, contents, openai_tools, temperature, 1024)
+            except Exception as exc:
+                _record_request(None, ok=False, error=f"{type(exc).__name__}: {exc}",
+                                is_retry=steps > 1)
+                raise
+            _record_request(response.get("usage") or response.get("raw_usage") or {
+                "promptTokenCount": response.get("prompt_tokens"),
+                "candidatesTokenCount": response.get("completion_tokens")},
+                is_retry=False)
             if not response["tool_calls"]:
                 return log, response["text"]
             # Echo raw parts verbatim: preserves thoughtSignature required by Gemini 3+.
@@ -255,11 +294,14 @@ async def run_llm_agent(model: str, temperature: float, max_steps: int, system_p
                     log.calls.append(tc["name"])
                     payload = _content(result) or str(_value(result))
                     if result.is_error:
+                        log.failed_provider_calls.append(tc["name"])
                         payload = f"MCP tool error: {payload}"
                 except Exception as exc:
+                    log.calls.append(tc["name"])
+                    log.failed_provider_calls.append(tc["name"])
                     payload = f"MCP tool error: {exc}"
                 response_parts.append({"functionResponse": {
-                    "name": tc["name"], "response": {"result": payload[:8000]}}})
+                    "name": tc["name"], "response": {"result": truncate_result(payload, result_limit)}}})
             contents.append({"role": "user", "parts": response_parts})
         return log, ""
     messages: list[dict[str, Any]] = [
@@ -268,19 +310,21 @@ async def run_llm_agent(model: str, temperature: float, max_steps: int, system_p
     steps = 0
     while steps < max_steps:
         steps += 1
-        response = await asyncio.to_thread(
-            llm.chat.completions.create, model=model, messages=messages,
-            tools=openai_tools or None, tool_choice="auto" if openai_tools else "none",
-            temperature=temperature, max_tokens=1024)
+        try:
+            response = await asyncio.to_thread(
+                llm.chat.completions.create, model=model, messages=messages,
+                tools=openai_tools or None, tool_choice="auto" if openai_tools else "none",
+                temperature=temperature, max_tokens=1024)
+        except Exception as exc:
+            _record_request(None, ok=False, error=f"{type(exc).__name__}: {exc}",
+                            is_retry=steps > 1)
+            raise
         usage = getattr(response, "usage", None)
-        if usage:
-            log.prompt_tokens += getattr(usage, "prompt_tokens", 0) or 0
-            log.completion_tokens += getattr(usage, "completion_tokens", 0) or 0
-            try:
-                log.raw_usage.append(usage.model_dump())
-            except Exception:
-                log.raw_usage.append({"prompt_tokens": log.prompt_tokens,
-                                      "completion_tokens": log.completion_tokens})
+        try:
+            raw = usage.model_dump() if usage is not None and hasattr(usage, "model_dump") else usage
+        except Exception:
+            raw = None
+        _record_request(raw)
         choice = response.choices[0].message
         if not choice.tool_calls:
             return log, choice.content or ""
@@ -298,21 +342,26 @@ async def run_llm_agent(model: str, temperature: float, max_steps: int, system_p
                 log.calls.append(tc.function.name)
                 payload = _content(result) or str(_value(result))
                 if result.is_error:
+                    log.failed_provider_calls.append(tc.function.name)
                     payload = f"MCP tool error: {payload}"
             except Exception as exc:
+                log.calls.append(tc.function.name)
+                log.failed_provider_calls.append(tc.function.name)
                 payload = f"MCP tool error: {exc}"
-            messages.append({"role": "tool", "tool_call_id": tc.id, "content": payload[:8000]})
+            messages.append({"role": "tool", "tool_call_id": tc.id, "content": truncate_result(payload, result_limit)})
     return log, ""
 
 
 async def eval_attempt(task: str, arm: str, attempt: int, model: str, temperature: float,
-                       snapshot: Path, workdir: Path, frozen_db: Path, out_root: Path) -> dict[str, Any]:
+                        snapshot: Path, workdir: Path, frozen_db: Path, out_root: Path,
+                        guidance_cap: int = 384,
+                        result_limit: int = 8000) -> dict[str, Any]:
     from .filesystem_demo import filesystem_server_path as _fsp
     root = restore_snapshot(snapshot, out_root / f"{task}-{arm}-k{attempt}")
     node = shutil.which("node")
     fs_params = StdioServerParameters(
         command=node, args=[str(_fsp(Path.cwd()).resolve()), str(root)])
-    memory_server = create_memory_server(frozen_db)
+    memory_server = create_memory_server(frozen_db, read_only=True)
     memory_calls = 0
     injected_guidance: dict[str, Any] | None = None
     started = time.perf_counter()
@@ -322,21 +371,48 @@ async def eval_attempt(task: str, arm: str, attempt: int, model: str, temperatur
             "name": t.name, "description": t.description or "",
             "parameters": t.input_schema or {"type": "object", "properties": {}}}} for t in listed.tools]
         prompt = SYSTEM_PROMPT
+        guidance_text = ""
+        guidance_tokens_estimate = 0
+        schema_audit: dict[str, Any] | None = None
+        schema_tokens_before = estimate_schema_tokens(openai_tools)
+        schema_tokens_after = schema_tokens_before
+        agent_tools = openai_tools
         if arm == "toolatlas":
             guidance = _value(await memory.call_tool(
-                "get_guidance", {"task": TRAIN_SUMMARIES[task], "top_k": 3, "read_budget": 8}))
+                "get_guidance", {"task": TRAIN_SUMMARIES[task], "top_k": 3,
+                                 "read_budget": 8, "token_budget": 384}))
             memory_calls += 1
             injected_guidance = guidance.get("playbook", [])
-            prompt += f"\nLearned playbook for this task family: {json.dumps(injected_guidance)}"
+            guidance_text = render_compact_block(guidance, token_budget=guidance_cap)
+            guidance_tokens_estimate = estimate_guidance_tokens(guidance_text)
+            if guidance_text:
+                prompt += f"\n{guidance_text}"
+            agent_tools, schema_audit = filter_tools_by_playbook(openai_tools, guidance)
+            schema_tokens_after = estimate_schema_tokens(agent_tools)
         task_text = (TASKS_DIR / task / "description.md").read_text()
-        log, final = await run_llm_agent(model, temperature, 30, prompt, openai_tools, client, task_text, root)
+        log, final = await run_llm_agent(
+            model, temperature, 30, prompt, agent_tools, client, task_text, root,
+            {"experiment_id": "mcpmark_file_property_ab", "task_id": task,
+             "arm": arm, "attempt": attempt},
+            result_limit=result_limit)
     passed, output = run_verifier(TASKS_DIR / task / "verify.py", root)
+    authoritative = all((row.get("usage") or {}).get("has_authoritative_input")
+                        for row in log.request_rows) if log.request_rows else False
     return {"task": task, "arm": arm, "attempt": attempt, "passed": passed,
             "provider_tool_calls": len(log.calls), "memory_tool_calls": memory_calls,
             "total_mcp_calls": len(log.calls) + memory_calls,
+            "failed_provider_calls": len(log.failed_provider_calls),
             "tools_used": log.calls, "prompt_tokens": log.prompt_tokens,
             "completion_tokens": log.completion_tokens, "total_tokens": log.total_tokens,
-            "raw_usage": log.raw_usage, "injected_guidance": injected_guidance,
+            "raw_usage": log.raw_usage, "request_rows": log.request_rows,
+            "model_requests": len(log.request_rows),
+            "has_complete_input_usage": authoritative,
+            "injected_guidance": injected_guidance,
+            "guidance_text": guidance_text,
+            "guidance_tokens_estimate": guidance_tokens_estimate,
+            "schema_pruning_audit": schema_audit,
+            "schema_tokens_before": schema_tokens_before,
+            "schema_tokens_after": schema_tokens_after,
             "seconds": round(time.perf_counter() - started, 1),
             "final_text": final[:500], "verifier_output": output[-500:]}
 
@@ -469,13 +545,15 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
         code_rev = "unknown"
     manifest = {"model": args.model, "temperature": args.temperature, "k": args.k,
                 "max_steps": 30, "provider": provider_name(),
+                "guidance_cap": args.guidance_cap, "result_limit": args.result_limit,
                 "snapshot_sha256": SNAPSHOT_SHA256, "code_rev": code_rev,
                 "claim_scope": "official_snapshot_and_verifier_file_property_slice_frozen_memory_real_llm",
                 "train_eval_overlap": "same-task deterministic training; label as same-task reuse, not held-out"}
     manifest_path = out_root / "manifest.json"
     if manifest_path.is_file():
         prior = json.loads(manifest_path.read_text())
-        mismatched = [key for key in ("model", "temperature", "k", "provider", "snapshot_sha256", "code_rev")
+        mismatched = [key for key in ("model", "temperature", "k", "provider", "guidance_cap",
+                                       "result_limit", "snapshot_sha256", "code_rev")
                       if prior.get(key) != manifest[key]]
         if mismatched:
             raise SystemExit(
@@ -487,12 +565,18 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
     train_db = out_root / "train-memory.db"
     frozen_db = out_root / "frozen-memory.db"
     partial_log = out_root / "attempts_partial.jsonl"
+    freeze_record: dict[str, Any] = {}
     if args.resume and frozen_db.is_file():
         print("resume: reusing frozen memory, skipping training", flush=True)
         memory_server = create_memory_server(frozen_db)
         async with Client(memory_server) as memory:
             stats = _value(await memory.call_tool("memory_stats", {}))
         train_report = [{"resumed": True}]
+        digest = hashlib.sha256()
+        with open(frozen_db, "rb") as handle:
+            for chunk in iter(lambda: handle.read(65536), b""):
+                digest.update(chunk)
+        freeze_record = {"resumed": True, "frozen_sha256": digest.hexdigest()}
     else:
         if train_db.exists():
             train_db.unlink()
@@ -515,7 +599,10 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
             guidance_check = _value(await memory.call_tool(
                 "get_guidance", {"task": TRAIN_SUMMARIES["size_classification"], "top_k": 3, "read_budget": 8}))
             stats = _value(await memory.call_tool("memory_stats", {}))
-        shutil.copyfile(train_db, frozen_db)
+        # Freeze via checkpoint + backup API (never a raw file copy: WAL
+        # content not yet checkpointed would silently vanish from the copy).
+        from .freeze_memory import freeze_memory
+        freeze_record = freeze_memory(train_db, frozen_db)
         if partial_log.is_file():
             partial_log.unlink()
 
@@ -541,7 +628,9 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
                     print(f"[{task} {arm} k={attempt}/{args.k}] running...", flush=True)
                     record = await eval_attempt(
                         task, arm, attempt, args.model, args.temperature,
-                        snapshot, out_root, frozen_db, out_root)
+                        snapshot, out_root, frozen_db, out_root,
+                        guidance_cap=args.guidance_cap,
+                        result_limit=args.result_limit)
                     attempts.append(record)
                     fh.write(json.dumps(record) + "\n")
                     fh.flush()
@@ -559,11 +648,16 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
                 "avg_tokens": round(sum(tokens) / len(tokens), 1) if any(tokens) else 0}
 
     summary = [summarize(t, a) for t in tasks for a in ("baseline", "toolatlas")]
+    from .freeze_memory import verify_frozen_unchanged
+    frozen_check = verify_frozen_unchanged(
+        frozen_db, freeze_record.get("frozen_sha256", ""))
     report = {"benchmark": "mcpmark_file_property_llm_ab", "model": args.model,
               "temperature": args.temperature, "k": args.k,
               "manifest": manifest,
               "snapshot_sha256": SNAPSHOT_SHA256, "frozen_memory_stats": stats,
-              "training": train_report, "attempts": attempts, "summary": summary}
+              "training": train_report, "freeze": freeze_record,
+              "frozen_post_eval": frozen_check,
+              "attempts": attempts, "summary": summary}
     (out_root / "report.json").write_text(json.dumps(report, indent=2))
     lines = ["# MCPMark file_property LLM A/B", "",
              f"Model: {args.model}, temperature {args.temperature}, k={args.k}", "",
@@ -584,6 +678,10 @@ def main() -> None:
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL") or os.environ.get("NVIDIA_MODEL", "deepseek-chat"))
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--k", type=int, default=4)
+    parser.add_argument("--guidance-cap", type=int, default=384,
+                        help="post-render cap for the compact injected guidance block (Plan 1 tuning: 128/256)")
+    parser.add_argument("--result-limit", type=int, default=8000,
+                        help="shared deterministic tool-result char limit, both arms (Plan 2 ablation)")
     parser.add_argument("--resume", action="store_true",
                         help="reuse frozen memory and skip attempts already in attempts_partial.jsonl")
     parser.add_argument("--preflight", action="store_true",

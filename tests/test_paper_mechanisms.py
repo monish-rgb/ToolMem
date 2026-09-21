@@ -356,18 +356,22 @@ async def test_reverification_due_served_read_only(tmp_path):
 
 # -- integration template ------------------------------------------------------------
 
-def test_template_orders_conventions_avoid_sequence():
+def test_template_orders_sequence_avoid_verify():
     block = format_guidance_block({
         "seed_candidates": [{"summary": "Prior", "confidence": 0.5}],
         "playbook": [{"tool": "alpha", "rationale": "do it"}],
         "avoid": [{"tool": "beta", "caution": "beta rejects empties"}],
-        "conventions": [{"text": "Scope first", "source": "strategy_1"}],
+        "conventions": [{"text": "Verify the result", "source": "strategy_1"}],
     })
     positions = [
-        block.index("Conventions"),
-        block.index("Avoid"),
-        block.index("Suggested tool sequence"),
-        block.index("related prior task"),
+        block.index("1. alpha"),
+        block.index("Avoid:"),
+        block.index("Verify:"),
     ]
     assert positions == sorted(positions)
     assert block.startswith("[ToolAtlas")
+    # Carriage rule: no prior-task summaries, confidence labels, or wrapper.
+    assert "Prior" not in block
+    assert "confidence" not in block
+    assert "related prior task" not in block
+    assert "End of ToolAtlas guidance" not in block

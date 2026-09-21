@@ -1,0 +1,244 @@
+{
+  "experiment_id": "filesystem-input-tokens-v1",
+  "protocol_version": "toolatlas-input-tokens-v1",
+  "derived_from": "filesystem-verified-v1",
+  "upstream_sha": "cd45b7f57923b9b3985467f5139927575f83141c",
+  "task_suite": "standard",
+  "service": "filesystem",
+  "split_rule": "SHA256(\"toolatlas-mcpmark-filesystem-v1\" + task_id); lowest hash per category -> training",
+  "split_label": "held-out-task, same-service/category-covered split (NOT cross-environment)",
+  "train_tasks": [
+    {
+      "task_id": "desktop/project_management",
+      "category": "desktop",
+      "hash": "0cda21993504d6184f008fb73eab146a1f4215ecab490c9e6196f13c459a093d"
+    },
+    {
+      "task_id": "desktop_template/contact_information",
+      "category": "desktop_template",
+      "hash": "130c614bfb2aa50432a92cd88bc03794af492863b0ff788badb390a1493c61ab"
+    },
+    {
+      "task_id": "file_context/file_splitting",
+      "category": "file_context",
+      "hash": "22dbdcbdb9e71fb666835015936da5760a32616204baec658c9c9c53c7daf615"
+    },
+    {
+      "task_id": "file_property/size_classification",
+      "category": "file_property",
+      "hash": "0acd6a6ebee854182ce3374982747df157ce9d61d90d80e002948c3223a1be86"
+    },
+    {
+      "task_id": "folder_structure/structure_mirror",
+      "category": "folder_structure",
+      "hash": "41ff595580fabbf8e708237aeb0fd85805919d20e53c63eb54b043340ab6b252"
+    },
+    {
+      "task_id": "legal_document/dispute_review",
+      "category": "legal_document",
+      "hash": "3c0bd6699ce8c340c3d96059dbdd4fd91f5ff8e3763178d919668add6189a11b"
+    },
+    {
+      "task_id": "papers/organize_legacy_papers",
+      "category": "papers",
+      "hash": "08a469b310e5c4c77a0442311b67de60b33e5dc1b39a7356f2cc97db5c8e5ed6"
+    },
+    {
+      "task_id": "student_database/gradebased_score",
+      "category": "student_database",
+      "hash": "4daf74dc2a662b8ce69214833a2c79cac37ceefeb81fa2de938a86e4475a539c"
+    },
+    {
+      "task_id": "threestudio/code_locating",
+      "category": "threestudio",
+      "hash": "1e4700a75bef1e98a51c1671e548212a94a3bd3d8e6e3f54a3f8cfab0a544822"
+    },
+    {
+      "task_id": "votenet/debugging",
+      "category": "votenet",
+      "hash": "29229b7309353897aa17b76139e00e4e77b1d40c361fc42f602567301dfe3c81"
+    }
+  ],
+  "eval_tasks": [
+    {
+      "task_id": "desktop/music_report",
+      "category": "desktop",
+      "hash": "b74e0108089eef26420f563b57e9d8a6a020cf7f15e61e4541deceafa88763b8"
+    },
+    {
+      "task_id": "desktop/timeline_extraction",
+      "category": "desktop",
+      "hash": "9595ea4a4bfbec607aab1a50b70b2255a96fc1774543fb69f001e89638718652"
+    },
+    {
+      "task_id": "desktop_template/budget_computation",
+      "category": "desktop_template",
+      "hash": "b071fab193ad9ab035db09285fb248e541641c0a54eb595e27712e133ce136a5"
+    },
+    {
+      "task_id": "desktop_template/file_arrangement",
+      "category": "desktop_template",
+      "hash": "4f0cc6baf2e77686ab41f5d503cbbc4390d7adb9dea7bdc329651eb4e75eafa5"
+    },
+    {
+      "task_id": "file_context/duplicates_searching",
+      "category": "file_context",
+      "hash": "43761805e484f735bd570e40280425b30f20bc677f8747a3a35718cc87e96997"
+    },
+    {
+      "task_id": "file_context/file_merging",
+      "category": "file_context",
+      "hash": "970225a79eac0848d7a83ab504440e47c2ffc935bc2ffa35bef8da89f16a5115"
+    },
+    {
+      "task_id": "file_context/pattern_matching",
+      "category": "file_context",
+      "hash": "727850e5e4d54e61238a7553b6339cbf1da71ae14b6df47b0e394a52c3473f4e"
+    },
+    {
+      "task_id": "file_context/uppercase",
+      "category": "file_context",
+      "hash": "ade0738bc36c6aa2227ad55d3f9601033f67560da5eb4369cdbe413ac35ead36"
+    },
+    {
+      "task_id": "file_property/time_classification",
+      "category": "file_property",
+      "hash": "852befcb15d26a5de12f40a9004e9a4a01d6255f7ceb0cd25f45e87ebdbfa9f4"
+    },
+    {
+      "task_id": "folder_structure/structure_analysis",
+      "category": "folder_structure",
+      "hash": "5013aaf7ddb7849beecebf33d4c0e2f8598c1769f7759fffe6dcb0f880944edd"
+    },
+    {
+      "task_id": "legal_document/individual_comments",
+      "category": "legal_document",
+      "hash": "eaff552ce38eff14700a8cfbabb2e5f68e2fb3d06e4e61c11869798b55ac3a72"
+    },
+    {
+      "task_id": "legal_document/solution_tracing",
+      "category": "legal_document",
+      "hash": "a09410c86ebf982b8c7fdec64b44cf56dd4176936cde89b05df161bb9936fb17"
+    },
+    {
+      "task_id": "papers/author_folders",
+      "category": "papers",
+      "hash": "c848ebd5abaa8101375f64c3d010ce0a32bfe5ab67e431c194fa208f5ac45a9a"
+    },
+    {
+      "task_id": "papers/find_math_paper",
+      "category": "papers",
+      "hash": "530d36c27663c8a3ae24f0b09628281212a90ac021586faef3212dc884bc2168"
+    },
+    {
+      "task_id": "student_database/duplicate_name",
+      "category": "student_database",
+      "hash": "da133bc9ed1f4da3d206728317b79ee344cc525a570d14780f88367d54614f45"
+    },
+    {
+      "task_id": "student_database/english_talent",
+      "category": "student_database",
+      "hash": "e7df75daffff668331190b2739e69cff76503f5660c345c84fd255cebd7355c2"
+    },
+    {
+      "task_id": "threestudio/output_analysis",
+      "category": "threestudio",
+      "hash": "44877b810037ccbeeb9591586bd74351602a16c5731eb3b12e3646f236b458d9"
+    },
+    {
+      "task_id": "threestudio/requirements_completion",
+      "category": "threestudio",
+      "hash": "5fbae6da1fa9e46d8788f108f7fa254dfe38ef9d8bce5b064ba20c3941e05435"
+    },
+    {
+      "task_id": "votenet/dataset_comparison",
+      "category": "votenet",
+      "hash": "cb17aa4e6df78d2c22d3583dd9574b096b5d38ad3941f5657df9db79e4d59231"
+    },
+    {
+      "task_id": "votenet/requirements_writing",
+      "category": "votenet",
+      "hash": "54ef020995f242a55f0b016fb2baab9e412b78cae05cf19f6c0392d8ac3e04b0"
+    }
+  ],
+  "counts": {
+    "train_tasks": 10,
+    "eval_tasks": 20,
+    "training_attempts": 40,
+    "eval_attempts": 160
+  },
+  "attempts": {
+    "training_per_task": 4,
+    "eval_per_task_per_arm": 4,
+    "arms": [
+      "baseline",
+      "toolatlas"
+    ]
+  },
+  "primary_endpoint": {
+    "metric": "online_input_tokens",
+    "variant": "cached_inclusive",
+    "also_report": [
+      "uncached_billable",
+      "total_inference_tokens"
+    ],
+    "definition": "input_token_saving = baseline_online_input_tokens - toolatlas_online_input_tokens",
+    "unit": "provider-reported input tokens per attempt, summed per task-clustered analysis"
+  },
+  "model_provider_settings": {
+    "model": "TBD \u2014 lock exact model ID before first evaluation attempt",
+    "provider": "TBD \u2014 gemini | openai_compatible",
+    "adapter": "src/toolatlas/gemini_rest.py GeminiRestClient or OpenAI-compatible client",
+    "temperature": 0.0,
+    "reasoning_effort": "TBD \u2014 lock before first attempt",
+    "max_tokens": 1024,
+    "max_turns": 30,
+    "system_prompt_hash": "TBD \u2014 hash of the neutral baseline prompt",
+    "tool_schema_hash": "TBD \u2014 hash of exposed provider tools",
+    "snapshot_hash": "TBD \u2014 official task state archive hash",
+    "code_rev": "TBD \u2014 git rev-parse HEAD at lock time",
+    "integration_patch": "benchmarks/mcpmark/patches/0001-toolatlas-agent.patch",
+    "locked_note": "Changing model/provider/reasoning/budgets/prompts/code/image/schemas requires a new experiment ID."
+  },
+  "guidance_policy": {
+    "top_k": 3,
+    "read_budget": 8,
+    "token_budget": 384,
+    "assisted_memory_calls": 1,
+    "baseline_memory_calls": 0,
+    "empty_retrieval": "inject nothing; empty is valid, never generic advice",
+    "second_retrieval": "forbidden in the primary experiment"
+  },
+  "memory_policy": "train (learn mode, verified rollouts only) -> checkpoint/WAL-truncate/backup/integrity_check/hash -> frozen read-only (mode=read, exactly 1 get_guidance per assisted attempt; mode=off makes 0 memory calls)",
+  "retry_policy": "identical budgets and retry handling in both arms; retries are separate ledger rows",
+  "context_compaction_policy": "identical in both arms; no ToolAtlas-only truncation or caching",
+  "exclusion_rules": [
+    "attempts with missing authoritative input usage are excluded from the primary analysis but retained as diagnostics",
+    "infrastructure failures are reported both including and excluding the failure class",
+    "failed and timed-out attempts stay in the denominator for success rates"
+  ],
+  "success_margin": {
+    "non_inferiority_pp": 5,
+    "note": "ToolAtlas pass rate no more than 5pp below baseline on the 20-task study; tighter 2pp margin needs a larger set"
+  },
+  "statistics": {
+    "unit": "paired (task_id, attempt) blocks; uncertainty clustered by task",
+    "metrics": [
+      "mean",
+      "median",
+      "p90",
+      "total"
+    ],
+    "ci": "task-clustered bootstrap 95% confidence interval for mean input-token saving",
+    "success_rule": "lower CI bound > 0 AND success within the non-inferiority margin"
+  },
+  "claim_label": "On a pre-registered held-out subset of official MCPMark Filesystem tasks, the same model and agent use fewer online input tokens with frozen ToolAtlas guidance than without it, while maintaining non-inferior official-verifier success.",
+  "claim_scope_limits": [
+    "not an official MCPMark leaderboard score",
+    "not a full 127-task result",
+    "not a paper reproduction",
+    "not cross-environment unless environment instances are held out",
+    "no cost claim without training+provider+memory+token+latency costs"
+  ],
+  "status": "pre-registered \u2014 locked before any model execution; never change split after seeing results"
+}

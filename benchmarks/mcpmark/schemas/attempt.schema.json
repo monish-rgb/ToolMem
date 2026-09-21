@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolAtlas paired attempt record",
+  "type": "object",
+  "required": [
+    "experiment_id", "task_id", "arm", "attempt", "attempt_id",
+    "verifier_passed", "token_ledger", "mcp_events",
+    "provider_calls", "memory_calls", "total_mcp_calls",
+    "model", "provider", "frozen_memory_sha256", "terminal_status"
+  ],
+  "properties": {
+    "experiment_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "arm": {"enum": ["baseline", "toolatlas"]},
+    "attempt": {"type": "integer", "minimum": 1},
+    "attempt_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "verifier_passed": {"type": "boolean"},
+    "token_ledger": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["request_id", "usage"],
+        "properties": {
+          "request_id": {"type": "string"},
+          "is_retry": {"type": "boolean"},
+          "usage": {
+            "type": "object",
+            "required": ["usage_source", "has_authoritative_input", "raw"],
+            "properties": {
+              "input_tokens": {"type": ["integer", "null"]},
+              "cached_input_tokens": {"type": ["integer", "null"]},
+              "uncached_input_tokens": {"type": ["integer", "null"]},
+              "output_tokens": {"type": ["integer", "null"]},
+              "reasoning_tokens": {"type": ["integer", "null"]},
+              "total_tokens": {"type": ["integer", "null"]},
+              "usage_source": {"enum": ["provider", "tokenizer_estimate", "missing"]},
+              "provider_request_id": {"type": "string"},
+              "has_authoritative_input": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "mcp_events": {"type": "array"},
+    "provider_calls": {"type": "integer", "minimum": 0},
+    "memory_calls": {"type": "integer", "minimum": 0},
+    "total_mcp_calls": {"type": "integer", "minimum": 0},
+    "model": {"type": "string"},
+    "provider": {"type": "string"},
+    "frozen_memory_sha256": {"type": "string"},
+    "terminal_status": {
+      "enum": ["success", "agent_failure", "verifier_failure", "timeout", "setup_failure", "provider_mcp_failure", "cleanup_failure", "infrastructure_failure"]
+    }
+  }
+}

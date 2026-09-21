@@ -31,6 +31,14 @@ TRIGRAM_FALLBACK_THRESHOLD = 0.15
 MAX_PLAYBOOK_STEPS = 8
 MAX_AVOID_NOTES = 2
 MAX_CONVENTIONS = 3
+GUIDANCE_TOKEN_BUDGET = 384
+"""Default hard budget for injected online guidance (plan Phase 2).
+
+The guidance is beneficial only when the avoided context exceeds the
+guidance added to the prompt, so the injected block is capped. Training-only
+budget tuning (128/256/384/512) selects one budget which is then locked in
+the experiment manifest; 384 is the starting default.
+"""
 
 
 def _unique(values: Iterable[str]) -> list[str]:
@@ -141,12 +149,20 @@ def _confidence(successes: int, failures: int, *, boundary: bool = False) -> flo
 
 
 class ToolMemory:
-    """Lifecycle-aware, provider-side ToolAtlas graph stored in SQLite."""
+    """Lifecycle-aware, provider-side ToolAtlas graph stored in SQLite.
 
-    def __init__(self, path: str | Path | None = None) -> None:
+    ``read_only=True`` opens the database through SQLite URI ``mode=ro`` with
+    ``PRAGMA query_only=ON`` and rejects every mutation, so evaluation memory
+    is physically frozen (plan Phase 5).
+    """
+
+    def __init__(self, path: str | Path | None = None, read_only: bool = False) -> None:
         self.path = Path(path) if path else None
+        self.read_only = read_only
         self._lock = threading.RLock()
-        self._store = SQLiteStore(self.path) if self.path else None
+        self._store = SQLiteStore(self.path, read_only=read_only) if self.path else None
+        if read_only and self._store is None:
+            raise ValueError("read_only memory requires a database path")
         self.tools: dict[str, ToolNode] = {}
         self.traces: dict[str, TraceNode] = {}
         self.strategies: dict[str, StrategyNode] = {}
@@ -154,8 +170,14 @@ class ToolMemory:
         if self._store:
             self._load()
 
+    def _require_writable(self, operation: str) -> None:
+        if self.read_only:
+            raise RuntimeError(
+                f"frozen memory is read-only: {operation} rejected")
+
     def register_tools(self, specs: Iterable[ToolSpec]) -> None:
         """Register schemas and invalidate knowledge learned against older ones."""
+        self._require_writable("register_tools")
         with self._lock:
             for spec in specs:
                 fingerprint = _fingerprint(spec)
@@ -173,8 +195,21 @@ class ToolMemory:
                 node.status = "active"
             self.save()
 
-    def induce(self, task_id: str, summary: str, rollouts: list[Rollout]) -> TraceNode:
-        """Compress a verified rollout batch and update all three graph layers."""
+    def induce(self, task_id: str, summary: str, rollouts: list[Rollout], *,
+               task_level_tips: list[str] | None = None,
+               step_rationales: list[str] | None = None,
+               induction: str = "deterministic",
+               known_tools: list[str] | None = None) -> TraceNode:
+        """Compress a verified rollout batch and update all three graph layers.
+
+        ``task_level_tips`` and ``step_rationales`` accept LLM-reflected
+        content (see reflection.py): each entry is re-sanitized here and
+        rejected when it references tools outside the trace, so reflected
+        memory stays grounded. ``known_tools`` names the wider tool universe
+        for that check (defaults to the trace's own tools). Defaults preserve
+        the deterministic control.
+        """
+        self._require_writable("induce")
         if not rollouts:
             raise ValueError("at least one rollout is required")
         if not task_id.strip() or not summary.strip():
@@ -197,25 +232,57 @@ class ToolMemory:
             successful = [rollout for rollout in rollouts if rollout.resolved]
             backbone = min(successful or rollouts, key=lambda rollout: len(rollout.steps))
             total_steps = len(backbone.steps)
-            neutral_steps = [
-                ExecutionStep(
-                    step.tool,
-                    _intent_rationale(step.tool, step.rationale, position, total_steps),
-                )
-                for position, step in enumerate(backbone.steps)
-            ]
+            if step_rationales is not None:
+                if len(step_rationales) != total_steps:
+                    raise ValueError(
+                        f"step_rationales has {len(step_rationales)} entries for "
+                        f"{total_steps} backbone steps")
+                used_tool_set = {step.tool for rollout in rollouts for step in rollout.steps}
+                universe = set(known_tools) if known_tools else used_tool_set
+                cleaned_rationales = []
+                for position, raw in enumerate(step_rationales):
+                    cleaned = _generic_rationale(raw or "")
+                    if not cleaned:
+                        raise ValueError(f"step rationale {position} is empty after sanitization")
+                    strangers = [
+                        name for name in universe - {backbone.steps[position].tool}
+                        if re.search(rf"\b{re.escape(name)}\b", cleaned)]
+                    if strangers:
+                        raise ValueError(
+                            f"step rationale {position} references tools outside its step: {strangers}")
+                    cleaned_rationales.append(cleaned)
+                neutral_steps = [
+                    ExecutionStep(step.tool, rationale)
+                    for step, rationale in zip(backbone.steps, cleaned_rationales)
+                ]
+            else:
+                neutral_steps = [
+                    ExecutionStep(
+                        step.tool,
+                        _intent_rationale(step.tool, step.rationale, position, total_steps),
+                    )
+                    for position, step in enumerate(backbone.steps)
+                ]
             used_tools = _unique(step.tool for rollout in rollouts for step in rollout.steps)
+            if task_level_tips is not None:
+                distilled_tips = _unique(
+                    _generic_rationale(tip) for tip in task_level_tips if (tip or "").strip())
+                distilled_tips = [tip for tip in distilled_tips if tip][:5]
+            else:
+                distilled_tips = self._distill_tips(rollouts)
             success_count = len(successful)
             failure_count = len(rollouts) - success_count
             fingerprints = {
                 name: self.tools.get(name, ToolNode(name=name)).schema_fingerprint
                 for name in used_tools
             }
+            if induction not in ("deterministic", "llm-reflected"):
+                raise ValueError(f"unknown induction provenance: {induction!r}")
             trace = TraceNode(
                 qid=task_id,
                 summary=summary,
                 agent_neutral_trace=neutral_steps,
-                task_level_tips=self._distill_tips(rollouts),
+                task_level_tips=distilled_tips,
                 tools=used_tools,
                 source_executions=[rollout.execution_id for rollout in rollouts],
                 success_count=success_count,
@@ -224,6 +291,7 @@ class ToolMemory:
                 status="active",
                 tool_fingerprints=fingerprints,
                 last_verified_at=max(rollout.verified_at for rollout in rollouts),
+                induction=induction,
             )
             self.traces[task_id] = trace
 
@@ -297,18 +365,28 @@ class ToolMemory:
         read_budget: int = 8,
         max_age_days: int = DEFAULT_MAX_AGE_DAYS,
         token_budget: int | None = None,
+        embed_mode: str = "lexical",
+        embedder: Any | None = None,
     ) -> dict[str, Any]:
         """Perform an auditable bounded traversal over currently valid memory.
 
         Seed retrieval is lexical first; when nothing matches, a trigram
         fallback rescues paraphrased queries (still empty when truly
         unrelated — no generic advice is ever invented). ``token_budget``
-        optionally caps the rendered guidance size.
+        optionally caps the rendered guidance size. ``embed_mode="embedding"``
+        with an explicit ``embedder`` blends versioned embedding cosine with
+        lexical scores for seed ranking; the lexical/trigram path stays the
+        deterministic fallback and the chosen mode is recorded in the
+        traversal audit.
         """
         if top_k < 1 or read_budget < 1 or max_age_days < 1:
             raise ValueError("top_k, read_budget, and max_age_days must be positive")
         if token_budget is not None and token_budget < 1:
             raise ValueError("token_budget must be positive when set")
+        if embed_mode not in ("lexical", "embedding"):
+            raise ValueError("embed_mode must be 'lexical' or 'embedding'")
+        if embed_mode == "embedding" and embedder is None:
+            raise ValueError("embed_mode='embedding' requires an embedder")
         with self._lock:
             candidates = [
                 node for node in self.traces.values()
@@ -320,6 +398,21 @@ class ToolMemory:
             )
             seeds = [(sim, confidence, qid) for sim, confidence, qid in ranked[:top_k] if sim > 0]
             retrieval = "lexical"
+            if embed_mode == "embedding" and candidates:
+                from .embeddings import cosine_vec
+                query_vec = embedder.embed([task])[0]
+                summaries = [node.summary for node in candidates]
+                vectors = embedder.embed(summaries)
+                lexical_by_qid = {qid: sim for sim, _, qid in ranked}
+                blended = sorted(
+                    ((0.5 * lexical_by_qid[node.qid]
+                      + 0.5 * max(0.0, cosine_vec(query_vec, vector)),
+                      node.confidence, node.qid)
+                     for node, vector in zip(candidates, vectors)),
+                    reverse=True,
+                )
+                seeds = [(sim, confidence, qid) for sim, confidence, qid in blended[:top_k] if sim > 0]
+                retrieval = f"embedding-{embedder.version}"
             if not seeds:
                 fallback = sorted(
                     (
@@ -512,6 +605,7 @@ class ToolMemory:
         self, task_id: str, resolved: bool, verifier_type: str, observation: str = ""
     ) -> TraceNode:
         """Refresh a trace against current tool schemas after external verification."""
+        self._require_writable("reverify_trace")
         if not verifier_type.strip():
             raise ValueError("verifier_type is required")
         with self._lock:
@@ -558,6 +652,7 @@ class ToolMemory:
 
     def set_trace_status(self, task_id: str, status: str, reason: str) -> TraceNode:
         """Governance hook to quarantine or invalidate memory with an audit reason."""
+        self._require_writable("set_trace_status")
         if status not in GOVERNANCE_STATUSES:
             raise ValueError(f"status must be one of {sorted(GOVERNANCE_STATUSES)}")
         if not reason.strip():
@@ -609,6 +704,30 @@ class ToolMemory:
         node = self.tools.get(name)
         return asdict(node) if node else None
 
+    def store_embedding(self, qid: str, model: str, version: str,
+                        vector: list[float]) -> None:
+        """Cache one provider vector for a known trace (writable only)."""
+        self._require_writable("store_embedding")
+        if qid not in self.traces:
+            raise ValueError(f"unknown trace: {qid}")
+        if self._store is None:
+            raise ValueError("embedding cache requires a database-backed memory")
+        self._store.save_embedding(qid, model, version, vector)
+
+    def get_embedding(self, qid: str, model: str, version: str) -> Any | None:
+        """Return the cached vector identity or None (lexical fallback).
+
+        Mismatched model/version and missing rows all return None so
+        retrieval never compares incomparable embedding spaces.
+        """
+        if self._store is None:
+            return None
+        vector = self._store.get_embedding(qid, model, version)
+        if not vector:
+            return None
+        from .embeddings import StoredEmbedding
+        return StoredEmbedding(qid=qid, model=model, version=version, vector=vector)
+
     def suggest_probes(self, name: str) -> dict[str, Any]:
         node = self.tools.get(name)
         if not node:
@@ -632,6 +751,8 @@ class ToolMemory:
     def save(self) -> None:
         if not self._store:
             return
+        if self.read_only:
+            raise RuntimeError("frozen memory is read-only: mutation rejected")
         self._store.save(
             {
                 "tools": {key: asdict(value) for key, value in self.tools.items()},
@@ -676,6 +797,7 @@ class ToolMemory:
                 status_reason=value.get("status_reason", ""),
                 tool_fingerprints=value.get("tool_fingerprints", {}),
                 last_verified_at=value.get("last_verified_at", utc_now()),
+                induction=value.get("induction", "deterministic"),
             )
             for key, value in payload["traces"].items()
         }

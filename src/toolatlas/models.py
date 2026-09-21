@@ -66,6 +66,7 @@ class TraceNode:
     status_reason: str = ""
     tool_fingerprints: dict[str, str] = field(default_factory=dict)
     last_verified_at: str = field(default_factory=utc_now)
+    induction: str = "deterministic"  # or "llm-reflected"
 
 
 @dataclass(slots=True)

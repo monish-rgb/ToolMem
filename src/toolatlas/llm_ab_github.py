@@ -22,6 +22,7 @@ from .github_demo import (
 )
 from .llm_ab_nim import DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_TEMPERATURE, _openai_client, _parse_answer_int
 from .memory_server import create_memory_server
+from .tool_filter import filter_tools_by_playbook
 
 DEFAULT_MAX_STEPS = 8
 
@@ -130,10 +131,49 @@ async def _independent_count(audit: GitHubAudit, kind: str, owner: str, repo: st
 
 
 async def _run_llm_agent(model, temperature, max_steps, system_prompt, openai_tools, audit, owner, repo, task):
+    from .gemini_rest import GeminiRestClient, provider_name
+    from .result_limit import truncate_result
+    provider = provider_name()
+    use_gemini = provider == "gemini"
+    user_prompt = f"{task['task']}. Repository: {owner}/{repo} (pass as owner/repo args). Report only the integer."
+
+    if use_gemini:
+        llm = GeminiRestClient(model=model)
+        contents: list[dict[str, Any]] = [{"role": "user", "parts": [{"text": user_prompt}]}]
+        steps = 0
+        while steps < max_steps:
+            steps += 1
+            response = await asyncio.to_thread(
+                llm.generate, system_prompt, contents, openai_tools, temperature, 512
+            )
+            if not response["tool_calls"]:
+                text = response["text"]
+                return {"final_text": text, "answer": _parse_answer_int(text), "steps": steps}
+            contents.append({"role": "model", "parts": response["raw_parts"]})
+            response_parts = []
+            for tc in response["tool_calls"]:
+                name = tc["name"]
+                try:
+                    args = json.loads(tc["args"] or "{}")
+                except json.JSONDecodeError:
+                    args = {}
+                try:
+                    result = await audit.call(name, args)
+                    payload = str(_value(result))
+                    if result.is_error:
+                        payload = f"MCP tool error: {payload}"
+                except PermissionError as exc:
+                    payload = f"Blocked: {exc}"
+                except Exception as exc:
+                    payload = f"MCP tool error: {exc}"
+                response_parts.append({"functionResponse": {"name": name, "response": {"result": truncate_result(payload, 8000)}}})
+            contents.append({"role": "user", "parts": response_parts})
+        return {"final_text": "", "answer": None, "steps": steps}
+
     client = _openai_client()
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"{task['task']}. Repository: {owner}/{repo} (pass as owner/repo args). Report only the integer."},
+        {"role": "user", "content": user_prompt},
     ]
     steps = 0
     while steps < max_steps:
@@ -211,9 +251,10 @@ async def run_github_nim_ab(project_root, memory_path, owner, repo,
                 "get_guidance", {"task": "Inspect repository issues and recent commits for triage", "top_k": 3, "read_budget": 8}))
             last_guidance = guidance
             assisted_prompt = SYSTEM_PROMPT + f"\nLearned playbook: {json.dumps(guidance.get('playbook', []))}"
+            assisted_tools, _ = filter_tools_by_playbook(openai_tools, guidance)
             assisted_audit = GitHubAudit(github)
             started = time.perf_counter()
-            assisted = await _run_llm_agent(model, temperature, max_steps, assisted_prompt, openai_tools, assisted_audit, owner, repo, task)
+            assisted = await _run_llm_agent(model, temperature, max_steps, assisted_prompt, assisted_tools, assisted_audit, owner, repo, task)
             assisted_elapsed = time.perf_counter() - started
 
             def metrics(name, run, audit, elapsed):

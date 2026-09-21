@@ -121,12 +121,21 @@ class GeminiRestClient:
         calls = [{"name": part["functionCall"]["name"],
                   "args": json.dumps(part["functionCall"].get("args", {}))}
                  for part in parts if "functionCall" in part]
-        usage = data.get("usageMetadata", {})
+        usage = data.get("usageMetadata", {}) or {}
+        # Normalize per the shared token contract (Phase 1): preserve the raw
+        # provider object, never coerce missing fields to zero in `usage`.
+        from .token_usage import normalize_gemini_usage
+        normalized = normalize_gemini_usage(usage, str(data.get("responseId", "")))
         # Return raw parts so callers can echo them back verbatim. Gemini 3+
         # requires thoughtSignature round-tripping on functionCall parts.
         return {"text": text, "tool_calls": calls, "raw_parts": parts,
-                "prompt_tokens": usage.get("promptTokenCount", 0) or 0,
-                "completion_tokens": usage.get("candidatesTokenCount", 0) or 0}
+                "prompt_tokens": normalized.input_tokens or 0,
+                "completion_tokens": normalized.output_tokens or 0,
+                "total_tokens": normalized.total_tokens,
+                "usage": normalized.to_dict(),
+                "usage_source": normalized.usage_source,
+                "has_authoritative_input": normalized.has_authoritative_input,
+                "raw_usage": usage}
 
 
 def provider_name() -> str:

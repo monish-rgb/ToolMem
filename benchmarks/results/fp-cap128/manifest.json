@@ -1,0 +1,13 @@
+{
+  "model": "\"gemini-2.5-flash\"",
+  "temperature": 0.0,
+  "k": 4,
+  "max_steps": 30,
+  "provider": "gemini",
+  "guidance_cap": 128,
+  "result_limit": 8000,
+  "snapshot_sha256": "99d5449cef45bfcda6e5260f6ef4cd356bdbae59818d37ffa840054cdee19ec4",
+  "code_rev": "3d8bb378a7d875ed5c50dac3342589314521719b",
+  "claim_scope": "official_snapshot_and_verifier_file_property_slice_frozen_memory_real_llm",
+  "train_eval_overlap": "same-task deterministic training; label as same-task reuse, not held-out"
+}

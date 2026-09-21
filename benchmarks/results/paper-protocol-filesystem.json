@@ -2,7 +2,7 @@
   "schema_version": "1",
   "benchmark": "toolatlas_paper_protocol_filesystem_control",
   "paper": "arxiv:2607.11126",
-  "generated_at": "2026-09-19T08:30:44.118493+00:00",
+  "generated_at": "2026-09-21T19:16:30.739181+00:00",
   "runner": "deterministic_read_only_control",
   "claim_scope": "local_filesystem_control_not_full_paper_reproduction",
   "protocol": {
@@ -73,7 +73,7 @@
           "total_mcp_calls": 96,
           "mean_provider_tool_calls_per_run": 4.0,
           "mean_total_mcp_calls_per_run": 4.0,
-          "median_elapsed_ms": 26.253
+          "median_elapsed_ms": 40.686
         },
         "tasks": [
           {
@@ -98,7 +98,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.828
+                "elapsed_ms": 67.153
               },
               {
                 "passed": true,
@@ -113,7 +113,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 27.381
+                "elapsed_ms": 45.375
               },
               {
                 "passed": true,
@@ -128,7 +128,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.965
+                "elapsed_ms": 45.284
               },
               {
                 "passed": true,
@@ -143,7 +143,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.369
+                "elapsed_ms": 43.283
               }
             ]
           },
@@ -169,7 +169,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.25
+                "elapsed_ms": 44.77
               },
               {
                 "passed": true,
@@ -184,7 +184,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.32
+                "elapsed_ms": 45.572
               },
               {
                 "passed": true,
@@ -199,7 +199,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.737
+                "elapsed_ms": 40.891
               },
               {
                 "passed": true,
@@ -214,7 +214,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.228
+                "elapsed_ms": 40.735
               }
             ]
           },
@@ -240,7 +240,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.717
+                "elapsed_ms": 46.191
               },
               {
                 "passed": true,
@@ -255,7 +255,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.984
+                "elapsed_ms": 45.409
               },
               {
                 "passed": true,
@@ -270,7 +270,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.727
+                "elapsed_ms": 40.242
               },
               {
                 "passed": true,
@@ -285,7 +285,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.404
+                "elapsed_ms": 43.582
               }
             ]
           },
@@ -311,7 +311,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 29.786
+                "elapsed_ms": 36.375
               },
               {
                 "passed": true,
@@ -326,7 +326,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.652
+                "elapsed_ms": 36.178
               },
               {
                 "passed": true,
@@ -341,7 +341,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.978
+                "elapsed_ms": 39.084
               },
               {
                 "passed": true,
@@ -356,7 +356,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.095
+                "elapsed_ms": 39.538
               }
             ]
           },
@@ -382,7 +382,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.004
+                "elapsed_ms": 38.364
               },
               {
                 "passed": true,
@@ -397,7 +397,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.42
+                "elapsed_ms": 36.761
               },
               {
                 "passed": true,
@@ -412,7 +412,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.207
+                "elapsed_ms": 38.881
               },
               {
                 "passed": true,
@@ -427,7 +427,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.252
+                "elapsed_ms": 41.792
               }
             ]
           },
@@ -453,7 +453,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.972
+                "elapsed_ms": 40.637
               },
               {
                 "passed": true,
@@ -468,7 +468,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.255
+                "elapsed_ms": 39.804
               },
               {
                 "passed": true,
@@ -483,7 +483,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.319
+                "elapsed_ms": 37.372
               },
               {
                 "passed": true,
@@ -498,7 +498,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.696
+                "elapsed_ms": 38.621
               }
             ]
           }
@@ -518,7 +518,7 @@
           "total_mcp_calls": 72,
           "mean_provider_tool_calls_per_run": 2.0,
           "mean_total_mcp_calls_per_run": 3.0,
-          "median_elapsed_ms": 17.206
+          "median_elapsed_ms": 27.428
         },
         "tasks": [
           {
@@ -541,7 +541,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.152,
+                "elapsed_ms": 28.812,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -625,7 +625,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.441,
+                "elapsed_ms": 28.066,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -709,7 +709,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.658,
+                "elapsed_ms": 31.12,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -793,7 +793,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.228,
+                "elapsed_ms": 27.498,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -888,7 +888,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.747,
+                "elapsed_ms": 27.701,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -972,7 +972,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.388,
+                "elapsed_ms": 26.908,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1056,7 +1056,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.865,
+                "elapsed_ms": 33.786,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1140,7 +1140,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.281,
+                "elapsed_ms": 34.193,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1235,7 +1235,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.063,
+                "elapsed_ms": 27.358,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1319,7 +1319,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.751,
+                "elapsed_ms": 24.749,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1403,7 +1403,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.307,
+                "elapsed_ms": 25.206,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1487,7 +1487,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 18.846,
+                "elapsed_ms": 24.164,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1582,7 +1582,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 13.008,
+                "elapsed_ms": 26.011,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1666,7 +1666,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 13.322,
+                "elapsed_ms": 25.823,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1750,7 +1750,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.679,
+                "elapsed_ms": 24.322,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1834,7 +1834,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.187,
+                "elapsed_ms": 24.759,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1929,7 +1929,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 18.093,
+                "elapsed_ms": 33.344,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2013,7 +2013,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.055,
+                "elapsed_ms": 27.897,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2097,7 +2097,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 18.767,
+                "elapsed_ms": 27.132,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2181,7 +2181,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.261,
+                "elapsed_ms": 25.968,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2276,7 +2276,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.91,
+                "elapsed_ms": 30.62,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2360,7 +2360,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.277,
+                "elapsed_ms": 26.535,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2444,7 +2444,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.446,
+                "elapsed_ms": 30.896,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2528,7 +2528,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.701,
+                "elapsed_ms": 31.295,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2672,7 +2672,7 @@
           "total_mcp_calls": 96,
           "mean_provider_tool_calls_per_run": 4.0,
           "mean_total_mcp_calls_per_run": 4.0,
-          "median_elapsed_ms": 22.166
+          "median_elapsed_ms": 47.026
         },
         "tasks": [
           {
@@ -2697,7 +2697,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 41.709
+                "elapsed_ms": 68.734
               },
               {
                 "passed": true,
@@ -2712,7 +2712,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.477
+                "elapsed_ms": 43.501
               },
               {
                 "passed": true,
@@ -2727,7 +2727,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.598
+                "elapsed_ms": 40.477
               },
               {
                 "passed": true,
@@ -2742,7 +2742,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.156
+                "elapsed_ms": 41.472
               }
             ]
           },
@@ -2768,7 +2768,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.306
+                "elapsed_ms": 48.163
               },
               {
                 "passed": true,
@@ -2783,7 +2783,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.447
+                "elapsed_ms": 51.41
               },
               {
                 "passed": true,
@@ -2798,7 +2798,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.4
+                "elapsed_ms": 57.681
               },
               {
                 "passed": true,
@@ -2813,7 +2813,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.976
+                "elapsed_ms": 59.211
               }
             ]
           },
@@ -2839,7 +2839,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.025
+                "elapsed_ms": 46.819
               },
               {
                 "passed": true,
@@ -2854,7 +2854,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 19.344
+                "elapsed_ms": 47.234
               },
               {
                 "passed": true,
@@ -2869,7 +2869,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.183
+                "elapsed_ms": 54.319
               },
               {
                 "passed": true,
@@ -2884,7 +2884,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.096
+                "elapsed_ms": 50.553
               }
             ]
           },
@@ -2910,7 +2910,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.069
+                "elapsed_ms": 57.27
               },
               {
                 "passed": true,
@@ -2925,7 +2925,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.372
+                "elapsed_ms": 49.652
               },
               {
                 "passed": true,
@@ -2940,7 +2940,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.908
+                "elapsed_ms": 49.15
               },
               {
                 "passed": true,
@@ -2955,7 +2955,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.142
+                "elapsed_ms": 45.075
               }
             ]
           },
@@ -2981,7 +2981,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.511
+                "elapsed_ms": 41.263
               },
               {
                 "passed": true,
@@ -2996,7 +2996,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.699
+                "elapsed_ms": 44.301
               },
               {
                 "passed": true,
@@ -3011,7 +3011,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.865
+                "elapsed_ms": 43.214
               },
               {
                 "passed": true,
@@ -3026,7 +3026,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.501
+                "elapsed_ms": 46.257
               }
             ]
           },
@@ -3052,7 +3052,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.964
+                "elapsed_ms": 43.682
               },
               {
                 "passed": true,
@@ -3067,7 +3067,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.587
+                "elapsed_ms": 41.407
               },
               {
                 "passed": true,
@@ -3082,7 +3082,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 27.962
+                "elapsed_ms": 45.965
               },
               {
                 "passed": true,
@@ -3097,7 +3097,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.564
+                "elapsed_ms": 58.11
               }
             ]
           }
@@ -3117,7 +3117,7 @@
           "total_mcp_calls": 72,
           "mean_provider_tool_calls_per_run": 2.0,
           "mean_total_mcp_calls_per_run": 3.0,
-          "median_elapsed_ms": 15.131
+          "median_elapsed_ms": 34.096
         },
         "tasks": [
           {
@@ -3140,7 +3140,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.518,
+                "elapsed_ms": 29.042,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3224,7 +3224,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.092,
+                "elapsed_ms": 32.866,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3308,7 +3308,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.651,
+                "elapsed_ms": 30.295,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3392,7 +3392,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.32,
+                "elapsed_ms": 35.653,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3487,7 +3487,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 20.311,
+                "elapsed_ms": 43.922,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3571,7 +3571,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 13.893,
+                "elapsed_ms": 41.765,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3655,7 +3655,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 13.668,
+                "elapsed_ms": 39.282,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3739,7 +3739,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.673,
+                "elapsed_ms": 41.135,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3834,7 +3834,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.908,
+                "elapsed_ms": 30.585,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3918,7 +3918,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.17,
+                "elapsed_ms": 34.916,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4002,7 +4002,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.634,
+                "elapsed_ms": 33.659,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4086,7 +4086,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.296,
+                "elapsed_ms": 43.233,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4181,7 +4181,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.169,
+                "elapsed_ms": 31.768,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4265,7 +4265,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 13.982,
+                "elapsed_ms": 30.053,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4349,7 +4349,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.45,
+                "elapsed_ms": 28.646,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4433,7 +4433,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.195,
+                "elapsed_ms": 30.63,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4528,7 +4528,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.502,
+                "elapsed_ms": 27.558,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4612,7 +4612,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.171,
+                "elapsed_ms": 30.169,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4696,7 +4696,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 15.298,
+                "elapsed_ms": 34.532,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4780,7 +4780,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 14.621,
+                "elapsed_ms": 27.439,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4875,7 +4875,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.705,
+                "elapsed_ms": 37.12,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4959,7 +4959,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 18.268,
+                "elapsed_ms": 36.652,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -5043,7 +5043,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 17.864,
+                "elapsed_ms": 36.432,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -5127,7 +5127,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 16.459,
+                "elapsed_ms": 40.773,
                 "guidance": {
                   "seed_candidates": [
                     {

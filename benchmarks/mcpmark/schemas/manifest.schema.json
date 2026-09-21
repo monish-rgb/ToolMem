@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolAtlas input-token experiment manifest",
+  "type": "object",
+  "required": [
+    "experiment_id", "protocol_version", "upstream_sha", "task_suite", "service",
+    "split_rule", "train_tasks", "eval_tasks", "attempts",
+    "primary_endpoint", "model_provider_settings", "guidance_policy", "memory_policy"
+  ],
+  "properties": {
+    "experiment_id": {"type": "string", "minLength": 1},
+    "protocol_version": {"type": "string", "minLength": 1},
+    "upstream_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "task_suite": {"type": "string"},
+    "service": {"type": "string"},
+    "split_rule": {"type": "string"},
+    "train_tasks": {"type": "array", "minItems": 10, "maxItems": 10},
+    "eval_tasks": {"type": "array", "minItems": 20, "maxItems": 20},
+    "attempts": {
+      "type": "object",
+      "required": ["training_per_task", "eval_per_task_per_arm", "arms"],
+      "properties": {
+        "training_per_task": {"const": 4},
+        "eval_per_task_per_arm": {"const": 4},
+        "arms": {"const": ["baseline", "toolatlas"]}
+      }
+    },
+    "primary_endpoint": {
+      "type": "object",
+      "required": ["metric", "variant"],
+      "properties": {
+        "metric": {"const": "online_input_tokens"},
+        "variant": {"enum": ["cached_inclusive", "uncached_billable"]}
+      }
+    },
+    "model_provider_settings": {"type": "object"},
+    "guidance_policy": {
+      "type": "object",
+      "required": ["top_k", "read_budget", "token_budget"],
+      "properties": {
+        "top_k": {"const": 3},
+        "read_budget": {"const": 8},
+        "token_budget": {"const": 384}
+      }
+    },
+    "memory_policy": {"type": "string"}
+  }
+}

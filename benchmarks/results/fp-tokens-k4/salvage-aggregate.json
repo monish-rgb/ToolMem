@@ -1,0 +1,48 @@
+{
+ "variant": "cached_inclusive",
+ "baseline_input_tokens": {
+  "n": 8,
+  "mean": 93559.12,
+  "median": 48978.0,
+  "p90": 180697.9,
+  "total": 748473.0
+ },
+ "toolatlas_input_tokens": {
+  "n": 8,
+  "mean": 115196.12,
+  "median": 116383.0,
+  "p90": 181635.2,
+  "total": 921569.0
+ },
+ "mean_saving": -21637.0,
+ "saving_ci95": {
+  "low": -31827.25,
+  "high": -11446.75
+ },
+ "saving_percent": -23.13,
+ "paired_blocks": 8,
+ "baseline_success": {
+  "n": 8,
+  "passed": 3,
+  "pass_at_1": 0.375,
+  "pass_at_4": 0.5
+ },
+ "toolatlas_success": {
+  "n": 8,
+  "passed": 4,
+  "pass_at_1": 0.5,
+  "pass_at_4": 0.5
+ },
+ "success_rate_difference": 0.125,
+ "input_per_verified_success": {
+  "baseline": 178293.33,
+  "toolatlas": 177752.0
+ },
+ "offline_construction_input_tokens": 0,
+ "amortized_break_even_tasks": null,
+ "amortized_break_even_range": [
+  null,
+  null
+ ],
+ "primary_gate_mean_saving_positive": false
+}

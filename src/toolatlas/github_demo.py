@@ -54,17 +54,22 @@ def _value(result: Any) -> Any:
 
 
 def _test_repo() -> tuple[str, str]:
-    repo = os.environ.get("GITHUB_TEST_REPOSITORY", "")
+    repo = os.environ.get("GITHUB_TEST_REPOSITORY", "").strip()
+    if "github.com/" in repo:
+        repo = repo.split("github.com/")[-1]
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+    repo = repo.strip("/")
     if "/" in repo:
-        owner, name = repo.split("/", 1)
-        if owner.strip() and name.strip():
-            return owner.strip(), name.strip()
+        parts = [p.strip() for p in repo.split("/") if p.strip()]
+        if len(parts) >= 2:
+            return parts[-2], parts[-1]
     owner = os.environ.get("GITHUB_TEST_OWNER", "").strip()
     name = os.environ.get("GITHUB_TEST_REPO", "").strip()
     if owner and name:
         return owner, name
     raise RuntimeError(
-        "set $env:GITHUB_TEST_REPOSITORY='owner/repo' (or OWNER+REPO) before running the GitHub demo"
+        "set GITHUB_TEST_REPOSITORY='owner/repo' (or OWNER+REPO) before running the GitHub demo"
     )
 
 

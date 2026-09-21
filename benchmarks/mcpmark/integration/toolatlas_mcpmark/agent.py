@@ -52,6 +52,8 @@ class ToolAtlasAgentMixin:
         trace_dir: Optional[str | Path] = None,
         top_k: int = 3,
         read_budget: int = 8,
+        token_budget: int = 384,
+        embed_mode: str = "lexical",
         task_id: str = "",
         arm: str = "",
         attempt: int = 0,
@@ -63,11 +65,17 @@ class ToolAtlasAgentMixin:
             raise ValueError(f"unknown toolatlas mode: {mode!r} (expected one of {MODES})")
         if mode in ("learn", "read") and not memory_path:
             raise ValueError(f"toolatlas mode '{mode}' requires a memory path")
+        if token_budget < 1:
+            raise ValueError("token_budget must be positive")
+        if embed_mode not in ("lexical", "embedding"):
+            raise ValueError("embed_mode must be 'lexical' or 'embedding'")
         self._tl_mode = mode
         self._tl_memory = str(memory_path) if memory_path else ""
         self._tl_trace_dir = Path(trace_dir) if trace_dir else None
         self._tl_top_k = int(top_k)
         self._tl_read_budget = int(read_budget)
+        self._tl_token_budget = int(token_budget)
+        self._tl_embed_mode = embed_mode
         self._tl_package_dir = str(package_dir) if package_dir else None
         self._tl_python_exe = python_exe
         self._tl_session_factory = session_factory or open_stdio_memory
@@ -81,6 +89,12 @@ class ToolAtlasAgentMixin:
 
     # -- per-attempt context (called by the evaluator patch) -----------------
     def begin_attempt(self, task_id: str, arm: str = "", attempt: int = 0) -> None:
+        if not task_id.strip():
+            raise ValueError("begin_attempt requires an explicit task_id")
+        if arm not in ("baseline", "toolatlas"):
+            raise ValueError(f"begin_attempt requires arm 'baseline'|'toolatlas', got {arm!r}")
+        if attempt < 1:
+            raise ValueError(f"begin_attempt requires attempt >= 1, got {attempt!r}")
         mode = getattr(self, "_tl_mode", "off")
         cfg = {
             "mode": mode,
@@ -88,6 +102,8 @@ class ToolAtlasAgentMixin:
             "trace_dir": getattr(self, "_tl_trace_dir", None),
             "top_k": getattr(self, "_tl_top_k", 3),
             "read_budget": getattr(self, "_tl_read_budget", 8),
+            "token_budget": getattr(self, "_tl_token_budget", 384),
+            "embed_mode": getattr(self, "_tl_embed_mode", "lexical"),
             "package_dir": getattr(self, "_tl_package_dir", None),
             "python_exe": getattr(self, "_tl_python_exe", None),
             "session_factory": getattr(self, "_tl_session_factory", None),
@@ -146,9 +162,14 @@ class ToolAtlasAgentMixin:
         query = retrieval_query(instruction)
         opener = self._tl_session_factory
         async with opener(self._tl_memory, True, self._tl_package_dir, self._tl_python_exe, self._tl_recorder) as session:
-            raw = await session.guidance(query, self._tl_top_k, self._tl_read_budget)
+            raw = await session.guidance(
+                query, self._tl_top_k, self._tl_read_budget,
+                getattr(self, "_tl_token_budget", 384),
+                getattr(self, "_tl_embed_mode", "lexical"))
         self._tl_guidance_raw = raw if isinstance(raw, dict) else {}
-        self._tl_guidance_block = format_guidance_block(self._tl_guidance_raw)
+        self._tl_guidance_block = format_guidance_block(
+            self._tl_guidance_raw,
+            token_budget=getattr(self, "_tl_token_budget", 384))
         return self._tl_guidance_block
 
     # -- post-verifier learning hook (evaluator calls this, learn mode only) --

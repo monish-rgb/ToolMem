@@ -79,9 +79,14 @@ class StdioMemorySession:
         self.calls.append({"tool": tool, "ok": True})
         return value
 
-    async def guidance(self, task: str, top_k: int, read_budget: int) -> dict:
+    async def guidance(
+        self, task: str, top_k: int, read_budget: int, token_budget: int = 384,
+        embed_mode: str = "lexical",
+    ) -> dict:
         value = await self.call(
-            "get_guidance", {"task": task, "top_k": top_k, "read_budget": read_budget}
+            "get_guidance",
+            {"task": task, "top_k": top_k, "read_budget": read_budget,
+             "token_budget": token_budget, "embed_mode": embed_mode},
         )
         return value if isinstance(value, dict) else {}
 

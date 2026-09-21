@@ -11,6 +11,8 @@ from typing import Any
 
 TOOLATLAS_DEFAULT_TOP_K = 3
 TOOLATLAS_DEFAULT_READ_BUDGET = 8
+TOOLATLAS_DEFAULT_TOKEN_BUDGET = 384
+TOOLATLAS_DEFAULT_EMBED_MODE = "lexical"
 
 
 def register_agent(registry: dict, agent_cls: Any) -> dict:
@@ -53,6 +55,18 @@ def add_toolatlas_cli_args(parser: Any) -> Any:
         default=TOOLATLAS_DEFAULT_READ_BUDGET,
         help="Guidance traversal read budget (default: 8)",
     )
+    group.add_argument(
+        "--toolatlas-token-budget",
+        type=int,
+        default=TOOLATLAS_DEFAULT_TOKEN_BUDGET,
+        help="Hard guidance token budget for the injected block (default: 384)",
+    )
+    group.add_argument(
+        "--toolatlas-embed-mode",
+        default=TOOLATLAS_DEFAULT_EMBED_MODE,
+        choices=["lexical", "embedding"],
+        help="Guidance seed retrieval: lexical or embedding blend (default: lexical)",
+    )
     return parser
 
 
@@ -64,6 +78,8 @@ def toolatlas_options_from_args(args: Any) -> dict:
         "trace_dir": getattr(args, "toolatlas_trace_dir", None),
         "top_k": getattr(args, "toolatlas_top_k", TOOLATLAS_DEFAULT_TOP_K),
         "read_budget": getattr(args, "toolatlas_read_budget", TOOLATLAS_DEFAULT_READ_BUDGET),
+        "token_budget": getattr(args, "toolatlas_token_budget", TOOLATLAS_DEFAULT_TOKEN_BUDGET),
+        "embed_mode": getattr(args, "toolatlas_embed_mode", TOOLATLAS_DEFAULT_EMBED_MODE),
     }
 
 
@@ -78,6 +94,8 @@ def maybe_configure_agent(agent: Any, options: dict) -> None:
         trace_dir=options.get("trace_dir"),
         top_k=options.get("top_k", TOOLATLAS_DEFAULT_TOP_K),
         read_budget=options.get("read_budget", TOOLATLAS_DEFAULT_READ_BUDGET),
+        token_budget=options.get("token_budget", TOOLATLAS_DEFAULT_TOKEN_BUDGET),
+        embed_mode=options.get("embed_mode", TOOLATLAS_DEFAULT_EMBED_MODE),
     )
 
 

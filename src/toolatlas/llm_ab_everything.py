@@ -17,6 +17,7 @@ from .everything_demo import EVERYTHING_PACKAGE_VERSION, EVERYTHING_PROVIDER, ev
 from .llm_ab_nim import DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_TEMPERATURE, _openai_client, _parse_answer_int
 from .memory_server import create_memory_server
 from .readonly_benchmark import _value
+from .tool_filter import filter_tools_by_playbook
 
 DEFAULT_MAX_STEPS = 8
 
@@ -200,9 +201,10 @@ async def run_everything_nim_ab(
                 "get_guidance", {"task": "Echo a message and calculate the sum of two values", "top_k": 3, "read_budget": 8}))
             last_guidance = guidance
             assisted_prompt = SYSTEM_PROMPT + f"\nLearned playbook: {json.dumps(guidance.get('playbook', []))}"
+            assisted_tools, _ = filter_tools_by_playbook(openai_tools, guidance)
             assisted_audit = EverythingAudit(everything)
             started = time.perf_counter()
-            assisted = await _run_llm_agent(model, temperature, max_steps, assisted_prompt, openai_tools, assisted_audit, task)
+            assisted = await _run_llm_agent(model, temperature, max_steps, assisted_prompt, assisted_tools, assisted_audit, task)
             assisted_elapsed = time.perf_counter() - started
 
             base_m = {"agent": "baseline_without_toolatlas", "label": task["label"], "passed": base["passed"],

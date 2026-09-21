@@ -117,6 +117,8 @@ EDITS = [
         "        toolatlas_trace_dir: str | None = None,\n"
         "        toolatlas_top_k: int = 3,\n"
         "        toolatlas_read_budget: int = 8,\n"
+        "        toolatlas_token_budget: int = 384,\n"
+        "        toolatlas_embed_mode: str = \"lexical\",\n"
         "    ):\n",
     ),
     Edit(
@@ -133,6 +135,8 @@ EDITS = [
         '            "trace_dir": toolatlas_trace_dir,\n'
         '            "top_k": toolatlas_top_k,\n'
         '            "read_budget": toolatlas_read_budget,\n'
+        '            "token_budget": toolatlas_token_budget,\n'
+        '            "embed_mode": toolatlas_embed_mode,\n'
         "        }\n"
         "        maybe_configure_agent(self.agent, self._toolatlas_options)\n",
     ),
@@ -173,7 +177,9 @@ EDITS = [
         '                "toolatlas_memory": self._toolatlas_options.get("memory_path"),\n'
         '                "toolatlas_trace_dir": self._toolatlas_options.get("trace_dir"),\n'
         '                "toolatlas_top_k": self._toolatlas_options.get("top_k"),\n'
-        '                "toolatlas_read_budget": self._toolatlas_options.get("read_budget"),\n',
+        '                "toolatlas_read_budget": self._toolatlas_options.get("read_budget"),\n'
+        '                "toolatlas_token_budget": self._toolatlas_options.get("token_budget"),\n'
+        '                "toolatlas_embed_mode": self._toolatlas_options.get("embed_mode"),\n',
         count=-1,
     ),
 ]

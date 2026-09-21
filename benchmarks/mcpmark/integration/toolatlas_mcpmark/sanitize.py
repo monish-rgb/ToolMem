@@ -24,11 +24,19 @@ QUOTED_PATTERN = re.compile(r"(?s)(['\"]).*?\1")
 NUMBER_PATTERN = re.compile(r"\b\d+(?:\.\d+)?\b")
 WHITESPACE_PATTERN = re.compile(r"\s+")
 
-GUIDANCE_TEMPLATE = (
-    "[ToolAtlas memory guidance — learned from verified prior rollouts]\n"
-    "{body}\n"
-    "[End of ToolAtlas guidance — use only if it fits the current task]"
-)
+GUIDANCE_HEADER = "[ToolAtlas verified plan]"
+VERIFY_FALLBACK = "Verify the final state against the task before finishing."
+MAX_LINE_CHARS = 200
+
+
+def _estimate_tokens(text: str) -> int:
+    if not text:
+        return 0
+    return max(1, len(text) // 4)
+
+
+def _clean_line(text: object, limit: int = MAX_LINE_CHARS) -> str:
+    return WHITESPACE_PATTERN.sub(" ", str(text or "")).strip()[:limit].strip()
 
 
 def sanitize_text(text: str, limit: int = 1000) -> str:
@@ -99,45 +107,61 @@ def guidance_is_empty(guidance: object) -> bool:
     return not candidates and not playbook
 
 
-def format_guidance_block(guidance: dict, max_steps: int = 6) -> str:
-    """Render one fixed guidance block; empty retrieval renders nothing.
+def format_guidance_block(guidance: dict, max_steps: int = 6,
+                          token_budget: int = 384) -> str:
+    """Render one compact guidance block; empty retrieval renders nothing.
 
-    Order is call-saving density first: planning conventions, then failure
-    avoid-notes, then the tool sequence, then provenance candidates.
+    Carriage rule (Plan 1): only the preferred tool sequence, up to two
+    failure notes, and a verification step enter the model prompt.
+    Prior-task summaries, confidence labels, and wrapper prose stay in the
+    traversal audit. The token cap applies *after* rendering — tail steps go
+    first, then avoid notes; the first step and the verification line are
+    always retained.
     """
+    if token_budget < 1:
+        raise ValueError("token_budget must be positive")
     if guidance_is_empty(guidance):
         return ""
-    lines = []
-    conventions = (guidance.get("conventions") or [])[:3]
-    if conventions:
-        lines.append("Conventions from verified prior work:")
-        for item in conventions:
-            text = item.get("text", "") if isinstance(item, dict) else str(item)
-            lines.append("- %s" % sanitize_text(str(text)))
-    avoid = (guidance.get("avoid") or [])[:2]
-    if avoid:
-        lines.append("Avoid (verified failure modes — do not retry these):")
-        for item in avoid:
-            if isinstance(item, dict):
-                tool = re.sub(r"[^A-Za-z0-9_.\-]", "", str(item.get("tool", "?")))[:64]
-                caution = sanitize_text(str(item.get("caution", "")))
-                lines.append("- %s: %s" % (tool, caution))
-            else:
-                lines.append("- %s" % sanitize_text(str(item)))
-    steps = (guidance.get("playbook") or [])[:max_steps]
-    if steps:
-        lines.append("Suggested tool sequence:")
-        for step in steps:
-            tool = re.sub(r"[^A-Za-z0-9_.\-]", "", str(step.get("tool", "?")))[:64]
-            rationale = sanitize_text(str(step.get("rationale", "")))
-            lines.append("- %s: %s" % (tool, rationale))
-    for cand in (guidance.get("seed_candidates") or [])[:4]:
-        summary = sanitize_text(str(cand.get("summary", "")))
-        lines.append(
-            "- related prior task: %s (confidence %s)"
-            % (summary, cand.get("confidence", "?"))
-        )
-    body = "\n".join(lines).strip()
-    if not body:
+    steps = [
+        (_clean_line(re.sub(r"[^A-Za-z0-9_.\-]", "", str(step.get("tool", "?")))[:64]),
+         _clean_line(step.get("rationale", "")))
+        for step in (guidance.get("playbook") or [])[:max_steps]
+        if isinstance(step, dict)
+    ]
+    steps = [(tool, rationale) for tool, rationale in steps if tool and tool != "?"]
+    if not steps:
         return ""
-    return GUIDANCE_TEMPLATE.format(body=body)
+    avoid = [
+        (_clean_line(re.sub(r"[^A-Za-z0-9_.\-]", "", str(item.get("tool", "?")))[:64]),
+         _clean_line(item.get("caution", "")))
+        for item in (guidance.get("avoid") or [])[:2]
+        if isinstance(item, dict)
+    ]
+    avoid = [(tool, caution) for tool, caution in avoid if caution]
+    verify = VERIFY_FALLBACK
+    for item in (guidance.get("conventions") or [])[:3]:
+        text = _clean_line(item.get("text", "") if isinstance(item, dict) else item)
+        if text:
+            verify = text
+            if "verif" in text.lower():
+                break
+
+    def _render(kept_steps: list, kept_avoid: list) -> str:
+        lines = ["%s (%d steps)" % (GUIDANCE_HEADER, len(kept_steps))]
+        for index, (tool, rationale) in enumerate(kept_steps):
+            lines.append("%d. %s: %s" % (index + 1, tool, sanitize_text(rationale))
+                         if rationale else "%d. %s" % (index + 1, tool))
+        for tool, caution in kept_avoid:
+            lines.append("Avoid: %s: %s" % (tool, sanitize_text(caution)))
+        lines.append("Verify: %s" % sanitize_text(verify))
+        return "\n".join(lines)
+
+    kept_steps, kept_avoid = list(steps), list(avoid)
+    while _estimate_tokens(_render(kept_steps, kept_avoid)) > token_budget:
+        if len(kept_steps) > 1:
+            kept_steps.pop()
+        elif kept_avoid:
+            kept_avoid.pop()
+        else:
+            break
+    return _render(kept_steps, kept_avoid)

@@ -117,8 +117,10 @@ class FakeSession:
             self._recorder.end_call(event, True, result=result)
         return result
 
-    async def guidance(self, task, top_k, read_budget):
-        args = {"task": task, "top_k": top_k, "read_budget": read_budget}
+    async def guidance(self, task, top_k, read_budget, token_budget=384,
+                       embed_mode="lexical"):
+        args = {"task": task, "top_k": top_k, "read_budget": read_budget,
+                "token_budget": token_budget, "embed_mode": embed_mode}
         self.calls.append({"tool": "get_guidance", **args})
 
         async def _do():
@@ -200,7 +202,7 @@ def test_read_mode_single_guidance_and_injection():
     asyncio.run(agent._execute_litellm_with_tools("Do the thing", None))
     assert len(sessions) == 1
     assert [c["tool"] for c in sessions[0].calls] == ["get_guidance"]
-    assert agent.seen_instruction.startswith("[ToolAtlas memory guidance")
+    assert agent.seen_instruction.startswith("[ToolAtlas verified plan]")
     assert agent.seen_instruction.endswith("Do the thing")
     record = agent.toolatlas_attempt_record()
     assert record["counts"]["memory_calls"] == 1

@@ -1,0 +1,1697 @@
+{
+  "experiment_id": "filesystem-input-tokens-v1",
+  "training_schedule": [
+    {
+      "task_id": "desktop/project_management",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "desktop_template/contact_information",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "file_context/file_splitting",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "file_property/size_classification",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "folder_structure/structure_mirror",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "legal_document/dispute_review",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "papers/organize_legacy_papers",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "student_database/gradebased_score",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "threestudio/code_locating",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "votenet/debugging",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "eval_schedule": [
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "9687dd6dac821bab",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "16f6c7c16cd6a895",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "96f9e708600d2045",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "d036fa59a60a36b3",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "c76ab377c1428b1f",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "4bb5633698b28eb6",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "6869d6fdeeb874c7",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/music_report",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "6661a1b02c4f076f",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "4b0a0428825a3897",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "177fca11458d16a9",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "55b47773aef87a59",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "fd33d422b7dcde38",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "40896e707d0913d9",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "3888d56476e3fa01",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "009e0a13ac06d877",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "76f66e641733786b",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "d5787edb27174abf",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "5b26bf7336710d44",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "ed2108d7c0ff9300",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "5d34fe651ac1a6e7",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "3562caef5d78a0db",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "35926c559fe76153",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "dd2dcbdca153e334",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "84857428b9d304cb",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "d8296f59b47ba17a",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "dd3b8b9f4c172c16",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "b9d0e3103a6e8a65",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "9d6b096067b5aa80",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "f345e5bf1f63a695",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "33afc372f924ca9d",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "50b2e72e2173b771",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "efc60097d417d3ba",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "860f33ed3cdfd1eb",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "1f42ec66e2936478",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "eb5213b8b79c22f8",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "7d1df41ebae941af",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "60191ca50d57b566",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "934b2f6f944cae0a",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "55f54935b2be5fe9",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "54e0eaeb28315f3e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "0210988b67a2b604",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "b2604fd16d12f8ee",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "efaa20f1a2be4c7d",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "318a26313fa069ed",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "b0e86ef8bc29d978",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "7c85759e278fa333",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "8206ea02c4e475f5",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/file_merging",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "4a317f1a95fc5538",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "278cf178621b5aa9",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "e9f3ba98073ec39b",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "61cce843b702a316",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "3f7ded878e355ac2",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "e7c49d5051c87862",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "4a5c9d3a99d81c2d",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "391aa754d7240c42",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/pattern_matching",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "987eec56e87d704e",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "83dc201b666d6a98",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "db9e6e74afcd84b1",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "9b9c1a6402cd7da1",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "f47c5ab5aee073b7",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "a1fb1ff538623fee",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "7574ca288df3951e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "8e6f87cbca17b33f",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_context/uppercase",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "ded58dc15b250623",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "e80976ea634e39a5",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "2f8ef39e26c25980",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "c4e50fa62d6c0429",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "06c3741208e3a72e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "6a845f172c067cee",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "1c515ffa088f6d90",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "b403b55f039e51c2",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "file_property/time_classification",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "3c5e648841d33546",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "817e58a2066bf860",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "527ee76ad5f1ec7e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "b870f9366dd0c61f",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "c22d2b9c51724814",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "19e059c7ca3efcd5",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "e1551753102c5a03",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "e5e699377783d762",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "852f26385f9c7c12",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "d63790dba760914c",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "0c5b7501c2d2d4ea",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "6e963968f672c55c",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "80aa5313afd9903f",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "4f728471d577ac02",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "e4d833243049f8b3",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "1dabeb8b1f2fc78e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/individual_comments",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "72f95e320ad9c290",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "6659ad8338b26fc0",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "c62186dc822c9b8c",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "884f213faf26d26f",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "3d91158d2039823a",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "c20067550128171b",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "f49b31ccd15cedbb",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "62edefefd893343b",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "7844568234d2fae2",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "4337df5397b32f7c",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "7ce68c380a81ace5",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "a2413f905ee5e118",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "1ed8515ff0aead97",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "f63b3390495ebc05",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "830d0f6bdb76eee7",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "65792ad5c60b51e7",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/author_folders",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "e8c759c735706719",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "1fba1f5d9a3dcf0b",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "69310c6813d2b8bd",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "a601b805be2d2aca",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "097603abbfa82665",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "e2bac29411f5dd5e",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "b1a606fc4b7f2d83",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "8272dc4eabdea0d4",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "papers/find_math_paper",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "5eaeb46d2ca5b7fe",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "d0a9c315067f8070",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "b77a9c713be72735",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "b8b2a9a36dafdaea",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "8d9860a6297b271e",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "40c49aca8cee0643",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "f3c3c960b1a75b47",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "8c784532caa0689e",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/duplicate_name",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "44fcda43c285bb05",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "6b4e9158dfe5dc2d",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "e167f269648a6fb4",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "11764ace62746691",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "5335c258c9fced82",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "88d34d7dbc7238c4",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "d4c6b9fb8e6be4d2",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "4ff4b3223fc73e9f",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "student_database/english_talent",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "1990c912f341d79c",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "7c5bd4b16fd551ab",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "a4ee2ed93333912d",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "bc2d505f0354a1e2",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "23b1a3a2251c2de1",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "953a3a4b75ba81c1",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "8703898a601cb11b",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "9d7e9bef63259f48",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/output_analysis",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "7819c9a131fd94b5",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "875a72b52526a7e1",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "be26bdbd536aaa7a",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "915f8eb51c6ed74e",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "529524476d7e9854",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "b33bbe0176bdfb9a",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "9c347457c4f8c715",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "5029f2691f7d2544",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "0ce99f5e0eede160",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "35cb42d9129b84c7",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "e13b536b4797ed9c",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "9bd640944808dc79",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "52cc8b88b7ed6cde",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "007053b6e8f65654",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "34a38c8c2bf4a1af",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "8433725c98817e35",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "1fc2275d4836c5cf",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 1,
+      "arm": "baseline",
+      "attempt_id": "ae1f477a19b27418",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 1,
+      "arm": "toolatlas",
+      "attempt_id": "bbf911986dba5ef0",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 2,
+      "arm": "baseline",
+      "attempt_id": "ed4a355b60e5ae54",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 2,
+      "arm": "toolatlas",
+      "attempt_id": "688bb7bcd3515cbc",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 3,
+      "arm": "baseline",
+      "attempt_id": "81f901737639bb38",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 3,
+      "arm": "toolatlas",
+      "attempt_id": "98d0c567724a695b",
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 4,
+      "arm": "baseline",
+      "attempt_id": "5d83583290a295db",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "experiment_id": "filesystem-input-tokens-v1",
+      "task_id": "votenet/requirements_writing",
+      "attempt": 4,
+      "arm": "toolatlas",
+      "attempt_id": "b2d377cbb1154081",
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    }
+  ]
+}

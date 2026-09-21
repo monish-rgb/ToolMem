@@ -1,0 +1,14 @@
+{
+  "model": "\"gemini-2.5-flash\"",
+  "temperature": 0.0,
+  "k": 4,
+  "max_steps": 30,
+  "provider": "gemini",
+  "container": "mcpmark-postgres",
+  "guidance_cap": 384,
+  "result_limit": 8000,
+  "backup_sha256": "50C7969A9E8F2CC1CE250AF58FC46D0ABEFC196C10A006DE979008443F324A14",
+  "code_rev": "3d8bb378a7d875ed5c50dac3342589314521719b",
+  "claim_scope": "official_backup_and_verifier_chinook_hierarchy_frozen_memory_real_llm",
+  "train_eval_overlap": "same-task deterministic training; label as same-task reuse, not held-out"
+}
