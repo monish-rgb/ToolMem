@@ -1,0 +1,176 @@
+{
+  "benchmark": "mcpmark_postgres_diagnostics_ab",
+  "model": "moonshotai/kimi-k3",
+  "k": 1,
+  "summary": [
+    {
+      "task": "slow_query_optimization",
+      "arm": "baseline",
+      "passed": "1/1",
+      "avg_provider_calls": 6.0,
+      "avg_tokens": 12988.0
+    },
+    {
+      "task": "slow_query_optimization",
+      "arm": "toolatlas",
+      "passed": "1/1",
+      "avg_provider_calls": 5.0,
+      "avg_tokens": 8977.0
+    },
+    {
+      "task": "db_health_audit",
+      "arm": "baseline",
+      "passed": "1/1",
+      "avg_provider_calls": 1.0,
+      "avg_tokens": 3712.0
+    },
+    {
+      "task": "db_health_audit",
+      "arm": "toolatlas",
+      "passed": "1/1",
+      "avg_provider_calls": 1.0,
+      "avg_tokens": 2902.0
+    }
+  ],
+  "results": [
+    {
+      "task": "slow_query_optimization",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "index_created=True, used_tools=['list_schemas', 'explain_query', 'analyze_query_indexes', 'explain_query', 'execute_sql', 'explain_query']",
+      "provider_calls": 6,
+      "memory_calls": 0,
+      "total_mcp_calls": 6,
+      "tools_used": [
+        "list_schemas",
+        "explain_query",
+        "analyze_query_indexes",
+        "explain_query",
+        "execute_sql",
+        "explain_query"
+      ],
+      "prompt_tokens": 12343,
+      "completion_tokens": 645,
+      "total_tokens": 12988,
+      "schema_tokens_before": 1387,
+      "schema_tokens_after": 1387,
+      "elapsed_sec": 550.91,
+      "guidance": null
+    },
+    {
+      "task": "slow_query_optimization",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "index_created=True, used_tools=['explain_query', 'analyze_query_indexes', 'explain_query', 'execute_sql', 'analyze_db_health']",
+      "provider_calls": 5,
+      "memory_calls": 1,
+      "total_mcp_calls": 6,
+      "tools_used": [
+        "explain_query",
+        "analyze_query_indexes",
+        "explain_query",
+        "execute_sql",
+        "analyze_db_health"
+      ],
+      "prompt_tokens": 8367,
+      "completion_tokens": 610,
+      "total_tokens": 8977,
+      "schema_tokens_before": 1387,
+      "schema_tokens_after": 809,
+      "elapsed_sec": 427.07,
+      "guidance": [
+        {
+          "tool": "explain_query",
+          "rationale": "inspect execution plan and scan costs",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        },
+        {
+          "tool": "analyze_query_indexes",
+          "rationale": "generate missing index recommendations",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        },
+        {
+          "tool": "execute_sql",
+          "rationale": "apply the verified CREATE INDEX statement",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        },
+        {
+          "tool": "analyze_db_health",
+          "rationale": "scan database cache hit ratio, bloat, and connection health",
+          "confidence": 0.6667,
+          "source_trace": "diag_db_health_audit_train"
+        }
+      ]
+    },
+    {
+      "task": "db_health_audit",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "used_health=True, final_len=1212",
+      "provider_calls": 1,
+      "memory_calls": 0,
+      "total_mcp_calls": 1,
+      "tools_used": [
+        "analyze_db_health"
+      ],
+      "prompt_tokens": 3365,
+      "completion_tokens": 347,
+      "total_tokens": 3712,
+      "schema_tokens_before": 1387,
+      "schema_tokens_after": 1387,
+      "elapsed_sec": 177.21,
+      "guidance": null
+    },
+    {
+      "task": "db_health_audit",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "used_health=True, final_len=1123",
+      "provider_calls": 1,
+      "memory_calls": 1,
+      "total_mcp_calls": 2,
+      "tools_used": [
+        "analyze_db_health"
+      ],
+      "prompt_tokens": 2585,
+      "completion_tokens": 317,
+      "total_tokens": 2902,
+      "schema_tokens_before": 1387,
+      "schema_tokens_after": 809,
+      "elapsed_sec": 159.01,
+      "guidance": [
+        {
+          "tool": "analyze_db_health",
+          "rationale": "scan database cache hit ratio, bloat, and connection health",
+          "confidence": 0.6667,
+          "source_trace": "diag_db_health_audit_train"
+        },
+        {
+          "tool": "explain_query",
+          "rationale": "inspect execution plan and scan costs",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        },
+        {
+          "tool": "analyze_query_indexes",
+          "rationale": "generate missing index recommendations",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        },
+        {
+          "tool": "execute_sql",
+          "rationale": "apply the verified CREATE INDEX statement",
+          "confidence": 0.6667,
+          "source_trace": "diag_slow_query_optimization_train"
+        }
+      ]
+    }
+  ]
+}

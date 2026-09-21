@@ -1,0 +1,1873 @@
+{
+  "benchmark": "mcpmark_file_property_llm_ab",
+  "model": "moonshotai/kimi-k3",
+  "temperature": 0.0,
+  "k": 1,
+  "manifest": {
+    "model": "moonshotai/kimi-k3",
+    "temperature": 0.0,
+    "k": 1,
+    "max_steps": 30,
+    "provider": "openai_compatible",
+    "guidance_cap": 384,
+    "result_limit": 8000,
+    "snapshot_sha256": "99d5449cef45bfcda6e5260f6ef4cd356bdbae59818d37ffa840054cdee19ec4",
+    "code_rev": "e26278c878d557d8d49cc5dde6890553dc7c86ac",
+    "claim_scope": "official_snapshot_and_verifier_file_property_slice_frozen_memory_real_llm",
+    "train_eval_overlap": "same-task deterministic training; label as same-task reuse, not held-out"
+  },
+  "snapshot_sha256": "99d5449cef45bfcda6e5260f6ef4cd356bdbae59818d37ffa840054cdee19ec4",
+  "frozen_memory_stats": {
+    "tools": 14,
+    "traces": 4,
+    "strategies": 2,
+    "trace_edges": 6,
+    "executions": 4,
+    "stale_traces": 0,
+    "refresh_due": 0
+  },
+  "training": [
+    {
+      "task": "size_classification",
+      "training_provider_calls": 22
+    },
+    {
+      "task": "time_classification",
+      "training_provider_calls": 29
+    }
+  ],
+  "freeze": {
+    "source": "C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\eval-fs-moonshotai\\kimi-k3\\train-memory.db",
+    "output": "C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\eval-fs-moonshotai\\kimi-k3\\frozen-memory.db",
+    "source_sha256": "eb5146845452cbac6e5d8ec69ac4e795920611c72a4fa1467ae660c2e0e0328d",
+    "frozen_sha256": "e0310720e484a4a76a18c98cbbf2b796062d2153ef9159c0f61cec1a541419ac",
+    "integrity_check": "ok",
+    "stats": {
+      "schema_version": "2",
+      "tools": 14,
+      "traces": 4,
+      "strategies": 2,
+      "executions": 4
+    }
+  },
+  "frozen_post_eval": {
+    "frozen_sha256": "e0310720e484a4a76a18c98cbbf2b796062d2153ef9159c0f61cec1a541419ac",
+    "integrity_check": "ok",
+    "sidecars": []
+  },
+  "attempts": [
+    {
+      "task": "size_classification",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": true,
+      "provider_tool_calls": 14,
+      "memory_tool_calls": 0,
+      "total_mcp_calls": 14,
+      "failed_provider_calls": 0,
+      "tools_used": [
+        "list_directory",
+        "list_directory_with_sizes",
+        "create_directory",
+        "create_directory",
+        "create_directory",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file"
+      ],
+      "prompt_tokens": 19587,
+      "completion_tokens": 1669,
+      "total_tokens": 21256,
+      "raw_usage": [
+        {
+          "input_tokens": 2077,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2077,
+          "output_tokens": 87,
+          "reasoning_tokens": null,
+          "total_tokens": 2164,
+          "usage_source": "provider",
+          "provider_request_id": "req_1ea5125cc18e4480",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 87,
+            "prompt_tokens": 2077,
+            "total_tokens": 2164,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2256,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2256,
+          "output_tokens": 85,
+          "reasoning_tokens": null,
+          "total_tokens": 2341,
+          "usage_source": "provider",
+          "provider_request_id": "req_1624d325808f48a5",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 85,
+            "prompt_tokens": 2256,
+            "total_tokens": 2341,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2506,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2506,
+          "output_tokens": 235,
+          "reasoning_tokens": null,
+          "total_tokens": 2741,
+          "usage_source": "provider",
+          "provider_request_id": "req_daada25eedf74742",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 235,
+            "prompt_tokens": 2506,
+            "total_tokens": 2741,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2919,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2919,
+          "output_tokens": 1024,
+          "reasoning_tokens": null,
+          "total_tokens": 3943,
+          "usage_source": "provider",
+          "provider_request_id": "req_3702fa6575f64396",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 1024,
+            "prompt_tokens": 2919,
+            "total_tokens": 3943,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 4788,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 4788,
+          "output_tokens": 141,
+          "reasoning_tokens": null,
+          "total_tokens": 4929,
+          "usage_source": "provider",
+          "provider_request_id": "req_480982d950544bab",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 141,
+            "prompt_tokens": 4788,
+            "total_tokens": 4929,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 5041,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 5041,
+          "output_tokens": 97,
+          "reasoning_tokens": null,
+          "total_tokens": 5138,
+          "usage_source": "provider",
+          "provider_request_id": "req_a59d375c8f434fdf",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 97,
+            "prompt_tokens": 5041,
+            "total_tokens": 5138,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        }
+      ],
+      "request_rows": [
+        {
+          "request_id": "req_1ea5125cc18e4480",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:27:29Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2077,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2077,
+            "output_tokens": 87,
+            "reasoning_tokens": null,
+            "total_tokens": 2164,
+            "usage_source": "provider",
+            "provider_request_id": "req_1ea5125cc18e4480",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 87,
+              "prompt_tokens": 2077,
+              "total_tokens": 2164,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_1624d325808f48a5",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:28:43Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2256,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2256,
+            "output_tokens": 85,
+            "reasoning_tokens": null,
+            "total_tokens": 2341,
+            "usage_source": "provider",
+            "provider_request_id": "req_1624d325808f48a5",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 85,
+              "prompt_tokens": 2256,
+              "total_tokens": 2341,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_daada25eedf74742",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:30:22Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2506,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2506,
+            "output_tokens": 235,
+            "reasoning_tokens": null,
+            "total_tokens": 2741,
+            "usage_source": "provider",
+            "provider_request_id": "req_daada25eedf74742",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 235,
+              "prompt_tokens": 2506,
+              "total_tokens": 2741,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_3702fa6575f64396",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:33:27Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2919,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2919,
+            "output_tokens": 1024,
+            "reasoning_tokens": null,
+            "total_tokens": 3943,
+            "usage_source": "provider",
+            "provider_request_id": "req_3702fa6575f64396",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 1024,
+              "prompt_tokens": 2919,
+              "total_tokens": 3943,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_480982d950544bab",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:34:46Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 4788,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 4788,
+            "output_tokens": 141,
+            "reasoning_tokens": null,
+            "total_tokens": 4929,
+            "usage_source": "provider",
+            "provider_request_id": "req_480982d950544bab",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 141,
+              "prompt_tokens": 4788,
+              "total_tokens": 4929,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_a59d375c8f434fdf",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:36:05Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 5041,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 5041,
+            "output_tokens": 97,
+            "reasoning_tokens": null,
+            "total_tokens": 5138,
+            "usage_source": "provider",
+            "provider_request_id": "req_a59d375c8f434fdf",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 97,
+              "prompt_tokens": 5041,
+              "total_tokens": 5138,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        }
+      ],
+      "model_requests": 6,
+      "has_complete_input_usage": true,
+      "injected_guidance": null,
+      "guidance_text": "",
+      "guidance_tokens_estimate": 0,
+      "schema_pruning_audit": null,
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 2101,
+      "seconds": 606.2,
+      "final_text": "Done. Files classified by size:\n\n- **small_files/** (<300 B): random_file_1.txt (111 B), random_file_3.txt (97 B)\n- **medium_files/** (300\u2013700 B): random_file_2.txt (634 B)\n- **large_files/** (>700 B): .DS_Store, bear.jpg, bridge.jpg, bus.MOV, road.MOV, sg.jpg",
+      "verifier_output": "cation in: C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\eval-fs-moonshotai\\kimi-k3\\size_classification-baseline-k1\n\n\ud83d\udccb Checking: Directory existence\n\u2705 All required directories exist\n\n\ud83d\udccb Checking: File classification\n\u2705 All files are correctly classified\n\n\ud83d\udccb Checking: No files in root\n\u2705 No files remain in root directory\n\n\ud83d\udccb Checking: File size validation\n\u2705 All files are in correct size categories\n\n\ud83d\udccb Checking: Total file count\n\u2705 Total file count is correct: 8\n\n\ud83c\udf89 All verification checks passed!\n"
+    },
+    {
+      "task": "size_classification",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": true,
+      "provider_tool_calls": 22,
+      "memory_tool_calls": 1,
+      "total_mcp_calls": 23,
+      "failed_provider_calls": 0,
+      "tools_used": [
+        "list_directory",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "create_directory",
+        "create_directory",
+        "create_directory",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file"
+      ],
+      "prompt_tokens": 19044,
+      "completion_tokens": 2356,
+      "total_tokens": 21400,
+      "raw_usage": [
+        {
+          "input_tokens": 978,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 978,
+          "output_tokens": 88,
+          "reasoning_tokens": null,
+          "total_tokens": 1066,
+          "usage_source": "provider",
+          "provider_request_id": "req_1779bcaaf72541a3",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 88,
+            "prompt_tokens": 978,
+            "total_tokens": 1066,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 1158,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 1158,
+          "output_tokens": 652,
+          "reasoning_tokens": null,
+          "total_tokens": 1810,
+          "usage_source": "provider",
+          "provider_request_id": "req_b6f5e85afc41450c",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 652,
+            "prompt_tokens": 1158,
+            "total_tokens": 1810,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2899,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2899,
+          "output_tokens": 295,
+          "reasoning_tokens": null,
+          "total_tokens": 3194,
+          "usage_source": "provider",
+          "provider_request_id": "req_888ad8c3c0ad40dd",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 295,
+            "prompt_tokens": 2899,
+            "total_tokens": 3194,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 3318,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 3318,
+          "output_tokens": 1024,
+          "reasoning_tokens": null,
+          "total_tokens": 4342,
+          "usage_source": "provider",
+          "provider_request_id": "req_3e657c1e290d422e",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 1024,
+            "prompt_tokens": 3318,
+            "total_tokens": 4342,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 5215,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 5215,
+          "output_tokens": 185,
+          "reasoning_tokens": null,
+          "total_tokens": 5400,
+          "usage_source": "provider",
+          "provider_request_id": "req_22e897d60ac54b1d",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 185,
+            "prompt_tokens": 5215,
+            "total_tokens": 5400,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 5476,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 5476,
+          "output_tokens": 112,
+          "reasoning_tokens": null,
+          "total_tokens": 5588,
+          "usage_source": "provider",
+          "provider_request_id": "req_b5ce38e293cb4f80",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 112,
+            "prompt_tokens": 5476,
+            "total_tokens": 5588,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        }
+      ],
+      "request_rows": [
+        {
+          "request_id": "req_1779bcaaf72541a3",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:37:26Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 978,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 978,
+            "output_tokens": 88,
+            "reasoning_tokens": null,
+            "total_tokens": 1066,
+            "usage_source": "provider",
+            "provider_request_id": "req_1779bcaaf72541a3",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 88,
+              "prompt_tokens": 978,
+              "total_tokens": 1066,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_b6f5e85afc41450c",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:39:18Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 1158,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1158,
+            "output_tokens": 652,
+            "reasoning_tokens": null,
+            "total_tokens": 1810,
+            "usage_source": "provider",
+            "provider_request_id": "req_b6f5e85afc41450c",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 652,
+              "prompt_tokens": 1158,
+              "total_tokens": 1810,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_888ad8c3c0ad40dd",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:40:41Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2899,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2899,
+            "output_tokens": 295,
+            "reasoning_tokens": null,
+            "total_tokens": 3194,
+            "usage_source": "provider",
+            "provider_request_id": "req_888ad8c3c0ad40dd",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 295,
+              "prompt_tokens": 2899,
+              "total_tokens": 3194,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_3e657c1e290d422e",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:43:09Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 3318,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 3318,
+            "output_tokens": 1024,
+            "reasoning_tokens": null,
+            "total_tokens": 4342,
+            "usage_source": "provider",
+            "provider_request_id": "req_3e657c1e290d422e",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 1024,
+              "prompt_tokens": 3318,
+              "total_tokens": 4342,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_22e897d60ac54b1d",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:44:50Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 5215,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 5215,
+            "output_tokens": 185,
+            "reasoning_tokens": null,
+            "total_tokens": 5400,
+            "usage_source": "provider",
+            "provider_request_id": "req_22e897d60ac54b1d",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 185,
+              "prompt_tokens": 5215,
+              "total_tokens": 5400,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_b5ce38e293cb4f80",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "size_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:46:15Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 5476,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 5476,
+            "output_tokens": 112,
+            "reasoning_tokens": null,
+            "total_tokens": 5588,
+            "usage_source": "provider",
+            "provider_request_id": "req_b5ce38e293cb4f80",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 112,
+              "prompt_tokens": 5476,
+              "total_tokens": 5588,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        }
+      ],
+      "model_requests": 6,
+      "has_complete_input_usage": true,
+      "injected_guidance": [
+        {
+          "tool": "list_directory",
+          "rationale": "inspect the workspace directory for task files",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_size_classification_2"
+        },
+        {
+          "tool": "create_directory",
+          "rationale": "create the required category directories",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_size_classification_2"
+        },
+        {
+          "tool": "get_file_info",
+          "rationale": "read file metadata to determine the target category",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_size_classification_2"
+        },
+        {
+          "tool": "move_file",
+          "rationale": "move each file into its category directory",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_size_classification_2"
+        },
+        {
+          "tool": "write_file",
+          "rationale": "write the required per-directory metadata file",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        }
+      ],
+      "guidance_text": "[ToolAtlas verified plan] (5 steps)\nDirective: Execute step 1 directly (list_directory). Do not invoke unneeded discovery tools.\n1. list_directory: inspect the workspace directory for task files\n2. create_directory: create the required category directories\n3. get_file_info: read file metadata to determine the target category\n4. move_file: move each file into its category directory\n5. write_file: write the required per-directory metadata file\nVerify: Verify the final tool result against the task requirement.",
+      "guidance_tokens_estimate": 128,
+      "schema_pruning_audit": {
+        "pruned": true,
+        "reason": "playbook_filter",
+        "kept": 5,
+        "removed": 9,
+        "removed_tools": [
+          "directory_tree",
+          "edit_file",
+          "list_allowed_directories",
+          "list_directory_with_sizes",
+          "read_file",
+          "read_media_file",
+          "read_multiple_files",
+          "read_text_file",
+          "search_files"
+        ],
+        "playbook_tools": [
+          "create_directory",
+          "get_file_info",
+          "list_directory",
+          "move_file",
+          "write_file"
+        ],
+        "always_include": [],
+        "avoid_tools": []
+      },
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 658,
+      "seconds": 610.4,
+      "final_text": "Done. Files classified by size:\n\n- **small_files/** (<300 B): random_file_1.txt (111 B), random_file_3.txt (97 B)\n- **medium_files/** (300\u2013700 B): random_file_2.txt (634 B)\n- **large_files/** (>700 B): bear.jpg, bridge.jpg, sg.jpg, bus.MOV, road.MOV, .DS_Store\n\nAll three directories were created and every file moved into the appropriate category.",
+      "verifier_output": "ation in: C:\\Users\\MONISH\\Downloads\\ToolMem\\benchmarks\\results\\eval-fs-moonshotai\\kimi-k3\\size_classification-toolatlas-k1\n\n\ud83d\udccb Checking: Directory existence\n\u2705 All required directories exist\n\n\ud83d\udccb Checking: File classification\n\u2705 All files are correctly classified\n\n\ud83d\udccb Checking: No files in root\n\u2705 No files remain in root directory\n\n\ud83d\udccb Checking: File size validation\n\u2705 All files are in correct size categories\n\n\ud83d\udccb Checking: Total file count\n\u2705 Total file count is correct: 8\n\n\ud83c\udf89 All verification checks passed!\n"
+    },
+    {
+      "task": "time_classification",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": false,
+      "provider_tool_calls": 20,
+      "memory_tool_calls": 0,
+      "total_mcp_calls": 20,
+      "failed_provider_calls": 0,
+      "tools_used": [
+        "list_allowed_directories",
+        "list_directory",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "create_directory",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "write_file"
+      ],
+      "prompt_tokens": 24992,
+      "completion_tokens": 2315,
+      "total_tokens": 27307,
+      "raw_usage": [
+        {
+          "input_tokens": 2166,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2166,
+          "output_tokens": 103,
+          "reasoning_tokens": null,
+          "total_tokens": 2269,
+          "usage_source": "provider",
+          "provider_request_id": "req_6aeaa5ed13c8408f",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 103,
+            "prompt_tokens": 2166,
+            "total_tokens": 2269,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2420,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2420,
+          "output_tokens": 574,
+          "reasoning_tokens": null,
+          "total_tokens": 2994,
+          "usage_source": "provider",
+          "provider_request_id": "req_89d767f86d1c4de5",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 574,
+            "prompt_tokens": 2420,
+            "total_tokens": 2994,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 3963,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 3963,
+          "output_tokens": 337,
+          "reasoning_tokens": null,
+          "total_tokens": 4300,
+          "usage_source": "provider",
+          "provider_request_id": "req_1d38cdb7332f4298",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 337,
+            "prompt_tokens": 3963,
+            "total_tokens": 4300,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 4148,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 4148,
+          "output_tokens": 1024,
+          "reasoning_tokens": null,
+          "total_tokens": 5172,
+          "usage_source": "provider",
+          "provider_request_id": "req_7f933c379cd1482a",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 1024,
+            "prompt_tokens": 4148,
+            "total_tokens": 5172,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 6029,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 6029,
+          "output_tokens": 190,
+          "reasoning_tokens": null,
+          "total_tokens": 6219,
+          "usage_source": "provider",
+          "provider_request_id": "req_6f31746cceda4568",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 190,
+            "prompt_tokens": 6029,
+            "total_tokens": 6219,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 6266,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 6266,
+          "output_tokens": 87,
+          "reasoning_tokens": null,
+          "total_tokens": 6353,
+          "usage_source": "provider",
+          "provider_request_id": "req_a98de477b1854df2",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 87,
+            "prompt_tokens": 6266,
+            "total_tokens": 6353,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        }
+      ],
+      "request_rows": [
+        {
+          "request_id": "req_6aeaa5ed13c8408f",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:47:44Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2166,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2166,
+            "output_tokens": 103,
+            "reasoning_tokens": null,
+            "total_tokens": 2269,
+            "usage_source": "provider",
+            "provider_request_id": "req_6aeaa5ed13c8408f",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 103,
+              "prompt_tokens": 2166,
+              "total_tokens": 2269,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_89d767f86d1c4de5",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:50:00Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2420,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2420,
+            "output_tokens": 574,
+            "reasoning_tokens": null,
+            "total_tokens": 2994,
+            "usage_source": "provider",
+            "provider_request_id": "req_89d767f86d1c4de5",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 574,
+              "prompt_tokens": 2420,
+              "total_tokens": 2994,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_1d38cdb7332f4298",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:51:25Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 3963,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 3963,
+            "output_tokens": 337,
+            "reasoning_tokens": null,
+            "total_tokens": 4300,
+            "usage_source": "provider",
+            "provider_request_id": "req_1d38cdb7332f4298",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 337,
+              "prompt_tokens": 3963,
+              "total_tokens": 4300,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_7f933c379cd1482a",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:53:20Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 4148,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 4148,
+            "output_tokens": 1024,
+            "reasoning_tokens": null,
+            "total_tokens": 5172,
+            "usage_source": "provider",
+            "provider_request_id": "req_7f933c379cd1482a",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 1024,
+              "prompt_tokens": 4148,
+              "total_tokens": 5172,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_6f31746cceda4568",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:54:47Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 6029,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6029,
+            "output_tokens": 190,
+            "reasoning_tokens": null,
+            "total_tokens": 6219,
+            "usage_source": "provider",
+            "provider_request_id": "req_6f31746cceda4568",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 190,
+              "prompt_tokens": 6029,
+              "total_tokens": 6219,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_a98de477b1854df2",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "baseline",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:56:07Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 6266,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6266,
+            "output_tokens": 87,
+            "reasoning_tokens": null,
+            "total_tokens": 6353,
+            "usage_source": "provider",
+            "provider_request_id": "req_a98de477b1854df2",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 87,
+              "prompt_tokens": 6266,
+              "total_tokens": 6353,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        }
+      ],
+      "model_requests": 6,
+      "has_complete_input_usage": true,
+      "injected_guidance": null,
+      "guidance_text": "",
+      "guidance_tokens_estimate": 0,
+      "schema_pruning_audit": null,
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 2101,
+      "seconds": 591.1,
+      "final_text": "Done. All 8 files (excluding .DS_Store) shared the same creation time (Mon Sep 21 2026 16:46:16 EDT), so they were all moved into `09/21/`. A `metadata_analyse.txt` was created there listing the oldest and latest file (both bear.jpg, since all ctimes are identical).",
+      "verifier_output": "results\\eval-fs-moonshotai\\kimi-k3\\time_classification-baseline-k1\n\n\ud83d\udccb Checking: Directory structure\n\u274c Month directory not found. Expected one of: ['07', '7', 'jul', 'Jul', 'JUL']\n\n\ud83d\udccb Checking: Files in directories\n\u2705 All files are in correct directories\n\n\ud83d\udccb Checking: Metadata analysis files\n\u2705 All metadata_analyse.txt files are correct\n\n\ud83d\udccb Checking: No files in root\n\u2705 No files remain in root directory\n\n\ud83d\udccb Checking: Total file count\n\u274c Expected 8 files total, found 0\n\n\u274c Some verification checks failed!\n"
+    },
+    {
+      "task": "time_classification",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": false,
+      "provider_tool_calls": 19,
+      "memory_tool_calls": 1,
+      "total_mcp_calls": 20,
+      "failed_provider_calls": 0,
+      "tools_used": [
+        "list_directory",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "get_file_info",
+        "create_directory",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "move_file",
+        "write_file"
+      ],
+      "prompt_tokens": 17958,
+      "completion_tokens": 2277,
+      "total_tokens": 20235,
+      "raw_usage": [
+        {
+          "input_tokens": 1067,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 1067,
+          "output_tokens": 88,
+          "reasoning_tokens": null,
+          "total_tokens": 1155,
+          "usage_source": "provider",
+          "provider_request_id": "req_af2ca227669440e3",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 88,
+            "prompt_tokens": 1067,
+            "total_tokens": 1155,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 1247,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 1247,
+          "output_tokens": 582,
+          "reasoning_tokens": null,
+          "total_tokens": 1829,
+          "usage_source": "provider",
+          "provider_request_id": "req_3c4c71e3249443ef",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 582,
+            "prompt_tokens": 1247,
+            "total_tokens": 1829,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 2798,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 2798,
+          "output_tokens": 199,
+          "reasoning_tokens": null,
+          "total_tokens": 2997,
+          "usage_source": "provider",
+          "provider_request_id": "req_03438102ad3445dd",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 199,
+            "prompt_tokens": 2798,
+            "total_tokens": 2997,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 3002,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 3002,
+          "output_tokens": 1024,
+          "reasoning_tokens": null,
+          "total_tokens": 4026,
+          "usage_source": "provider",
+          "provider_request_id": "req_61909b6426f64c9d",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 1024,
+            "prompt_tokens": 3002,
+            "total_tokens": 4026,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 4685,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 4685,
+          "output_tokens": 291,
+          "reasoning_tokens": null,
+          "total_tokens": 4976,
+          "usage_source": "provider",
+          "provider_request_id": "req_281286ec9eb249c2",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 291,
+            "prompt_tokens": 4685,
+            "total_tokens": 4976,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        },
+        {
+          "input_tokens": 5159,
+          "cached_input_tokens": 0,
+          "uncached_input_tokens": 5159,
+          "output_tokens": 93,
+          "reasoning_tokens": null,
+          "total_tokens": 5252,
+          "usage_source": "provider",
+          "provider_request_id": "req_089164c962d24730",
+          "has_authoritative_input": true,
+          "raw": {
+            "completion_tokens": 93,
+            "prompt_tokens": 5159,
+            "total_tokens": 5252,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cache_write_tokens": null,
+              "cached_tokens": 0,
+              "image_tokens": null,
+              "text_tokens": null
+            }
+          }
+        }
+      ],
+      "request_rows": [
+        {
+          "request_id": "req_af2ca227669440e3",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:57:50Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 1067,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1067,
+            "output_tokens": 88,
+            "reasoning_tokens": null,
+            "total_tokens": 1155,
+            "usage_source": "provider",
+            "provider_request_id": "req_af2ca227669440e3",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 88,
+              "prompt_tokens": 1067,
+              "total_tokens": 1155,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_3c4c71e3249443ef",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T20:59:36Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 1247,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1247,
+            "output_tokens": 582,
+            "reasoning_tokens": null,
+            "total_tokens": 1829,
+            "usage_source": "provider",
+            "provider_request_id": "req_3c4c71e3249443ef",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 582,
+              "prompt_tokens": 1247,
+              "total_tokens": 1829,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_03438102ad3445dd",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T21:01:03Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 2798,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 2798,
+            "output_tokens": 199,
+            "reasoning_tokens": null,
+            "total_tokens": 2997,
+            "usage_source": "provider",
+            "provider_request_id": "req_03438102ad3445dd",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 199,
+              "prompt_tokens": 2798,
+              "total_tokens": 2997,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_61909b6426f64c9d",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T21:02:57Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 3002,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 3002,
+            "output_tokens": 1024,
+            "reasoning_tokens": null,
+            "total_tokens": 4026,
+            "usage_source": "provider",
+            "provider_request_id": "req_61909b6426f64c9d",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 1024,
+              "prompt_tokens": 3002,
+              "total_tokens": 4026,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_281286ec9eb249c2",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T21:04:25Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 4685,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 4685,
+            "output_tokens": 291,
+            "reasoning_tokens": null,
+            "total_tokens": 4976,
+            "usage_source": "provider",
+            "provider_request_id": "req_281286ec9eb249c2",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 291,
+              "prompt_tokens": 4685,
+              "total_tokens": 4976,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        },
+        {
+          "request_id": "req_089164c962d24730",
+          "experiment_id": "mcpmark_file_property_ab",
+          "task_id": "time_classification",
+          "arm": "toolatlas",
+          "attempt": 1,
+          "timestamp": "2026-09-21T21:05:41Z",
+          "model": "moonshotai/kimi-k3",
+          "provider": "openai_compatible",
+          "ok": true,
+          "is_retry": false,
+          "error": "",
+          "usage": {
+            "input_tokens": 5159,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 5159,
+            "output_tokens": 93,
+            "reasoning_tokens": null,
+            "total_tokens": 5252,
+            "usage_source": "provider",
+            "provider_request_id": "req_089164c962d24730",
+            "has_authoritative_input": true,
+            "raw": {
+              "completion_tokens": 93,
+              "prompt_tokens": 5159,
+              "total_tokens": 5252,
+              "completion_tokens_details": null,
+              "prompt_tokens_details": {
+                "audio_tokens": null,
+                "cache_write_tokens": null,
+                "cached_tokens": 0,
+                "image_tokens": null,
+                "text_tokens": null
+              }
+            }
+          }
+        }
+      ],
+      "model_requests": 6,
+      "has_complete_input_usage": true,
+      "injected_guidance": [
+        {
+          "tool": "list_directory",
+          "rationale": "inspect the workspace directory for task files",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        },
+        {
+          "tool": "get_file_info",
+          "rationale": "read file metadata to determine the target category",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        },
+        {
+          "tool": "create_directory",
+          "rationale": "create the required category directories",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        },
+        {
+          "tool": "move_file",
+          "rationale": "move each file into its category directory",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        },
+        {
+          "tool": "write_file",
+          "rationale": "write the required per-directory metadata file",
+          "confidence": 0.6667,
+          "source_trace": "mcpmark_time_classification_2"
+        }
+      ],
+      "guidance_text": "[ToolAtlas verified plan] (5 steps)\nDirective: Execute step 1 directly (list_directory). Do not invoke unneeded discovery tools.\n1. list_directory: inspect the workspace directory for task files\n2. get_file_info: read file metadata to determine the target category\n3. create_directory: create the required category directories\n4. move_file: move each file into its category directory\n5. write_file: write the required per-directory metadata file\nVerify: Verify the final tool result against the task requirement.",
+      "guidance_tokens_estimate": 128,
+      "schema_pruning_audit": {
+        "pruned": true,
+        "reason": "playbook_filter",
+        "kept": 5,
+        "removed": 9,
+        "removed_tools": [
+          "directory_tree",
+          "edit_file",
+          "list_allowed_directories",
+          "list_directory_with_sizes",
+          "read_file",
+          "read_media_file",
+          "read_multiple_files",
+          "read_text_file",
+          "search_files"
+        ],
+        "playbook_tools": [
+          "create_directory",
+          "get_file_info",
+          "list_directory",
+          "move_file",
+          "write_file"
+        ],
+        "always_include": [],
+        "avoid_tools": []
+      },
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 658,
+      "seconds": 573.6,
+      "final_text": "Done. All 8 files (excluding .DS_Store) shared the same creation time (Mon Sep 21 2026 16:56:07 EDT), so they were all moved into `09/21/`. A `metadata_analyse.txt` was created there listing the oldest (bear.jpg) and latest (sg.jpg) files with their creation times (ties broken alphabetically).",
+      "verifier_output": "esults\\eval-fs-moonshotai\\kimi-k3\\time_classification-toolatlas-k1\n\n\ud83d\udccb Checking: Directory structure\n\u274c Month directory not found. Expected one of: ['07', '7', 'jul', 'Jul', 'JUL']\n\n\ud83d\udccb Checking: Files in directories\n\u2705 All files are in correct directories\n\n\ud83d\udccb Checking: Metadata analysis files\n\u2705 All metadata_analyse.txt files are correct\n\n\ud83d\udccb Checking: No files in root\n\u2705 No files remain in root directory\n\n\ud83d\udccb Checking: Total file count\n\u274c Expected 8 files total, found 0\n\n\u274c Some verification checks failed!\n"
+    }
+  ],
+  "summary": [
+    {
+      "task": "size_classification",
+      "arm": "baseline",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "avg_provider_calls": 14.0,
+      "avg_total_calls": 14.0,
+      "avg_tokens": 21256.0
+    },
+    {
+      "task": "size_classification",
+      "arm": "toolatlas",
+      "n": 1,
+      "passed": 1,
+      "pass_rate": 1.0,
+      "avg_provider_calls": 22.0,
+      "avg_total_calls": 23.0,
+      "avg_tokens": 21400.0
+    },
+    {
+      "task": "time_classification",
+      "arm": "baseline",
+      "n": 1,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "avg_provider_calls": 20.0,
+      "avg_total_calls": 20.0,
+      "avg_tokens": 27307.0
+    },
+    {
+      "task": "time_classification",
+      "arm": "toolatlas",
+      "n": 1,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "avg_provider_calls": 19.0,
+      "avg_total_calls": 20.0,
+      "avg_tokens": 20235.0
+    }
+  ]
+}

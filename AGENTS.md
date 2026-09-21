@@ -90,11 +90,47 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 - `--resume` does not validate model/provider/settings against prior attempts; JSONL rows lack that provenance. Use a fresh output directory when changing any configuration and retain the run's exact configuration. Do not silently pool attempts from different models.
 - Preserve Docker isolation: non-root UID, no runtime network or injected credentials, read-only root filesystem, dropped capabilities, no-new-privileges, bounded CPU/RAM/PIDs, no host bind mounts or Docker socket. `.dockerignore` allowlists the build context. The runner copies results out and removes its container/work volume. Host-run live A/B results are not evidence of Docker isolation, and Docker cannot isolate remote account effects if credentials/network are added.
 - The paper's RQ4 result measures total inference tokens (3.55M for ToolAtlas versus 4.44M for Vanilla), not raw tool calls. A production claim requires official MCPMark/MCP-Universe tasks and snapshots, four independent LLM rollouts, programmatic verifiers, token accounting, and broader services/agents.
+- Ensure deterministic training rollouts use batch primitives (e.g., `list_directory_with_sizes` over iterative `get_file_info`) to prevent inducing $N+1$ iterative playbooks that lock the agent out of batch shortcuts during schema pruning.
+- Schema pruning is a double-edged sword when memory encodes an iterative path: strict pruning saves tokens per turn but blinds the agent to un-pruned batch shortcuts. Always ensure tool-family retention or two-tier exposure in production deployments.
+
+## Findings & Lessons: Schema Pruning, Suboptimal Lock-in & Generalization
+
+### 1. The Anomaly: Moonshot Filesystem `size_classification` (22 vs 14 calls)
+During the Moonshot Kimi-k3 Filesystem evaluation (`benchmarks/results/eval-fs-moonshotai/kimi-k3`):
+- **Baseline**: 14 calls, 21,256 tokens (100% pass).
+- **ToolAtlas**: 22 calls, 21,400 tokens (100% pass).
+
+**Root Cause:**
+- Deterministic training in `mcpmark_file_property_ab.py` (`_size_policy`) inspected file sizes iteratively using `get_file_info` inside a `for name in files:` loop rather than the single-call `list_directory_with_sizes`.
+- ToolAtlas induced a 4-step playbook: `[list_directory -> create_directory -> get_file_info -> move_file]`.
+- Dynamic schema pruning (`filter_tools_by_playbook`) pruned away all 9 non-playbook tools, including `list_directory_with_sizes`.
+- **Baseline** had all 14 tools in its prompt, discovered `list_directory_with_sizes`, and fetched all sizes in 1 call ($1 + 1 + 3 + 9 = 14$ calls).
+- **ToolAtlas** strictly followed its memory playbook, executing 9 separate `get_file_info` calls ($1 + 9 + 3 + 9 = 22$ calls).
+- **The Token Paradox**: Despite +57% more calls (22 vs 14), total tokens were flat (+0.6%, 21,400 vs 21,256) because schema pruning cut per-turn prompt overhead from 2,101 to 658 tokens. ToolAtlas actually used *fewer* prompt tokens than Baseline (19,044 vs 19,587); the difference was purely completion tokens for tool arguments.
+
+### 2. Transferability Across MCP Servers (The Single-Item vs. Batch Dilemma)
+In empirical benchmarks, this inversion occurred **only** on Filesystem `size_classification`. On PostgreSQL Chinook, Moonshot achieved **-58.9% tokens** and -50% calls; on GitHub triage, Gemini achieved a **10.3x speedup**; and on Filesystem `time_classification`, ToolAtlas saved **-25.9% tokens**.
+
+However, the underlying dynamic ("Single-Item vs. Batch Tool") exists across all real-world MCP APIs:
+- **Notion MCP**: `append_block_children` (1 call for $N$ blocks) vs. looping `append_block` ($N$ calls).
+- **GitHub MCP**: `list_issues` with filters (1 call) vs. search + looping `get_issue` ($N+1$ calls).
+- **PostgreSQL MCP**: A single `JOIN` / `IN (...)` query vs. an iterative $N+1$ `SELECT` loop.
+- **Slack MCP**: Bulk digest posting vs. individual message spamming.
+
+If memory records an iterative loop and schema pruning eliminates the batch tool, the agent is locked into the slower path.
+
+### 3. Architectural Safeguards
+To prevent lock-in while preserving token reduction across all MCP servers:
+1. **Tool-Family Expansion (`tool_filter.py`)**: Expand playbook pruning to include functional sibling tools (e.g., metadata tools `get_file_info` + `list_directory_with_sizes`, or query tools `execute_query` + `describe_table`).
+2. **Two-Tier Schema Exposure**: Inject full JSON schemas (~400 tokens each) only for playbook tools, while providing a compact 1-line text catalog (~50 tokens total) of remaining server tools so the agent retains discovery awareness.
+3. **Dynamic Fallback Escalation**: If an agent hits a tool error or stalls, dynamically restore the full tool catalog to enable self-healing and alternate paths.
+4. **Shortest-Trace Competition (`memory.py`)**: When multiple rollouts succeed, ToolAtlas automatically preserves the shortest trace backbone, allowing faster paths to displace slower historical rollouts.
+5. **Training Policy Optimization**: Ensure synthetic training harnesses always exercise batch primitives where available.
 
 ## Verify
 
 Rerun `pytest -q` after touching `memory.py`, `models.py`, either server, `similarity.py`, fixtures, or benchmark code. Run `toolatlas-demo` after changing the MCP loop or persistence. Run `python -m toolatlas.paper_benchmark` after changing benchmark logic or its fixtures, then inspect both stored result files and confirm they contain no secrets or machine-local paths.
 
-Current full suite: 128 passed, 1 skipped (GitHub live test skips without server install, PAT, or test repo), including `tests/test_llm_memory.py` (23 LLM-pipeline tests, all faked/offline), `tests/test_tool_filter.py` (14 schema pruning tests), and `tests/test_history_compress.py` (5 history compression tests). `npm install` is required to execute rather than skip the real Filesystem/Everything integrations.
+Current full suite: 132 passed, 1 skipped (GitHub live test skips without server install, PAT, or test repo), including `tests/test_llm_memory.py` (23 LLM-pipeline tests, all faked/offline), `tests/test_tool_filter.py` (14 schema pruning tests), `tests/test_history_compress.py` (5 history compression tests), and `tests/test_notion_server.py` (4 Notion simulator tests). `npm install` is required to execute rather than skip the real Filesystem/Everything integrations.
 
 After changing the Docker harness, run `benchmarks/docker/run.ps1` and inspect `checks.json`, pytest skips, tool coverage, verifier output, and both control report files. Preserve failed attempts and distinguish skipped/unexecuted experiments from task failures. Scan shareable results for secrets and host paths; current live A/B verifier logs contain absolute Windows paths and need redaction before publishing. Python dependency ranges are not locked; the saved Docker run includes `python-packages.txt` and `image-id.txt` captured separately.
