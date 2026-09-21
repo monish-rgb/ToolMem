@@ -65,6 +65,7 @@ class CallLog:
     calls: list[str] = field(default_factory=list)
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    raw_usage: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def total_tokens(self) -> int:
@@ -237,6 +238,8 @@ async def run_llm_agent(model: str, temperature: float, max_steps: int, system_p
                 llm.generate, system_prompt, contents, openai_tools, temperature, 1024)
             log.prompt_tokens += response["prompt_tokens"]
             log.completion_tokens += response["completion_tokens"]
+            log.raw_usage.append({"prompt_tokens": response["prompt_tokens"],
+                                  "completion_tokens": response["completion_tokens"]})
             if not response["tool_calls"]:
                 return log, response["text"]
             # Echo raw parts verbatim: preserves thoughtSignature required by Gemini 3+.
@@ -273,6 +276,11 @@ async def run_llm_agent(model: str, temperature: float, max_steps: int, system_p
         if usage:
             log.prompt_tokens += getattr(usage, "prompt_tokens", 0) or 0
             log.completion_tokens += getattr(usage, "completion_tokens", 0) or 0
+            try:
+                log.raw_usage.append(usage.model_dump())
+            except Exception:
+                log.raw_usage.append({"prompt_tokens": log.prompt_tokens,
+                                      "completion_tokens": log.completion_tokens})
         choice = response.choices[0].message
         if not choice.tool_calls:
             return log, choice.content or ""
@@ -306,6 +314,7 @@ async def eval_attempt(task: str, arm: str, attempt: int, model: str, temperatur
         command=node, args=[str(_fsp(Path.cwd()).resolve()), str(root)])
     memory_server = create_memory_server(frozen_db)
     memory_calls = 0
+    injected_guidance: dict[str, Any] | None = None
     started = time.perf_counter()
     async with Client(fs_params) as client, Client(memory_server) as memory:
         listed = await client.list_tools()
@@ -317,7 +326,8 @@ async def eval_attempt(task: str, arm: str, attempt: int, model: str, temperatur
             guidance = _value(await memory.call_tool(
                 "get_guidance", {"task": TRAIN_SUMMARIES[task], "top_k": 3, "read_budget": 8}))
             memory_calls += 1
-            prompt += f"\nLearned playbook for this task family: {json.dumps(guidance.get('playbook', []))}"
+            injected_guidance = guidance.get("playbook", [])
+            prompt += f"\nLearned playbook for this task family: {json.dumps(injected_guidance)}"
         task_text = (TASKS_DIR / task / "description.md").read_text()
         log, final = await run_llm_agent(model, temperature, 30, prompt, openai_tools, client, task_text, root)
     passed, output = run_verifier(TASKS_DIR / task / "verify.py", root)
@@ -326,6 +336,7 @@ async def eval_attempt(task: str, arm: str, attempt: int, model: str, temperatur
             "total_mcp_calls": len(log.calls) + memory_calls,
             "tools_used": log.calls, "prompt_tokens": log.prompt_tokens,
             "completion_tokens": log.completion_tokens, "total_tokens": log.total_tokens,
+            "raw_usage": log.raw_usage, "injected_guidance": injected_guidance,
             "seconds": round(time.perf_counter() - started, 1),
             "final_text": final[:500], "verifier_output": output[-500:]}
 
@@ -450,6 +461,29 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
         if not (TASKS_DIR / task / "description.md").is_file() or not (TASKS_DIR / task / "verify.py").is_file():
             raise FileNotFoundError(f"official task files missing for {task} in {TASKS_DIR}")
 
+    from .gemini_rest import provider_name
+    try:
+        code_rev = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                                  text=True, timeout=15).stdout.strip()
+    except Exception:
+        code_rev = "unknown"
+    manifest = {"model": args.model, "temperature": args.temperature, "k": args.k,
+                "max_steps": 30, "provider": provider_name(),
+                "snapshot_sha256": SNAPSHOT_SHA256, "code_rev": code_rev,
+                "claim_scope": "official_snapshot_and_verifier_file_property_slice_frozen_memory_real_llm",
+                "train_eval_overlap": "same-task deterministic training; label as same-task reuse, not held-out"}
+    manifest_path = out_root / "manifest.json"
+    if manifest_path.is_file():
+        prior = json.loads(manifest_path.read_text())
+        mismatched = [key for key in ("model", "temperature", "k", "provider", "snapshot_sha256", "code_rev")
+                      if prior.get(key) != manifest[key]]
+        if mismatched:
+            raise SystemExit(
+                f"refusing to resume: manifest mismatch on {mismatched}. "
+                "Use a fresh --output directory when changing model/settings/snapshot/code.")
+    else:
+        manifest_path.write_text(json.dumps(manifest, indent=2))
+
     train_db = out_root / "train-memory.db"
     frozen_db = out_root / "frozen-memory.db"
     partial_log = out_root / "attempts_partial.jsonl"
@@ -527,7 +561,7 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
     summary = [summarize(t, a) for t in tasks for a in ("baseline", "toolatlas")]
     report = {"benchmark": "mcpmark_file_property_llm_ab", "model": args.model,
               "temperature": args.temperature, "k": args.k,
-              "claim_scope": "official_snapshot_and_verifier_file_property_slice_frozen_memory_real_llm",
+              "manifest": manifest,
               "snapshot_sha256": SNAPSHOT_SHA256, "frozen_memory_stats": stats,
               "training": train_report, "attempts": attempts, "summary": summary}
     (out_root / "report.json").write_text(json.dumps(report, indent=2))

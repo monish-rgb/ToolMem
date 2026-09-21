@@ -1,0 +1,54 @@
+{
+  "model_name": "openai/moonshotai/kimi-k3",
+  "model_config": {
+    "mcp_service": "filesystem",
+    "model_name": "openai/moonshotai/kimi-k3",
+    "litellm_run_model_name": "kimi-k3",
+    "reasoning_effort": "default",
+    "timeout": 900,
+    "agent_name": "mcpmark"
+  },
+  "total_tasks": 1,
+  "successful_tasks": 1,
+  "failed_tasks": 0,
+  "success_rate": 100.0,
+  "total_task_execution_time": 744.9317474365234,
+  "average_task_execution_time": 744.9317474365234,
+  "total_agent_execution_time": 744.1141419410706,
+  "average_agent_execution_time": 744.1141419410706,
+  "token_usage": {
+    "total_input_tokens": 21141,
+    "total_output_tokens": 1384,
+    "total_tokens": 22525,
+    "total_reasoning_tokens": 0,
+    "avg_input_tokens": 21141.0,
+    "avg_output_tokens": 1384.0,
+    "avg_total_tokens": 22525.0,
+    "avg_reasoning_tokens": 0.0
+  },
+  "turn_usage": {
+    "total_turns": 6,
+    "avg_turns": 6.0
+  },
+  "category_breakdown": {
+    "file_property": {
+      "total": 1,
+      "success_rate": 100.0,
+      "avg_time": 744.93,
+      "token_usage": {
+        "total_input": 21141,
+        "total_output": 1384,
+        "total": 22525,
+        "total_reasoning": 0,
+        "avg_input": 21141.0,
+        "avg_output": 1384.0,
+        "avg_total": 22525.0,
+        "avg_reasoning": 0.0
+      },
+      "turn_usage": {
+        "total_turns": 6,
+        "avg_turns": 6.0
+      }
+    }
+  }
+}

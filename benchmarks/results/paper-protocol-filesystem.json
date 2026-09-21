@@ -2,7 +2,7 @@
   "schema_version": "1",
   "benchmark": "toolatlas_paper_protocol_filesystem_control",
   "paper": "arxiv:2607.11126",
-  "generated_at": "2026-09-16T15:37:28.371133+00:00",
+  "generated_at": "2026-09-19T08:30:44.118493+00:00",
   "runner": "deterministic_read_only_control",
   "claim_scope": "local_filesystem_control_not_full_paper_reproduction",
   "protocol": {
@@ -73,7 +73,7 @@
           "total_mcp_calls": 96,
           "mean_provider_tool_calls_per_run": 4.0,
           "mean_total_mcp_calls_per_run": 4.0,
-          "median_elapsed_ms": 35.481
+          "median_elapsed_ms": 26.253
         },
         "tasks": [
           {
@@ -98,7 +98,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 60.353
+                "elapsed_ms": 37.828
               },
               {
                 "passed": true,
@@ -113,7 +113,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 43.715
+                "elapsed_ms": 27.381
               },
               {
                 "passed": true,
@@ -128,7 +128,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 38.351
+                "elapsed_ms": 26.965
               },
               {
                 "passed": true,
@@ -143,7 +143,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.743
+                "elapsed_ms": 26.369
               }
             ]
           },
@@ -169,7 +169,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.804
+                "elapsed_ms": 25.25
               },
               {
                 "passed": true,
@@ -184,7 +184,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.284
+                "elapsed_ms": 26.32
               },
               {
                 "passed": true,
@@ -199,7 +199,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.587
+                "elapsed_ms": 26.737
               },
               {
                 "passed": true,
@@ -214,7 +214,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.399
+                "elapsed_ms": 26.228
               }
             ]
           },
@@ -240,7 +240,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.764
+                "elapsed_ms": 26.717
               },
               {
                 "passed": true,
@@ -255,7 +255,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.153
+                "elapsed_ms": 22.984
               },
               {
                 "passed": true,
@@ -270,7 +270,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 32.184
+                "elapsed_ms": 25.727
               },
               {
                 "passed": true,
@@ -285,7 +285,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 32.645
+                "elapsed_ms": 23.404
               }
             ]
           },
@@ -311,7 +311,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 39.551
+                "elapsed_ms": 29.786
               },
               {
                 "passed": true,
@@ -326,7 +326,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.917
+                "elapsed_ms": 35.652
               },
               {
                 "passed": true,
@@ -341,7 +341,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.894
+                "elapsed_ms": 26.978
               },
               {
                 "passed": true,
@@ -356,7 +356,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.94
+                "elapsed_ms": 21.095
               }
             ]
           },
@@ -382,7 +382,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.693
+                "elapsed_ms": 20.004
               },
               {
                 "passed": true,
@@ -397,7 +397,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.831
+                "elapsed_ms": 22.42
               },
               {
                 "passed": true,
@@ -412,7 +412,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 32.713
+                "elapsed_ms": 23.207
               },
               {
                 "passed": true,
@@ -427,7 +427,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.484
+                "elapsed_ms": 26.252
               }
             ]
           },
@@ -453,7 +453,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.714
+                "elapsed_ms": 26.972
               },
               {
                 "passed": true,
@@ -468,7 +468,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.57
+                "elapsed_ms": 26.255
               },
               {
                 "passed": true,
@@ -483,7 +483,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.479
+                "elapsed_ms": 24.319
               },
               {
                 "passed": true,
@@ -498,7 +498,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.61
+                "elapsed_ms": 24.696
               }
             ]
           }
@@ -518,7 +518,7 @@
           "total_mcp_calls": 72,
           "mean_provider_tool_calls_per_run": 2.0,
           "mean_total_mcp_calls_per_run": 3.0,
-          "median_elapsed_ms": 24.352
+          "median_elapsed_ms": 17.206
         },
         "tasks": [
           {
@@ -541,7 +541,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.474,
+                "elapsed_ms": 17.152,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -609,7 +609,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -624,7 +625,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.719,
+                "elapsed_ms": 17.441,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -692,7 +693,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -707,7 +709,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.898,
+                "elapsed_ms": 16.658,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -775,7 +777,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -790,7 +793,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.583,
+                "elapsed_ms": 16.228,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -858,7 +861,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -884,7 +888,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.406,
+                "elapsed_ms": 17.747,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -952,7 +956,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -967,7 +972,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.818,
+                "elapsed_ms": 17.388,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1035,7 +1040,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1050,7 +1056,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.328,
+                "elapsed_ms": 17.865,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1118,7 +1124,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1133,7 +1140,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.419,
+                "elapsed_ms": 17.281,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1201,7 +1208,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -1227,7 +1235,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.552,
+                "elapsed_ms": 17.063,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1295,7 +1303,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1310,7 +1319,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.264,
+                "elapsed_ms": 16.751,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1378,7 +1387,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1393,7 +1403,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.969,
+                "elapsed_ms": 17.307,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1461,7 +1471,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1476,7 +1487,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.563,
+                "elapsed_ms": 18.846,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1544,7 +1555,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -1570,7 +1582,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.072,
+                "elapsed_ms": 13.008,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1638,7 +1650,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1653,7 +1666,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.042,
+                "elapsed_ms": 13.322,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1721,7 +1734,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1736,7 +1750,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.908,
+                "elapsed_ms": 14.679,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1804,7 +1818,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1819,7 +1834,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.577,
+                "elapsed_ms": 15.187,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1887,7 +1902,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -1913,7 +1929,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.183,
+                "elapsed_ms": 18.093,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -1981,7 +1997,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -1996,7 +2013,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.129,
+                "elapsed_ms": 20.055,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2064,7 +2081,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -2079,7 +2097,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.45,
+                "elapsed_ms": 18.767,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2147,7 +2165,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -2162,7 +2181,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.365,
+                "elapsed_ms": 17.261,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2230,7 +2249,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -2256,7 +2276,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.089,
+                "elapsed_ms": 16.91,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2324,7 +2344,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -2339,7 +2360,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.34,
+                "elapsed_ms": 16.277,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2407,7 +2428,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -2422,7 +2444,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 29.265,
+                "elapsed_ms": 17.446,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2490,7 +2512,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -2505,7 +2528,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.886,
+                "elapsed_ms": 14.701,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -2573,7 +2596,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -2648,7 +2672,7 @@
           "total_mcp_calls": 96,
           "mean_provider_tool_calls_per_run": 4.0,
           "mean_total_mcp_calls_per_run": 4.0,
-          "median_elapsed_ms": 36.328
+          "median_elapsed_ms": 22.166
         },
         "tasks": [
           {
@@ -2673,7 +2697,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 61.468
+                "elapsed_ms": 41.709
               },
               {
                 "passed": true,
@@ -2688,7 +2712,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 39.048
+                "elapsed_ms": 26.477
               },
               {
                 "passed": true,
@@ -2703,7 +2727,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.396
+                "elapsed_ms": 25.598
               },
               {
                 "passed": true,
@@ -2718,7 +2742,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.964
+                "elapsed_ms": 20.156
               }
             ]
           },
@@ -2744,7 +2768,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.429
+                "elapsed_ms": 22.306
               },
               {
                 "passed": true,
@@ -2759,7 +2783,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.279
+                "elapsed_ms": 22.447
               },
               {
                 "passed": true,
@@ -2774,7 +2798,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.718
+                "elapsed_ms": 23.4
               },
               {
                 "passed": true,
@@ -2789,7 +2813,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.522
+                "elapsed_ms": 21.976
               }
             ]
           },
@@ -2815,7 +2839,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.213
+                "elapsed_ms": 22.025
               },
               {
                 "passed": true,
@@ -2830,7 +2854,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.196
+                "elapsed_ms": 19.344
               },
               {
                 "passed": true,
@@ -2845,7 +2869,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.587
+                "elapsed_ms": 21.183
               },
               {
                 "passed": true,
@@ -2860,7 +2884,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.527
+                "elapsed_ms": 21.096
               }
             ]
           },
@@ -2886,7 +2910,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.698
+                "elapsed_ms": 21.069
               },
               {
                 "passed": true,
@@ -2901,7 +2925,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 38.011
+                "elapsed_ms": 21.372
               },
               {
                 "passed": true,
@@ -2916,7 +2940,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 39.509
+                "elapsed_ms": 22.908
               },
               {
                 "passed": true,
@@ -2931,7 +2955,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.649
+                "elapsed_ms": 23.142
               }
             ]
           },
@@ -2957,7 +2981,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 35.323
+                "elapsed_ms": 21.511
               },
               {
                 "passed": true,
@@ -2972,7 +2996,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.659
+                "elapsed_ms": 22.699
               },
               {
                 "passed": true,
@@ -2987,7 +3011,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 33.901
+                "elapsed_ms": 21.865
               },
               {
                 "passed": true,
@@ -3002,7 +3026,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.189
+                "elapsed_ms": 20.501
               }
             ]
           },
@@ -3028,7 +3052,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 36.377
+                "elapsed_ms": 20.964
               },
               {
                 "passed": true,
@@ -3043,7 +3067,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 40.125
+                "elapsed_ms": 23.587
               },
               {
                 "passed": true,
@@ -3058,7 +3082,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 37.727
+                "elapsed_ms": 27.962
               },
               {
                 "passed": true,
@@ -3073,7 +3097,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 34.398
+                "elapsed_ms": 22.564
               }
             ]
           }
@@ -3093,7 +3117,7 @@
           "total_mcp_calls": 72,
           "mean_provider_tool_calls_per_run": 2.0,
           "mean_total_mcp_calls_per_run": 3.0,
-          "median_elapsed_ms": 24.51
+          "median_elapsed_ms": 15.131
         },
         "tasks": [
           {
@@ -3116,7 +3140,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.402,
+                "elapsed_ms": 15.518,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3184,7 +3208,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3199,7 +3224,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.919,
+                "elapsed_ms": 15.092,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3267,7 +3292,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3282,7 +3308,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.098,
+                "elapsed_ms": 15.651,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3350,7 +3376,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3365,7 +3392,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.013,
+                "elapsed_ms": 16.32,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3433,7 +3460,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -3459,7 +3487,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 25.921,
+                "elapsed_ms": 20.311,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3527,7 +3555,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3542,7 +3571,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.92,
+                "elapsed_ms": 13.893,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3610,7 +3639,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3625,7 +3655,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.81,
+                "elapsed_ms": 13.668,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3693,7 +3723,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3708,7 +3739,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.805,
+                "elapsed_ms": 14.673,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3776,7 +3807,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -3802,7 +3834,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.145,
+                "elapsed_ms": 14.908,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3870,7 +3902,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3885,7 +3918,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.638,
+                "elapsed_ms": 15.17,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -3953,7 +3986,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -3968,7 +4002,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.697,
+                "elapsed_ms": 15.634,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4036,7 +4070,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4051,7 +4086,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.691,
+                "elapsed_ms": 14.296,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4119,7 +4154,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -4145,7 +4181,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 21.577,
+                "elapsed_ms": 14.169,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4213,7 +4249,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4228,7 +4265,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.331,
+                "elapsed_ms": 13.982,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4296,7 +4333,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4311,7 +4349,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.084,
+                "elapsed_ms": 14.45,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4379,7 +4417,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4394,7 +4433,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 22.969,
+                "elapsed_ms": 15.195,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4462,7 +4501,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -4488,7 +4528,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.707,
+                "elapsed_ms": 14.502,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4556,7 +4596,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4571,7 +4612,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 26.169,
+                "elapsed_ms": 14.171,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4639,7 +4680,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4654,7 +4696,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.618,
+                "elapsed_ms": 15.298,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4722,7 +4764,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4737,7 +4780,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.218,
+                "elapsed_ms": 14.621,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4805,7 +4848,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }
@@ -4831,7 +4875,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 23.176,
+                "elapsed_ms": 16.705,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4899,7 +4943,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4914,7 +4959,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.681,
+                "elapsed_ms": 18.268,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -4982,7 +5027,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -4997,7 +5043,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 31.236,
+                "elapsed_ms": 17.864,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -5065,7 +5111,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               },
@@ -5080,7 +5127,7 @@
                   "read_text_file"
                 ],
                 "forbidden_write_attempts": 0,
-                "elapsed_ms": 24.813,
+                "elapsed_ms": 16.459,
                 "guidance": {
                   "seed_candidates": [
                     {
@@ -5148,7 +5195,8 @@
                       }
                     ],
                     "reads_used": 6,
-                    "read_budget": 8
+                    "read_budget": 8,
+                    "retrieval": "lexical"
                   }
                 }
               }

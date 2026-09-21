@@ -13,6 +13,9 @@ from __future__ import annotations
 
 import json
 import os
+import random
+import time
+import urllib.error
 import urllib.request
 from typing import Any
 
@@ -64,13 +67,14 @@ class GeminiRestClient:
             raise RuntimeError("set $env:LLM_MODEL (e.g. gemini-2.5-flash) for the Gemini provider")
 
     def _post(self, payload: dict[str, Any]) -> dict[str, Any]:
-        import random
-        import time
-        import urllib.error
         url = f"{self.host}/v1beta/models/{self.model}:generateContent"
         body = json.dumps(payload).encode()
         last_error = ""
-        for attempt in range(6):
+        max_retries = max(1, int(os.environ.get("GEMINI_MAX_RETRIES", "10")))
+        base_delay = max(0.1, float(os.environ.get("GEMINI_RETRY_INITIAL_SECONDS", "2")))
+        max_delay = max(base_delay, float(os.environ.get("GEMINI_RETRY_MAX_SECONDS", "60")))
+        retryable = (429, 500, 502, 503, 504)
+        for attempt in range(max_retries):
             request = urllib.request.Request(
                 url, data=body,
                 headers={"x-goog-api-key": self.api_key, "Content-Type": "application/json"},
@@ -80,9 +84,22 @@ class GeminiRestClient:
                     return json.loads(response.read().decode())
             except urllib.error.HTTPError as exc:
                 last_error = exc.read().decode()[:500]
-                if exc.code not in (429, 500, 502, 503, 504) or attempt == 5:
+                if exc.code not in retryable or attempt == max_retries - 1:
                     raise RuntimeError(f"Gemini API HTTP {exc.code}: {last_error}") from exc
-                time.sleep(2 ** attempt + random.uniform(0, 2))
+                retry_after = exc.headers.get("Retry-After")
+                delay = min(max_delay, base_delay * (2 ** attempt)) + random.uniform(0, base_delay)
+                if retry_after:
+                    try:
+                        delay = max(delay, min(max_delay, float(retry_after)))
+                    except ValueError:
+                        pass
+                time.sleep(delay)
+            except urllib.error.URLError as exc:
+                last_error = str(exc)[:500]
+                if attempt == max_retries - 1:
+                    raise RuntimeError(f"Gemini API transport error: {last_error}") from exc
+                delay = min(max_delay, base_delay * (2 ** attempt)) + random.uniform(0, base_delay)
+                time.sleep(delay)
         raise RuntimeError(f"Gemini API unavailable after retries: {last_error}")
 
     def generate(self, system: str, contents: list[dict[str, Any]],

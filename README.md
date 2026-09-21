@@ -221,10 +221,12 @@ Equivalent configuration:
 
 Recommended agent flow:
 
-1. Call `get_guidance` before solving a task and place the returned playbook/tips in the agent context.
+1. Call `get_guidance` before solving a task and place the returned block in the agent context, conventions first: planning conventions, then `avoid` cautions (verified failure modes — do not retry them), then the tool playbook.
 2. Use the ordinary provider tools.
 3. Verify the result externally.
 4. Call `remember_execution` with only agent-neutral rationales and the verified outcome.
+
+Seed retrieval is lexical first with a trigram fallback for paraphrased queries; truly unrelated queries still return empty guidance (no invented advice). Pass `token_budget` to cap the rendered guidance size; every response carries a `guidance_tokens_estimate`. Structural rationales (`invoke X …`, empty, …) are upgraded to positional intent at induction; provided rationales are kept.
 
 For repeated attempts of one task, prefer `remember_rollouts`. It chooses a successful backbone, retains corrections from failures, assigns execution IDs, and computes confidence from the verified batch.
 
@@ -251,14 +253,18 @@ Guidance now includes:
 - A versioned response schema.
 - Confidence and source provenance.
 - Evidence counts for tool tips.
+- Verified failure-avoidance notes (`avoid`) and planning conventions first.
 - An explicit `ReadTrace` / `Expand` / `ReadTool` / `ReadStrategy` / `Done` traversal audit.
-- Reads used versus the configured read budget.
+- Reads used versus the configured read budget, plus retrieval mode (`lexical`, `trigram-fallback`, `none`) and per-task coverage.
+- A deterministic `guidance_tokens_estimate` (characters/4).
+
+Offline capability exploration (`src/toolatlas/explorer.py`) probes each allowed tool with minimal affordance calls and outward boundary probes (missing/mistyped/empty/oversized inputs), then ingests only verified outcomes: confirmations become affordances, rejections become boundary cautions, contradictions are reported and never ingested. Exploration is explicit, allow-listed, refuses destructive tools by default, and supports a dry run. Use `reverification_due` (also on the read-only server profile) to schedule refresh runs; amortize this offline cost over evaluation runs.
 
 SQLite is configured in WAL mode and mutations are guarded within a server process. A production deployment should still use one memory-writer service instead of starting several independent writers against the same database.
 
 ## Where this differs from the full paper
 
-The paper uses three seed tasks per tool, four rollouts per task, three exploration rounds with three boundary and three affordance probes per target, semantic embeddings, and an LLM navigator with an eight-read budget. This prototype supports the same data flow and the default `top_k=3`, `read_budget=8`, but the included demo is deliberately smaller. See `src/toolatlas/memory.py` for the induction/traversal logic and `src/toolatlas/demo.py` for the execution-verified MCP loop.
+The paper uses three seed tasks per tool, four rollouts per task, three exploration rounds with three boundary and three affordance probes per target, semantic embeddings, and an LLM navigator with an eight-read budget. This prototype supports the same data flow and the default `top_k=3`, `read_budget=8`, but replaces embeddings with lexical-plus-trigram similarity, the LLM navigator with a deterministic bounded walk (with early stop once the playbook is sufficient), and LLM-distilled rationales with positional intent templates. Near-duplicate evidence merges by normalized/fuzzy match so strategies form across paraphrased rollouts. The included demo is deliberately smaller. See `src/toolatlas/memory.py` for the induction/traversal logic and `src/toolatlas/demo.py` for the execution-verified MCP loop.
 
 ## Remaining improvements
 

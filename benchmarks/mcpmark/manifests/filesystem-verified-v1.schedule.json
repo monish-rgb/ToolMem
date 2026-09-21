@@ -1,0 +1,977 @@
+{
+  "experiment_id": "filesystem-verified-v1",
+  "training_schedule": [
+    {
+      "task_id": "desktop/project_management",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "desktop_template/contact_information",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "file_context/file_splitting",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "file_property/size_classification",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "folder_structure/structure_mirror",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "legal_document/dispute_review",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "papers/organize_legacy_papers",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "student_database/gradebased_score",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "threestudio/code_locating",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "task_id": "votenet/debugging",
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "eval_schedule": [
+    {
+      "task_id": "desktop/music_report",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/music_report",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/music_report",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/music_report",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop/timeline_extraction",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/budget_computation",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "desktop_template/file_arrangement",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/duplicates_searching",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/file_merging",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/file_merging",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/file_merging",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/file_merging",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/pattern_matching",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/pattern_matching",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/pattern_matching",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/pattern_matching",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/uppercase",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/uppercase",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/uppercase",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_context/uppercase",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_property/time_classification",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_property/time_classification",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_property/time_classification",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "file_property/time_classification",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "folder_structure/structure_analysis",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/individual_comments",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/individual_comments",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/individual_comments",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/individual_comments",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "legal_document/solution_tracing",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/author_folders",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/author_folders",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/author_folders",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/author_folders",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/find_math_paper",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/find_math_paper",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/find_math_paper",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "papers/find_math_paper",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/duplicate_name",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/duplicate_name",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/duplicate_name",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/duplicate_name",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/english_talent",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/english_talent",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/english_talent",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "student_database/english_talent",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/output_analysis",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/output_analysis",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/output_analysis",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/output_analysis",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "threestudio/requirements_completion",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/dataset_comparison",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/requirements_writing",
+      "attempt": 1,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/requirements_writing",
+      "attempt": 2,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "toolatlas",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/requirements_writing",
+      "attempt": 3,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    },
+    {
+      "task_id": "votenet/requirements_writing",
+      "attempt": 4,
+      "arms": [
+        "baseline",
+        "toolatlas"
+      ],
+      "first": "baseline",
+      "reset_between_arms": true,
+      "fresh_conversation": true
+    }
+  ]
+}

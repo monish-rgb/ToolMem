@@ -26,71 +26,91 @@ def _rollout(task_id: str, summary: str, item: dict[str, Any]) -> Rollout:
     )
 
 
-def create_memory_server(path: str | Path | None = None) -> MCPServer:
+READ_ONLY_TOOLS = frozenset({
+    "get_guidance",
+    "inspect_tool",
+    "suggest_probes",
+    "refresh_status",
+    "reverification_due",
+    "memory_stats",
+})
+"""Tools exposed by the read-only evaluation profile.
+
+Excluded from evaluation: ingestion (register_tools, remember_execution,
+remember_rollouts), re-verification (reverify_trace), and governance or
+status-change mutation (set_trace_status). refresh_status only lists review
+candidates and is safe to expose.
+"""
+
+
+def create_memory_server(
+    path: str | Path | None = None, read_only: bool = False
+) -> MCPServer:
     store = ToolMemory(path)
     server = MCPServer("toolatlas-memory")
 
-    @server.tool()
-    def register_tools(tools: list[dict[str, Any]]) -> dict[str, Any]:
-        """Register provider tool specifications before learning executions."""
-        store.register_tools(
-            ToolSpec(
-                name=item["name"],
-                description=item.get("description", ""),
-                input_schema=item.get("input_schema", {}),
-                version=item.get("version", "unknown"),
-                provider=item.get("provider", "local"),
+    if not read_only:
+        @server.tool()
+        def register_tools(tools: list[dict[str, Any]]) -> dict[str, Any]:
+            """Register provider tool specifications before learning executions."""
+            store.register_tools(
+                ToolSpec(
+                    name=item["name"],
+                    description=item.get("description", ""),
+                    input_schema=item.get("input_schema", {}),
+                    version=item.get("version", "unknown"),
+                    provider=item.get("provider", "local"),
+                )
+                for item in tools
             )
-            for item in tools
-        )
-        return store.stats()
+            return store.stats()
 
-    @server.tool()
-    def remember_execution(
-        task_id: str,
-        summary: str,
-        steps: list[dict[str, str]],
-        resolved: bool,
-        observation: str = "",
-        verifier_type: str = "external",
-    ) -> dict[str, Any]:
-        """Induce graph memory from one execution-verified agent rollout."""
-        rollout = _rollout(
-            task_id, summary,
-            {
-                "steps": steps,
-                "resolved": resolved,
-                "observation": observation,
-                "verifier_type": verifier_type,
-            },
-        )
-        trace = store.induce(task_id, summary, [rollout])
-        return {
-            "schema_version": SCHEMA_VERSION,
-            "qid": trace.qid,
-            "tools": trace.tools,
-            "confidence": trace.confidence,
-            "stats": store.stats(),
-        }
+        @server.tool()
+        def remember_execution(
+            task_id: str,
+            summary: str,
+            steps: list[dict[str, str]],
+            resolved: bool,
+            observation: str = "",
+            verifier_type: str = "external",
+        ) -> dict[str, Any]:
+            """Induce graph memory from one execution-verified agent rollout."""
+            rollout = _rollout(
+                task_id, summary,
+                {
+                    "steps": steps,
+                    "resolved": resolved,
+                    "observation": observation,
+                    "verifier_type": verifier_type,
+                },
+            )
+            trace = store.induce(task_id, summary, [rollout])
+            return {
+                "schema_version": SCHEMA_VERSION,
+                "qid": trace.qid,
+                "tools": trace.tools,
+                "confidence": trace.confidence,
+                "stats": store.stats(),
+            }
 
-    @server.tool()
-    def remember_rollouts(
-        task_id: str, summary: str, rollouts: list[dict[str, Any]]
-    ) -> dict[str, Any]:
-        """Induce one trace from multiple independently verified attempts."""
-        trace = store.induce(
-            task_id,
-            summary,
-            [_rollout(task_id, summary, item) for item in rollouts],
-        )
-        return {
-            "schema_version": SCHEMA_VERSION,
-            "qid": trace.qid,
-            "confidence": trace.confidence,
-            "success_count": trace.success_count,
-            "failure_count": trace.failure_count,
-            "execution_ids": trace.source_executions,
-        }
+        @server.tool()
+        def remember_rollouts(
+            task_id: str, summary: str, rollouts: list[dict[str, Any]]
+        ) -> dict[str, Any]:
+            """Induce one trace from multiple independently verified attempts."""
+            trace = store.induce(
+                task_id,
+                summary,
+                [_rollout(task_id, summary, item) for item in rollouts],
+            )
+            return {
+                "schema_version": SCHEMA_VERSION,
+                "qid": trace.qid,
+                "confidence": trace.confidence,
+                "success_count": trace.success_count,
+                "failure_count": trace.failure_count,
+                "execution_ids": trace.source_executions,
+            }
 
     @server.tool()
     def get_guidance(
@@ -122,27 +142,33 @@ def create_memory_server(path: str | Path | None = None) -> MCPServer:
         """List stale, invalid, or quarantined memories requiring review."""
         return store.refresh_status(max_age_days=max_age_days)
 
-    @server.tool()
-    def reverify_trace(
-        task_id: str,
-        resolved: bool,
-        verifier_type: str,
-        observation: str = "",
-    ) -> dict[str, Any]:
-        """Record external re-verification against the current tool schemas."""
-        trace = store.reverify_trace(task_id, resolved, verifier_type, observation)
-        return {
-            "qid": trace.qid,
-            "status": trace.status,
-            "confidence": trace.confidence,
-            "last_verified_at": trace.last_verified_at,
-        }
+    if not read_only:
+        @server.tool()
+        def reverify_trace(
+            task_id: str,
+            resolved: bool,
+            verifier_type: str,
+            observation: str = "",
+        ) -> dict[str, Any]:
+            """Record external re-verification against the current tool schemas."""
+            trace = store.reverify_trace(task_id, resolved, verifier_type, observation)
+            return {
+                "qid": trace.qid,
+                "status": trace.status,
+                "confidence": trace.confidence,
+                "last_verified_at": trace.last_verified_at,
+            }
+
+        @server.tool()
+        def set_trace_status(task_id: str, status: str, reason: str) -> dict[str, Any]:
+            """Govern a trace by setting it stale, invalid, or quarantined with a reason."""
+            trace = store.set_trace_status(task_id, status, reason)
+            return {"qid": trace.qid, "status": trace.status, "reason": trace.status_reason}
 
     @server.tool()
-    def set_trace_status(task_id: str, status: str, reason: str) -> dict[str, Any]:
-        """Govern a trace by setting it stale, invalid, or quarantined with a reason."""
-        trace = store.set_trace_status(task_id, status, reason)
-        return {"qid": trace.qid, "status": trace.status, "reason": trace.status_reason}
+    def reverification_due(max_age_days: int = 30) -> dict[str, Any]:
+        """List traces needing a re-verification run, most overdue first."""
+        return store.reverification_due(max_age_days=max_age_days)
 
     @server.tool()
     def memory_stats() -> dict[str, int]:
@@ -158,7 +184,10 @@ def create_memory_server(path: str | Path | None = None) -> MCPServer:
 
 
 memory_path = Path(os.environ.get("TOOLATLAS_MEMORY_PATH", ".toolatlas/memory.db"))
-mcp = create_memory_server(memory_path)
+memory_read_only = os.environ.get("TOOLATLAS_READ_ONLY", "").strip().lower() in (
+    "1", "true", "yes", "on",
+)
+mcp = create_memory_server(memory_path, read_only=memory_read_only)
 
 
 def main() -> None:

@@ -21,12 +21,16 @@ from .models import (
     TraceNode,
     utc_now,
 )
-from .similarity import cosine_text, tokens
+from .similarity import cosine_text, tokens, trigram_similarity
 from .storage import SCHEMA_VERSION, SQLiteStore
 
 ALLOWED_STATUSES = {"active", "stale", "invalid", "quarantined"}
 GOVERNANCE_STATUSES = ALLOWED_STATUSES - {"active"}
 DEFAULT_MAX_AGE_DAYS = 30
+TRIGRAM_FALLBACK_THRESHOLD = 0.15
+MAX_PLAYBOOK_STEPS = 8
+MAX_AVOID_NOTES = 2
+MAX_CONVENTIONS = 3
 
 
 def _unique(values: Iterable[str]) -> list[str]:
@@ -39,6 +43,81 @@ def _generic_rationale(text: str) -> str:
     text = re.sub(r"(['\"]).*?\1", "<value>", text)
     text = re.sub(r"\b\d+(?:\.\d+)?\b", "<value>", text)
     return " ".join(text.split()).strip()[:1000]
+
+
+STRUCTURAL_RATIONALE_RE = re.compile(
+    r"^(invoke|run|call|execute|use)\s+[a-z0-9_.\-]+\s*(tool)?(\s+during\s+.*|\s+for\s+.*)?$"
+)
+
+
+def _intent_rationale(tool: str, rationale: str, position: int, total: int) -> str:
+    """Upgrade structural rationales to positional tool-use intent.
+
+    Provided rationales carry real intent and are kept (sanitized). Only
+    empty or structural placeholders (e.g. "invoke X during the rollout")
+    are replaced with deterministic, agent-neutral intent derived from the
+    step position — never invented chain-of-thought.
+    """
+    cleaned = _generic_rationale(rationale or "")
+    if cleaned and not STRUCTURAL_RATIONALE_RE.match(cleaned.lower()):
+        return cleaned
+    if total <= 1:
+        return f"apply {tool} to the task input and verify the result"
+    if position == 0:
+        return f"establish working scope and inputs with {tool}"
+    if position == total - 1:
+        return f"produce and verify the task output with {tool}"
+    return f"advance the intermediate result toward the task goal with {tool}"
+
+
+def _normalize_tool_name(name: str) -> str:
+    """Canonical tool identity for grouping (case, separators, versions)."""
+    normalized = re.sub(r"[-.\s]+", "_", name.strip().lower())
+    normalized = re.sub(r"_v\d+$", "", normalized)
+    normalized = re.sub(r"_+", "_", normalized).strip("_")
+    return normalized or name.strip().lower()
+
+
+_ENTRY_BOILERPLATE_RE = re.compile(
+    r"^(reliably supports workflows that|avoid or validate when|compose with)\s+",
+    re.IGNORECASE,
+)
+
+
+def _entry_core(text: str) -> str:
+    """Comparable core of an evidence entry without boilerplate framing."""
+    core = _ENTRY_BOILERPLATE_RE.sub("", text.strip().lower())
+    return re.sub(r"\s+", " ", core).strip(" .")
+
+
+def _common_prefix_length(left: str, right: str) -> int:
+    length = 0
+    for left_char, right_char in zip(left, right):
+        if left_char != right_char:
+            break
+        length += 1
+    return length
+
+
+def _entries_match(left: str, right: str) -> bool:
+    """Exact match after normalization, shared-stem match, else trigram cores."""
+    if left == right:
+        return True
+    if left.strip().lower() == right.strip().lower():
+        return True
+    left_core, right_core = _entry_core(left), _entry_core(right)
+    if len(left_core) < 8 or len(right_core) < 8:
+        return False
+    if _common_prefix_length(left_core, right_core) >= 12:
+        return True
+    return trigram_similarity(left_core, right_core) >= 0.75
+
+
+def estimate_tokens(text: str) -> int:
+    """Deterministic guidance-size estimate (characters/4, no model needed)."""
+    if not text:
+        return 0
+    return max(1, len(text) // 4)
 
 
 def _fingerprint(spec: ToolSpec) -> str:
@@ -117,9 +196,13 @@ class ToolMemory:
 
             successful = [rollout for rollout in rollouts if rollout.resolved]
             backbone = min(successful or rollouts, key=lambda rollout: len(rollout.steps))
+            total_steps = len(backbone.steps)
             neutral_steps = [
-                ExecutionStep(step.tool, _generic_rationale(step.rationale))
-                for step in backbone.steps
+                ExecutionStep(
+                    step.tool,
+                    _intent_rationale(step.tool, step.rationale, position, total_steps),
+                )
+                for position, step in enumerate(backbone.steps)
             ]
             used_tools = _unique(step.tool for rollout in rollouts for step in rollout.steps)
             success_count = len(successful)
@@ -213,10 +296,19 @@ class ToolMemory:
         top_k: int = 3,
         read_budget: int = 8,
         max_age_days: int = DEFAULT_MAX_AGE_DAYS,
+        token_budget: int | None = None,
     ) -> dict[str, Any]:
-        """Perform an auditable bounded traversal over currently valid memory."""
+        """Perform an auditable bounded traversal over currently valid memory.
+
+        Seed retrieval is lexical first; when nothing matches, a trigram
+        fallback rescues paraphrased queries (still empty when truly
+        unrelated — no generic advice is ever invented). ``token_budget``
+        optionally caps the rendered guidance size.
+        """
         if top_k < 1 or read_budget < 1 or max_age_days < 1:
             raise ValueError("top_k, read_budget, and max_age_days must be positive")
+        if token_budget is not None and token_budget < 1:
+            raise ValueError("token_budget must be positive when set")
         with self._lock:
             candidates = [
                 node for node in self.traces.values()
@@ -227,6 +319,20 @@ class ToolMemory:
                 reverse=True,
             )
             seeds = [(sim, confidence, qid) for sim, confidence, qid in ranked[:top_k] if sim > 0]
+            retrieval = "lexical"
+            if not seeds:
+                fallback = sorted(
+                    (
+                        (trigram_similarity(task, node.summary), node.confidence, node.qid)
+                        for node in candidates
+                    ),
+                    reverse=True,
+                )
+                seeds = [
+                    (sim, confidence, qid) for sim, confidence, qid in fallback[:top_k]
+                    if sim >= TRIGRAM_FALLBACK_THRESHOLD
+                ]
+                retrieval = "trigram-fallback"
             if not seeds:
                 return self._empty_guidance(read_budget)
 
@@ -255,11 +361,41 @@ class ToolMemory:
                 tool for qid in selected for tool in self.traces[qid].tools
                 if tool in self.tools and self.tools[tool].status == "active"
             )
+            successful_selected = [
+                self.traces[qid] for qid in selected if self.traces[qid].success_count > 0
+            ]
+            playbook: list[dict[str, Any]] = []
+            seen_steps: set[tuple[str, str]] = set()
+            for trace in successful_selected:
+                for step in trace.agent_neutral_trace:
+                    key = (step.tool, step.rationale)
+                    if step.tool in relevant_tools and key not in seen_steps:
+                        playbook.append(
+                            {
+                                "tool": step.tool,
+                                "rationale": step.rationale,
+                                "confidence": trace.confidence,
+                                "source_trace": trace.qid,
+                            }
+                        )
+                        seen_steps.add(key)
+                    if len(playbook) >= MAX_PLAYBOOK_STEPS:
+                        break
+                if len(playbook) >= MAX_PLAYBOOK_STEPS:
+                    break
+
             task_terms = set(tokens(task))
             tool_tips: list[dict[str, Any]] = []
+            avoid: list[dict[str, Any]] = []
+            # Once the playbook is sufficient, read at most two more tools and
+            # only for boundary cautions — extra affordance reads rarely change
+            # the plan but always cost traversal budget.
+            max_tool_reads = 2 if len(playbook) >= 6 else len(relevant_tools)
+            tools_read = 0
             for tool_name in relevant_tools:
-                if len(operations) >= read_budget:
+                if len(operations) >= read_budget or tools_read >= max_tool_reads:
                     break
+                tools_read += 1
                 operations.append({"action": "ReadTool", "target": tool_name})
                 entries = [
                     entry for entry in (
@@ -286,6 +422,16 @@ class ToolMemory:
                             "source_queries": entry.source_queries,
                         }
                     )
+                for entry in self.tools[tool_name].boundaries:
+                    if entry.status == "active" and len(avoid) < MAX_AVOID_NOTES:
+                        avoid.append(
+                            {
+                                "tool": tool_name,
+                                "caution": entry.text,
+                                "confidence": entry.confidence,
+                                "evidence_count": len(entry.source_executions),
+                            }
+                        )
 
             strategy: list[dict[str, Any]] = []
             for node in self.strategies.values():
@@ -301,27 +447,26 @@ class ToolMemory:
                         }
                     )
 
-            successful_selected = [
-                self.traces[qid] for qid in selected if self.traces[qid].success_count > 0
-            ]
-            playbook: list[dict[str, Any]] = []
-            seen_steps: set[tuple[str, str]] = set()
-            for trace in successful_selected:
-                for step in trace.agent_neutral_trace:
-                    key = (step.tool, step.rationale)
-                    if step.tool in relevant_tools and key not in seen_steps:
-                        playbook.append(
-                            {
-                                "tool": step.tool,
-                                "rationale": step.rationale,
-                                "confidence": trace.confidence,
-                                "source_trace": trace.qid,
-                            }
-                        )
-                        seen_steps.add(key)
+            conventions: list[dict[str, str]] = []
+            for node in strategy[:2]:
+                conventions.append({"text": node["text"], "source": node["source_strategy_id"]})
+            for _, _, qid in seeds:
+                for tip in self.traces[qid].task_level_tips:
+                    if len(conventions) >= MAX_CONVENTIONS:
+                        break
+                    if all(tip != existing["text"] for existing in conventions):
+                        conventions.append({"text": tip, "source": qid})
+                if len(conventions) >= MAX_CONVENTIONS:
+                    break
+
+            truncated = False
+            if token_budget is not None:
+                playbook, avoid, conventions, truncated = self._fit_token_budget(
+                    playbook, avoid, conventions, token_budget
+                )
 
             operations.append({"action": "Done", "target": "guidance"})
-            return {
+            guidance = {
                 "schema_version": SCHEMA_VERSION,
                 "seed_candidates": [
                     {
@@ -335,12 +480,33 @@ class ToolMemory:
                 "playbook": playbook,
                 "strategy": strategy,
                 "tool_tips": tool_tips,
+                "avoid": avoid,
+                "conventions": conventions,
+                "truncated": truncated,
                 "traversal": {
                     "operations": operations,
                     "reads_used": sum(op["action"] != "Done" for op in operations),
                     "read_budget": read_budget,
+                    "retrieval": retrieval,
+                },
+                "coverage": {
+                    "seed_count": len(seeds),
+                    "tools_covered": relevant_tools,
+                    "retrieval": retrieval,
                 },
             }
+            guidance["guidance_tokens_estimate"] = estimate_tokens(
+                json.dumps(
+                    {
+                        "seed_candidates": guidance["seed_candidates"],
+                        "playbook": playbook,
+                        "avoid": avoid,
+                        "conventions": conventions,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return guidance
 
     def reverify_trace(
         self, task_id: str, resolved: bool, verifier_type: str, observation: str = ""
@@ -566,7 +732,10 @@ class ToolMemory:
         successes: int, failures: int, fingerprint: str, boundary: bool = False,
         related_tools: list[str] | None = None,
     ) -> None:
-        entry = next((candidate for candidate in entries if candidate.text == text), None)
+        entry = next(
+            (candidate for candidate in entries if _entries_match(candidate.text, text)),
+            None,
+        )
         if entry is None:
             entry = EvidenceEntry(text=text, related_tools=related_tools or [])
             entries.append(entry)
@@ -582,12 +751,32 @@ class ToolMemory:
 
     @staticmethod
     def _distill_tips(rollouts: list[Rollout]) -> list[str]:
+        """Distill reusable tips from successes and failures alike.
+
+        Successes yield planning tips (scope discovery, ordered verification);
+        failures yield fix tips pairing what went wrong with the correction, so
+        future rollouts skip the same wasted calls.
+        """
         tips: list[str] = []
-        if any(rollout.resolved for rollout in rollouts):
+        successful = [rollout for rollout in rollouts if rollout.resolved]
+        failed = [rollout for rollout in rollouts if not rollout.resolved]
+        if successful:
             tips.append("Verify the final tool result against the task requirement.")
-        for rollout in rollouts:
-            if not rollout.resolved and rollout.observation:
-                tips.append(f"Validate inputs first: {_generic_rationale(rollout.observation)}")
+            longest = max(len(rollout.steps) for rollout in successful)
+            if longest > 1:
+                tips.append(
+                    "Discover the working scope first, then apply tools in order "
+                    "and verify each intermediate result."
+                )
+        for rollout in failed:
+            if not rollout.observation:
+                continue
+            cause = _generic_rationale(rollout.observation)
+            tips.append(f"Validate inputs first: {cause}")
+            tips.append(
+                f"If the verifier reports {cause}, correct the inputs and retry "
+                "instead of repeating the failed call."
+            )
         return _unique(tips)
 
     def _rebuild_trace_edges(self) -> None:
@@ -607,34 +796,154 @@ class ToolMemory:
                 self.traces[left_id].neighbors.append(right_id)
                 self.traces[right_id].neighbors.append(left_id)
 
+    @staticmethod
+    def _is_near_sequence(shorter: tuple[str, ...], longer: tuple[str, ...]) -> bool:
+        """Same tool order modulo at most one inserted or missing step."""
+        if not (len(longer) - len(shorter) == 1 and len(shorter) >= 1):
+            return False
+        index = 0
+        skipped = False
+        for tool in longer:
+            if index < len(shorter) and tool == shorter[index]:
+                index += 1
+            elif not skipped:
+                skipped = True
+            else:
+                return False
+        return index == len(shorter)
+
     def _induce_strategies(self) -> None:
         sequences: dict[tuple[str, ...], list[str]] = {}
+        canonical_of: dict[str, tuple[str, ...]] = {}
         for qid, trace in self.traces.items():
-            sequence = tuple(step.tool for step in trace.agent_neutral_trace)
-            if len(sequence) > 1 and trace.success_count > 0 and self._trace_is_current(trace):
-                sequences.setdefault(sequence, []).append(qid)
-        self.strategies = {}
-        for sequence, qids in sequences.items():
+            if len(trace.agent_neutral_trace) <= 1 or trace.success_count == 0:
+                continue
+            if not self._trace_is_current(trace):
+                continue
+            canonical = tuple(_normalize_tool_name(step.tool) for step in trace.agent_neutral_trace)
+            canonical_of[qid] = canonical
+            sequences.setdefault(canonical, []).append(qid)
+        # Merge near-duplicate groups (same order, at most one step apart) so
+        # strategies form across paraphrased rollouts instead of exact repeats.
+        groups = list(sequences.items())
+        merged: list[tuple[tuple[str, ...], list[str]]] = []
+        consumed: set[int] = set()
+        for index, (canonical, qids) in enumerate(groups):
+            if index in consumed:
+                continue
             if len(qids) >= 2:
-                confidence = round(sum(self.traces[qid].confidence for qid in qids) / len(qids), 4)
+                merged.append((canonical, list(qids)))
+                consumed.add(index)
+                continue
+            for other_index, (other_canonical, other_qids) in enumerate(groups):
+                if other_index in consumed or other_index == index or len(other_qids) < 1:
+                    continue
+                short, long = sorted([canonical, other_canonical], key=len)
+                if self._is_near_sequence(short, long):
+                    merged.append((long, _unique(qids + other_qids)))
+                    consumed.add(index)
+                    consumed.add(other_index)
+                    break
+            else:
+                merged.append((canonical, list(qids)))
+                consumed.add(index)
+        self.strategies = {}
+        for canonical, qids in merged:
+            if len(_unique(qids)) >= 2:
+                unique_qids = _unique(qids)
+                longest = max(
+                    unique_qids,
+                    key=lambda qid: len(self.traces[qid].agent_neutral_trace),
+                )
+                display = [
+                    step.tool for step in self.traces[longest].agent_neutral_trace
+                ]
+                confidence = round(
+                    sum(self.traces[qid].confidence for qid in unique_qids) / len(unique_qids), 4
+                )
                 sid = f"strategy_{len(self.strategies) + 1}"
                 self.strategies[sid] = StrategyNode(
                     sid=sid,
-                    text=f"Apply {' then '.join(sequence)} and verify the composed result.",
-                    source_queries=qids,
-                    tool_sequence=list(sequence),
+                    text=f"Apply {' then '.join(display)} and verify the composed result.",
+                    source_queries=unique_qids,
+                    tool_sequence=list(canonical),
                     confidence=confidence,
                     status="active",
                 )
+
+    @staticmethod
+    def _fit_token_budget(
+        playbook: list[dict[str, Any]],
+        avoid: list[dict[str, Any]],
+        conventions: list[dict[str, str]],
+        token_budget: int,
+    ) -> tuple[list, list, list, bool]:
+        """Shrink guidance to a token budget: conventions, avoid, then playbook.
+
+        Order preserves the highest call-saving density first: planning
+        conventions, then failure-avoidance cautions, then the step sequence
+        (kept in order, trimmed from the tail).
+        """
+        def size(play: list, avo: list, con: list) -> int:
+            return estimate_tokens(json.dumps({"p": play, "a": avo, "c": con}, sort_keys=True))
+
+        truncated = False
+        sections: list[list] = [conventions, avoid, playbook]
+        while size(playbook, avoid, conventions) > token_budget and any(sections):
+            for section in sections:
+                if section:
+                    section.pop()
+                    truncated = True
+                    break
+        return playbook, avoid, conventions, truncated
 
     @staticmethod
     def _empty_guidance(read_budget: int) -> dict[str, Any]:
         return {
             "schema_version": SCHEMA_VERSION,
             "seed_candidates": [], "playbook": [], "strategy": [], "tool_tips": [],
+            "avoid": [], "conventions": [], "truncated": False,
+            "guidance_tokens_estimate": 0,
             "traversal": {
                 "operations": [{"action": "Done", "target": "no_relevant_current_memory"}],
                 "reads_used": 0,
                 "read_budget": read_budget,
+                "retrieval": "none",
             },
+            "coverage": {"seed_count": 0, "tools_covered": [], "retrieval": "none"},
         }
+
+    def reverification_due(self, max_age_days: int = DEFAULT_MAX_AGE_DAYS) -> dict[str, Any]:
+        """List traces needing a re-verification run, most overdue first.
+
+        Covers expired verification, schema drift, and governance-blocked
+        traces — the paper's lifecycle gap: stale guidance causes wasted
+        inference calls, so refresh scheduling is a call-saving mechanism.
+        """
+        if max_age_days < 1:
+            raise ValueError("max_age_days must be positive")
+        now = datetime.now(UTC)
+        due: list[dict[str, Any]] = []
+        for qid, trace in self.traces.items():
+            reason = self._refresh_reason(trace, max_age_days=max_age_days)
+            if reason == "current":
+                continue
+            try:
+                verified_at = datetime.fromisoformat(trace.last_verified_at)
+                if verified_at.tzinfo is None:
+                    verified_at = verified_at.replace(tzinfo=UTC)
+                overdue = max(0, (now - verified_at).days - max_age_days)
+            except ValueError:
+                overdue = max_age_days
+            due.append(
+                {
+                    "qid": qid,
+                    "summary": trace.summary,
+                    "reason": reason,
+                    "days_overdue": overdue,
+                    "success_count": trace.success_count,
+                    "failure_count": trace.failure_count,
+                }
+            )
+        due.sort(key=lambda item: (item["reason"] != "verification_expired", -item["days_overdue"]))
+        return {"traces_due": due, "count": len(due)}

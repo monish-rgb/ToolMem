@@ -1,6 +1,6 @@
 # ToolAtlas paper-protocol Filesystem benchmark
 
-Generated: 2026-09-16T15:37:28.371133+00:00
+Generated: 2026-09-19T08:30:44.118493+00:00
 
 This is a deterministic, read-only Filesystem control using the evaluation shape from the ToolAtlas paper. It is not the full MCPMark/MCP-Universe reproduction and does not establish production readiness.
 
