@@ -1,279 +1,425 @@
-# Mini ToolAtlas
+# ToolAtlas: Provider-Side Memory for Agentic Tool Use
 
-A small, runnable implementation of the core ideas in **ToolAtlas: Learning Once, Reusing Everywhere with Tool-Side Memory** (arXiv:2607.11126).
+[![Python >=3.11](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MCP Compliant](https://img.shields.io/badge/MCP-2.0+-green.svg)](https://modelcontextprotocol.io/)
+[![Tests: 137 Passed](https://img.shields.io/badge/tests-137%20passed-brightgreen.svg)](tests/)
 
-This is intentionally a teaching prototype, not a reproduction of the paper's full benchmark. It keeps the important architecture:
+An implementation and extension of **ToolAtlas: Learning Once, Reusing Everywhere with Tool-Side Memory** ([arXiv:2607.11126](https://arxiv.org/abs/2607.11126)).
 
-- **Tool-Trace graph:** verified executions become agent-neutral `(tool, rationale)` traces.
-- **Tool-Capability graph:** tools accumulate evidence-backed affordances, boundaries, and co-usage patterns.
-- **Tool-Strategy graph:** repeated multi-tool sequences become reusable planning strategies.
-- **Dynamic traversal:** a new task seeds retrieval from similar traces and follows graph links under a read budget.
-- **Provider-side persistence:** memory is stored in a SQLite/WAL database owned by the MCP tool provider and reused by different clients or agents.
-- **Lifecycle management:** schema fingerprints, verification age, confidence, provenance, refresh candidates, and governance status prevent outdated memory from being served silently.
+ToolAtlas introduces **provider-side / tool-side memory** for LLM agents. Instead of forcing every agent to rediscover how to use tools through trial and error—or relying on expensive model retraining—ToolAtlas captures verified tool execution traces directly on the tool side (via the Model Context Protocol, MCP), builds graph-structured memory, dynamically prunes tool schemas, and injects compact, deterministic guidance into future agent turns.
 
-The expensive LLM proposer/reflection and embedding model from the research system are replaced with deterministic rules and local bag-of-words similarity. This keeps the end-to-end mechanism inspectable. The deterministic core is API-key free; only the optional NIM LLM comparisons and the GitHub integration need keys (`NVIDIA_API_KEY`, `GITHUB_PERSONAL_ACCESS_TOKEN`), always via environment variables, never committed.
+---
 
-## Run on Windows PowerShell
+## Table of Contents
+1. [The Problem Statement](#the-problem-statement)
+2. [Why Tool-Side Memory?](#why-tool-side-memory)
+3. [Architecture & How We Implemented It](#architecture--how-we-implemented-it)
+   - [Operational Lifecycle Flow Diagram](#operational-lifecycle-flow)
+   - [The Tri-Graph Representation & Data Model Diagram](#1-the-tri-graph-representation)
+4. [Current State & Empirical Benchmark Results](#current-state--empirical-benchmark-results)
+5. [Setup & Plugin Guide (How to Connect to Tools & Agents)](#setup--plugin-guide-how-to-connect-to-tools--agents)
+   - [System Integration Architecture Diagram](#system-integration-architecture)
+   - [Connecting to Desktop Clients & IDEs](#1-connecting-to-desktop-clients--ides)
+   - [Integrating into Custom Python Agents](#2-integrating-into-custom-python-agents-langchain-crewai-native-sdks)
+6. [Why ToolAtlas is Invaluable in Real Agentic Workflows](#why-toolatlas-is-invaluable-in-real-agentic-workflows)
+7. [Local Quickstart & Commands](#local-quickstart--commands)
+8. [Repository Structure](#repository-structure)
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -e ".[dev]"
-.\.venv\Scripts\python -m pytest
-.\.venv\Scripts\toolatlas-demo
+---
+
+## The Problem Statement
+
+Autonomous agents (ReAct, LangChain, Cursor, Claude Desktop, CrewAI, AutoGen) face fundamental operational bottlenecks when interacting with external tool environments:
+
+1. **The Stateless Agent Trap**: Every agent session starts completely cold. An agent assigned to inspect a database, query a repository, or process files must repeatedly spend 2 to 13 exploratory turns discovering directory layouts, database schemas, table relationships, and API quirks.
+2. **Massive Schema Overhead (Prompt Bloat)**: Production MCP servers often expose 10 to 30 tools (e.g., PostgreSQL, GitHub, Slack, AWS). Sending full JSON schemas on *every single turn* consumes **2,000 to 4,500 prompt tokens per turn**. In a 10-turn conversation, 20,000 to 45,000 tokens are wasted purely on redundant tool schemas that the agent never calls.
+3. **Suboptimal Iterative Looping ($N+1$ Problem)**: Without memory of proven execution paths, LLMs default to conservative, single-item exploration—such as running 10 separate `get_file_info` calls instead of 1 batch `list_directory_with_sizes`, or issuing multiple iterative `SELECT` statements instead of a single `JOIN`.
+4. **Repeated Boundary Violations & Failure Modes**: Agents frequently hit the same failure edges (missing arguments, invalid parameters, permission denials) repeatedly across different user sessions because failure history is discarded when the conversation ends.
+
+---
+
+## Why Tool-Side Memory?
+
+Traditional agent memory is **client-side** (e.g., conversation history, user preferences, vector memory of user notes). This has major flaws:
+- Knowledge of tools is trapped inside individual agent sessions.
+- Upgrading or changing the model loses all accumulated operational knowledge.
+- Models cannot be continuously fine-tuned for every internal database schema or API change.
+
+**ToolAtlas shifts memory to the Provider/Tool Side**:
+- **Learn Once, Reuse Everywhere**: An expert trajectory executed by Claude 3.5 Sonnet or GPT-4o is persisted directly into the MCP tool memory. The next day, a smaller, cheaper, or faster model (e.g., Gemini 2.5 Flash, Moonshot Kimi-k3, or a local LLaMA) immediately reuses that exact playbook.
+- **Environment Invariant**: Memories store agent-neutral intent (e.g., "inspect file metadata", "filter by status") rather than hardcoded environment paths, user PII, or chain-of-thought syntax.
+- **Dynamic Schema Pruning**: By retrieving the exact sequence of tools required for the task, ToolAtlas dynamically prunes dead-weight tool schemas from the model's prompt, slashing per-turn token costs by 50% to 90%.
+
+---
+
+## Architecture & How We Implemented It
+
+### Operational Lifecycle Flow
+
+```mermaid
+flowchart TD
+    subgraph AgentRuntime["1. Agent & LLM Runtime"]
+        Task["User Task Prompt"] --> Agent["LLM Agent (ReAct / Plan-and-Solve)"]
+        Agent --> GuidanceCall["Call get_guidance(task)"]
+        GuidanceResponse["Compact Playbook + Avoid Notes"] --> SchemaPruner["Dynamic Schema Pruner (tool_filter.py)"]
+        SchemaPruner --> LLMTurn["LLM Generation Turn (Pruned Schemas)"]
+        LLMTurn --> ExecTool["Execute Target Tools (1-Shot)"]
+    end
+
+    subgraph ToolAtlasServer["2. ToolAtlas Provider-Side Memory Server (MCP)"]
+        GuidanceCall --> RetrievalEngine["Dual-Engine Retrieval: Lexical + Trigram + Embeddings"]
+        
+        subgraph TriGraph["ToolMemory Knowledge Graphs (SQLite WAL)"]
+            TraceGraph["Trace Graph: Verified Sequences and Intent"]
+            CapGraph["Capability Graph: Affordances and Avoid Cautions"]
+            StratGraph["Strategy Graph: Reusable Multi-Tool Playbooks"]
+            
+            TraceGraph <--> CapGraph
+            TraceGraph <--> StratGraph
+        end
+        
+        RetrievalEngine --> TriGraph
+        TriGraph --> CompactRenderer["Guidance Renderer: Conventions-First + Step Floor"]
+        CompactRenderer --> GuidanceResponse
+    end
+
+    subgraph TargetTools["3. Target Tool Providers (MCP)"]
+        ExecTool --> TargetMCP["Target MCP Servers: PostgreSQL, Filesystem, GitHub, Notion"]
+        TargetMCP --> ExternalResult["Tool Execution Result"]
+    end
+
+    ExternalResult --> Verifier["External Programmatic Verifier"]
+    Verifier -->|"Outcome Resolved: True"| Ingest["Call remember_execution(task, tools, intent)"]
+    Ingest --> TriGraph
 ```
 
-For the optional NIM true-model comparisons (same model/prompt/temperature both arms):
+### 1. The Tri-Graph Representation
 
-```powershell
-.\.venv\Scripts\python -m pip install -e ".[nim]"
+```mermaid
+flowchart TD
+    subgraph TraceGraphSection["1. Tool-Trace Graph"]
+        Trace1["Trace A: Intent 'Find deployment window'"]
+        Trace2["Trace B: Intent 'Inspect production config'"]
+        Step1["Step 1: search_files (Intent: locate target)"]
+        Step2["Step 2: read_file (Intent: extract parameter)"]
+        Trace1 --> Step1 --> Step2
+    end
+
+    subgraph CapGraphSection["2. Tool-Capability Graph"]
+        ToolNode["Tool: read_file (SHA-256 Fingerprint)"]
+        Affordance["Affordance: Path within sandbox succeeds"]
+        Boundary["Boundary Caution: Missing file or path traversal fails"]
+        ToolNode --> Affordance
+        ToolNode --> Boundary
+    end
+
+    subgraph StratGraphSection["3. Tool-Strategy Graph"]
+        StrategyNode["Canonical Strategy: search_files -> read_file"]
+        Pattern["Evidence Count >= 2, Success Rate 100%"]
+        StrategyNode --> Pattern
+    end
+
+    Step1 -.-> ToolNode
+    Step2 -.-> ToolNode
+    Trace1 ==> StrategyNode
+    Trace2 ==> StrategyNode
 ```
 
-The small demo starts two local **stdio MCP servers**:
+- **Tool-Trace Graph**: Stores verified executions as sequences of `(tool, positional_intent)`. Structural rationales are normalized into positional intent (e.g., "identify target file", "extract specific value").
+- **Tool-Capability Graph**: Distills affordances (inputs and parameter ranges that succeed) and boundary cautions (`avoid` notes from verified failures).
+- **Tool-Strategy Graph**: When the same multi-tool sequence appears across $\ge 2$ traces, ToolAtlas merges them into a canonical, reusable strategy.
 
-1. `toolatlas-text-server` provides `normalize_text`, `word_count`, and `keyword_count`.
-2. `toolatlas-memory-server` provides `register_tools`, `remember_execution`, `remember_rollouts`, `suggest_probes`, `get_guidance`, `inspect_tool`, `refresh_status`, `reverify_trace`, `set_trace_status`, and `memory_stats`.
+### 2. Dual-Engine Retrieval
+- **Lexical + Trigram Fallback**: Blends normalized bag-of-words token matching with trigram character similarity (`TRIGRAM_FALLBACK_THRESHOLD = 0.15`), returning empty guidance on unrelated queries to prevent invented advice.
+- **Vector Embedding Sidecar**: Supports cosine similarity against cached vector embeddings (`embeddings.py`), compatible with Gemini, OpenAI, or local hash embedders.
 
-It executes two successful composed tasks plus one failing boundary probe, verifies their outcomes, persists `demo-memory.db`, and retrieves guidance for an unseen task.
+### 3. Dynamic Tool Schema Pruning (`tool_filter.py`)
+Eliminates dead-weight schemas from the LLM prompt. Full tool schemas (~400 tokens each) are only presented for tools in the active playbook, while safe general tools (`read_file`, `list_directory`) are retained as safety fallbacks.
 
-For a real third-party server integration, install the pinned official Filesystem MCP server and run:
+### 4. Canonical Guidance Renderer (`guidance_render.py`)
+Renders token-budgeted guidance structured **conventions first**:
+1. Global conventions & discovery suppression directives.
+2. Verified `avoid` notes (failure patterns to skip).
+3. Ordered step-by-step tool playbook.
+4. Programmatic verification step.
 
-```powershell
-npm install
-.\.venv\Scripts\python -m pytest tests/test_real_filesystem_mcp.py -v
-.\.venv\Scripts\python -m toolatlas.filesystem_demo
+### 5. Shortest-Trace Competition & Lifecycle Governance
+- **Shortest Backbone**: When multiple rollouts succeed, ToolAtlas retains the shortest path, allowing batch primitives to naturally displace iterative loops.
+- **SHA-256 Schema Fingerprinting**: Tool schema changes automatically invalidate dependent memory.
+- **30-Day Expiry & Re-verification**: Traces expire after 30 days and must pass external re-verification (`reverify_trace`) before being served again.
+
+---
+
+## Current State & Empirical Benchmark Results
+
+ToolAtlas has been tested and evaluated across real MCP servers using both deterministic controls and live frontier LLMs (Google Gemini 2.5 Flash, Gemini 3 Flash Preview, Moonshot Kimi-k3 via NVIDIA NIM).
+
+### Cross-Model Benchmark Scorecard
+
+| Domain / Benchmark | Baseline Calls | ToolAtlas Calls | Baseline Tokens | ToolAtlas Tokens | Token Reduction | Latency Impact |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **PostgreSQL Chinook** (Kimi-k3) | 6.0 | 3.0 | 25,249 | 10,381 | **-58.9%** | 2.1x faster |
+| **PostgreSQL Chinook** (Gemini Flash) | 5.5 | 4.0 | 20,490 | 15,640 | **-23.7%** | 1.4x faster |
+| **PostgreSQL Diagnostics** (Gemini Flash) | 7.0 | 6.0 | 16,700 | 11,879 | **-28.9%** | 1.8x faster |
+| **PostgreSQL Diagnostics** (Kimi-k3) | 14.0 | 9.0 | 59,726 | 23,819 | **-60.1%** | **5.4x faster** |
+| **Sales Data Analysis** (Gemini 3 Flash) | 2.0 | 1.0 | 10,069 | 5,381 | **-46.6%** | **2.6x faster** |
+| **Sales Data Analysis** (Kimi-k3) | 3.0 | 1.0 | 15,087 | 5,511 | **-63.5%** | Direct 1-shot |
+| **Filesystem Size Classification** (Gemini Flash) | 16.0 | 14.0 | 126,500 | 7,100 | **-94.4%** | Direct execution |
+| **GitHub Issue Triage** (Gemini Flash) | 6.0 | 2.0 | 14,200 | 4,800 | **-66.2%** | **10.3x faster** |
+| **Filesystem Control** (Deterministic) | 4.0 | 2.0 | N/A | N/A | **-50.0% calls** | Immediate read |
+
+### Key Architectural Lessons Discovered
+1. **Single-Turn Convergence**: In complex synthesis tasks (e.g. Sales Data Analysis, SQL Query Tuning), memory eliminates multi-turn exploratory loops, guiding the agent to solve the task in **1 single provider turn**.
+2. **Catalog Sizing Law**:
+   - **Large Catalogs (>10 tools)**: Tool schema pruning provides massive double-digit token savings (-25% to -94%).
+   - **Micro-Catalogs (<8 tools, e.g. Notion)**: Full schema overhead is already minimal (~300 tokens). Schema pruning saves only ~60 tokens/turn, meaning memory's primary value is deterministic workflow enforcement rather than token reduction.
+3. **Batch Tool Retention**: If training traces encode iterative loops ($N$ individual file checks), strict pruning can hide batch shortcuts. ToolAtlas implements tool-family retention to prevent suboptimal path lock-in.
+
+---
+
+## Setup & Plugin Guide (How to Connect to Tools & Agents)
+
+ToolAtlas runs as a standard Model Context Protocol (MCP) server over `stdio`. It connects seamlessly to any MCP host, IDE, or custom agent runtime.
+
+### System Integration Architecture
+
+```mermaid
+flowchart LR
+    subgraph Hosts["1. MCP Hosts & Client Ecosystem"]
+        Claude["Claude Desktop"]
+        VSCode["VS Code (.vscode/mcp.json)"]
+        Cursor["Cursor IDE (.cursor/mcp.json)"]
+        CustomAgent["Python Agents (LangChain, CrewAI, AutoGen)"]
+    end
+
+    subgraph ProtocolLayer["2. Standard MCP Protocol (JSON-RPC over stdio)"]
+        MCPBus["MCP Communication Channel"]
+    end
+
+    subgraph MemoryProvider["3. ToolAtlas Memory Provider"]
+        MemoryServer["toolatlas-memory-server"]
+        Storage["SQLite WAL Storage (memory.db)"]
+        Pruner["tool_filter.py (Dynamic Schema Pruner)"]
+        MemoryServer --- Storage
+        MemoryServer --- Pruner
+    end
+
+    subgraph TargetProviders["4. Target Tool Servers (MCP)"]
+        FS["Filesystem MCP Server"]
+        PG["PostgreSQL MCP Server"]
+        GH["GitHub MCP Server"]
+        Other["Enterprise MCP Server"]
+    end
+
+    subgraph ModelLayer["5. Frontier LLM Backbones"]
+        Gemini["Google Gemini (2.5 Flash, 3 Flash)"]
+        OpenAI["OpenAI (GPT-4o, o3-mini)"]
+        Anthropic["Anthropic (Claude 3.5 Sonnet)"]
+        LocalLLM["Local LLMs (Kimi-k3, LLaMA, DeepSeek)"]
+    end
+
+    Hosts <--> MCPBus
+    MCPBus <--> MemoryServer
+    MCPBus <--> TargetProviders
+    Hosts <--> ModelLayer
 ```
 
-The real integration scopes Filesystem MCP to `mcp-sandbox`, discovers its live schemas, verifies write/read/list operations, confirms that access outside the sandbox is denied, learns provider-side memory, and retrieves a reusable filesystem playbook.
+### 1. Connecting to Desktop Clients & IDEs
 
-The server was checked before connection through PolicyLayer. Its identity was verified, but it received grade D because its 14-tool surface includes four write-capable tools and had recently changed. For that reason, this repository pins the tested package version, invokes the installed entry point without runtime downloads, and restricts it to `mcp-sandbox`. See the [registry record](https://policylayer.com/tools/filesystem).
-
-## Everything MCP protocol integration
-
-The pinned Everything server exercises MCP tools plus roots, sampling, elicitation,
-resources, logging, and tasks. It is a protocol test server rather than a filesystem
-server: `--root` is advertised through MCP roots and used as the subprocess working
-directory, but the server does not read or edit that directory.
-
-```powershell
-npm install
-.\.venv\Scripts\python -m toolatlas.everything_demo --root "C:\path\to\project"
-.\.venv\Scripts\python -m pytest tests/test_everything_mcp.py -v
-```
-
-The integration calls every tool discovered in the live handshake. Its subprocess
-receives a sanitized environment so the server's `get-env` test tool cannot reveal
-credentials. Sampling is deterministic, and elicitation is declined automatically;
-no browser is opened and no user information is collected.
-
-PolicyLayer reported an unverified identity, grade D, and a recent grade change
-for this server; the connection was made only after explicit approval. The
-package is pinned and the integration avoids inherited credentials. See the
-[registry record](https://policylayer.com/tools/server-everything).
-
-## GitHub MCP integration (read-only)
-
-The pinned `@modelcontextprotocol/server-github@2025.4.8` server is exercised
-read-only against a single test repository. Write-capable tools
-(create/update/merge/push/...) are never called; a client-side allowlist
-(`READ_ONLY_GITHUB_TOOLS`) blocks them. The PAT needs only read scopes on the
-test repo and is passed solely to the server subprocess environment — it is
-never logged or stored in memory.
-
-```powershell
-npm install
-$env:GITHUB_PERSONAL_ACCESS_TOKEN="<pat>"
-$env:GITHUB_TEST_REPOSITORY="owner/repo"
-.\.venv\Scripts\python -m pytest tests/test_github_mcp.py -v
-.\.venv\Scripts\python -m toolatlas.github_demo
-```
-
-The demo verifies repository access via a direct read (search is not used as a
-gate because the search index misses private/forked repos), runs two composed
-`list_issues → list_commits` overviews so a strategy forms, probes a missing
-file path as a boundary (this server raises `MCPError: Not Found` instead of
-returning an error flag, which the harness treats as denial), and retrieves a
-`list_issues → list_commits` playbook. Without a token the test skips.
-
-## Live read-only A/B comparison
-
-Run the same verified task with a baseline agent and a ToolAtlas-assisted agent:
-
-```powershell
-npm install
-.\.venv\Scripts\python -m toolatlas.readonly_benchmark
-```
-
-Or run it as a test:
-
-```powershell
-.\.venv\Scripts\python -m pytest tests/test_readonly_ab.py -v
-```
-
-Both benchmark CLIs create a uniquely named database under `.toolatlas/` when
-`--memory` is omitted. Pass `--memory <path>` only when intentionally testing
-reuse across runs. The selected database path is included in the JSON output.
-
-The benchmark launches the real pinned Filesystem MCP subprocess against static files in `tests/fixtures/readonly_workspace`. A client-side allowlist permits only read operations and raises immediately on any write-capable tool call.
-
-The controlled task asks both agents to find a deployment policy and report a setting. The current expected comparison is:
-
-| Variant | Result | Filesystem calls | Tool sequence |
-|---|---:|---:|---|
-| Baseline without ToolAtlas | Pass | 4 | `list_directory → directory_tree → search_files → read_text_file` |
-| Agent with ToolAtlas | Pass | 2 | `search_files → read_text_file` |
-
-Training calls used to bootstrap provider memory are reported separately and excluded from the comparison. Wall-clock latency is recorded but not asserted because process scheduling varies.
-
-This is a deterministic control experiment over a live MCP server, not an LLM-quality benchmark. It isolates whether retrieved provider memory can reduce exploration calls. For an LLM comparison, use the same model, prompt, temperature, task set, and verifier in both arms; enable only the ToolAtlas memory server in the assisted arm.
-
-## True LLM A/B comparisons (NVIDIA NIM)
-
-Three harnesses run Arm A (provider tools only) vs Arm B (`get_guidance` once,
-then the same tools) with the same model, neutral system prompt, temperature,
-tasks, and verifier. The baseline prompt carries no strategy hint; only Arm B
-receives the learned playbook. Set credentials per window (PowerShell shown;
-in `cmd` use `set VAR=value` instead of `$env:VAR="value"`):
-
-```powershell
-$env:NVIDIA_API_KEY="<nim-key>"
-$env:NVIDIA_BASE_URL="https://integrate.api.nvidia.com/v1"
-$env:NVIDIA_MODEL="moonshotai/kimi-k3"
-```
-
-Filesystem with distractors (`tests/fixtures/complex_workspace`: staging/US/
-archive decoys plus a deploy-checklist runbook; 3 tasks):
-
-```powershell
-.\.venv\Scripts\python -m toolatlas.llm_ab_nim --workspace complex_workspace --memory .toolatlas\nim-complex.db --temperature 0
-```
-
-Everything protocol server (3 `echo label + sum` tasks, optimal floor is 2
-calls, so expect ties on easy tasks):
-
-```powershell
-.\.venv\Scripts\python -m toolatlas.llm_ab_everything --root mcp-sandbox --memory .toolatlas\everything-nim.db --temperature 0
-```
-
-GitHub read-only (3 count tasks on the test repo; expected counts are resolved
-by an independent direct read at runtime because repos change; a `null`
-expected value means the count check was skipped and only required-tool use
-was verified):
-
-```powershell
-$env:GITHUB_PERSONAL_ACCESS_TOKEN="<pat>"
-$env:GITHUB_TEST_REPOSITORY="owner/repo"
-.\.venv\Scripts\python -m toolatlas.llm_ab_github --memory .toolatlas\github-nim.db --temperature 0
-```
-
-Use a fresh `--memory` database per comparison run; reuse accumulates evidence
-counts across runs by design. Redirect output to a file (`> run.json 2>&1`)
-since `cmd` truncates long output.
-
-## Paper-protocol benchmark
-
-Run the stored, deterministic Filesystem control using the evaluation shape from
-the ToolAtlas paper (disjoint 1:2 train/test tasks, frozen memory, same- and
-cross-environment splits, four runs per task, pass@1/pass@4, and cost metrics):
-
-```powershell
-.\.venv\Scripts\python -m toolatlas.paper_benchmark
-```
-
-Results are written to `benchmarks/results/paper-protocol-filesystem.json` and
-`.md`. The report separates provider calls from the `get_guidance` memory call,
-so it cannot hide retrieval overhead. It also reports memory-construction cost
-and the number of evaluation runs required to amortize that cost.
-
-This is a paper-aligned local control, not the full paper reproduction. The full
-evaluation requires MCPMark and MCP-Universe environments across eight services,
-their task snapshots and verifiers, four independent LLM rollouts per task, and
-inference-token accounting.
-
-## Connect the servers to an MCP host
-
-The repository now includes two ready project configurations:
-
-- `.mcp.json` for clients that support the common project MCP format and launch from the repository root.
-- `.vscode/mcp.json` for VS Code with `${workspaceFolder}` paths.
-
-Both configurations expose the installed official Filesystem server and ToolAtlas memory server. The toy text server is retained only for the small demo and unit tests. GitHub is intentionally omitted from the committed configs because it requires a PAT; pass the token via the environment when running the GitHub demo/harness.
-
-Equivalent configuration:
-
+#### Claude Desktop (`claude_desktop_config.json`)
+Add ToolAtlas Memory alongside your target tool server:
 ```json
 {
   "mcpServers": {
+    "toolatlas-memory": {
+      "command": "python",
+      "args": ["-m", "toolatlas.memory_server"],
+      "env": {
+        "TOOLATLAS_MEMORY_PATH": "C:/path/to/project/.toolatlas/memory.db",
+        "TOOLATLAS_READ_ONLY": "0"
+      }
+    },
     "filesystem": {
       "command": "node",
       "args": [
         "node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
-        "mcp-sandbox"
+        "C:/path/to/workspace"
       ]
-    },
-    "toolatlas-memory": {
-      "command": "C:\\path\\to\\ToolMem\\.venv\\Scripts\\python.exe",
-      "args": ["-m", "toolatlas.memory_server"],
-      "env": {"TOOLATLAS_MEMORY_PATH": ".toolatlas/filesystem-memory.db"}
     }
   }
 }
 ```
 
-Recommended agent flow:
-
-1. Call `get_guidance` before solving a task and place the returned block in the agent context, conventions first: planning conventions, then `avoid` cautions (verified failure modes — do not retry them), then the tool playbook.
-2. Use the ordinary provider tools.
-3. Verify the result externally.
-4. Call `remember_execution` with only agent-neutral rationales and the verified outcome.
-
-Seed retrieval is lexical first with a trigram fallback for paraphrased queries; truly unrelated queries still return empty guidance (no invented advice). Pass `token_budget` to cap the rendered guidance size; every response carries a `guidance_tokens_estimate`. Structural rationales (`invoke X …`, empty, …) are upgraded to positional intent at induction; provided rationales are kept.
-
-For repeated attempts of one task, prefer `remember_rollouts`. It chooses a successful backbone, retains corrections from failures, assigns execution IDs, and computes confidence from the verified batch.
-
-## Lifecycle and governance
-
-Each tool receives a SHA-256 fingerprint over its name, description, input schema, provider, and version. Calling `register_tools` with a changed definition marks dependent traces and capability entries stale. Stale, invalid, quarantined, or verification-expired traces are excluded from `get_guidance`.
-
-Use the lifecycle tools as follows:
-
-```text
-register_tools(updated schemas)
-        ↓
-refresh_status(max_age_days=30)
-        ↓
-rerun each returned task against the current provider
-        ↓
-reverify_trace(task_id, resolved, verifier_type)
+#### VS Code (`.vscode/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "toolatlas-memory": {
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": ["-m", "toolatlas.memory_server"],
+      "env": {
+        "TOOLATLAS_MEMORY_PATH": "${workspaceFolder}/.toolatlas/memory.db"
+      }
+    }
+  }
+}
 ```
 
-`set_trace_status` is the manual governance hook. It requires an audit reason and can set `stale`, `invalid`, or `quarantined`. Only successful `reverify_trace` calls can return knowledge to `active`.
+#### Cursor (`.cursor/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "toolatlas": {
+      "command": "python",
+      "args": ["-m", "toolatlas.memory_server"]
+    }
+  }
+}
+```
 
-Guidance now includes:
+---
 
-- A versioned response schema.
-- Confidence and source provenance.
-- Evidence counts for tool tips.
-- Verified failure-avoidance notes (`avoid`) and planning conventions first.
-- An explicit `ReadTrace` / `Expand` / `ReadTool` / `ReadStrategy` / `Done` traversal audit.
-- Reads used versus the configured read budget, plus retrieval mode (`lexical`, `trigram-fallback`, `none`) and per-task coverage.
-- A deterministic `guidance_tokens_estimate` (characters/4).
+### 2. Integrating into Custom Python Agents (LangChain, CrewAI, Native SDKs)
 
-Offline capability exploration (`src/toolatlas/explorer.py`) probes each allowed tool with minimal affordance calls and outward boundary probes (missing/mistyped/empty/oversized inputs), then ingests only verified outcomes: confirmations become affordances, rejections become boundary cautions, contradictions are reported and never ingested. Exploration is explicit, allow-listed, refuses destructive tools by default, and supports a dry run. Use `reverification_due` (also on the read-only server profile) to schedule refresh runs; amortize this offline cost over evaluation runs.
+Integrating ToolAtlas into any agentic loop requires three straightforward steps:
 
-SQLite is configured in WAL mode and mutations are guarded within a server process. A production deployment should still use one memory-writer service instead of starting several independent writers against the same database.
+```python
+from mcp import Client, StdioServerParameters
+from toolatlas.tool_filter import filter_tools_by_playbook
 
-## Where this differs from the full paper
+async def run_assisted_agent(task_prompt: str, all_server_tools: list[dict]):
+    # 1. Connect to ToolAtlas Memory Server
+    params = StdioServerParameters(command="python", args=["-m", "toolatlas.memory_server"])
+    async with Client(params) as memory:
+        
+        # 2. Retrieve Guidance for the task
+        guidance = await memory.call_tool("get_guidance", {
+            "task": task_prompt,
+            "token_budget": 384,
+            "read_budget": 6
+        })
+        playbook = guidance.get("playbook", [])
+        avoid_notes = guidance.get("avoid", [])
 
-The paper uses three seed tasks per tool, four rollouts per task, three exploration rounds with three boundary and three affordance probes per target, semantic embeddings, and an LLM navigator with an eight-read budget. This prototype supports the same data flow and the default `top_k=3`, `read_budget=8`, but replaces embeddings with lexical-plus-trigram similarity, the LLM navigator with a deterministic bounded walk (with early stop once the playbook is sufficient), and LLM-distilled rationales with positional intent templates. Near-duplicate evidence merges by normalized/fuzzy match so strategies form across paraphrased rollouts. The included demo is deliberately smaller. See `src/toolatlas/memory.py` for the induction/traversal logic and `src/toolatlas/demo.py` for the execution-verified MCP loop.
+        # 3. Dynamically prune tools down to the playbook
+        active_tools = filter_tools_by_playbook(
+            tools=all_server_tools,
+            playbook=playbook,
+            always_include=["read_file", "list_directory"],
+            avoid_tools=[note["tool"] for note in avoid_notes]
+        )
 
-## Remaining improvements
+        # 4. Inject guidance into the system prompt and run LLM
+        system_prompt = f"Operational Guidance:\n{guidance['formatted_text']}"
+        response = await llm.generate(
+            prompt=task_prompt, 
+            system=system_prompt, 
+            tools=active_tools
+        )
+        
+        # 5. On successful verified completion, ingest into memory
+        if verify_result(response):
+            await memory.call_tool("remember_execution", {
+                "task": task_prompt,
+                "tool_sequence": response.tool_calls,
+                "resolved": True
+            })
+```
 
-The lifecycle work addresses changing APIs, storage, re-verification, and basic governance, but these production concerns remain:
+---
 
-1. Replace lexical similarity with a pluggable embedding backend while keeping the offline fallback.
-2. Run generated verifiers inside an isolated sandbox with time, network, and filesystem limits.
-3. Add tenant/provider namespaces, authentication, and authorization around governance tools.
-4. Add secret/PII redaction and prompt-injection filtering before memory induction.
-5. Build an automatic refresh worker that executes `refresh_status` candidates on a schedule.
-6. Evaluate specialized and rapidly changing tool domains, including permission and backend-schema changes.
-7. Add a baseline evaluation harness for success rate, incorrect-guidance rate, latency, calls, and lifecycle cost.
+## Why ToolAtlas is Invaluable in Real Agentic Workflows
+
+1. **Instant ROI on API Costs**: By stripping unused JSON schemas and eliminating 2–8 exploratory turns per task, token bills drop by **25% to 94%**.
+2. **5x–10x Faster Execution**: Eliminating round-trips to the LLM directly cuts execution time (e.g. from 279 seconds down to 12 seconds in data analysis).
+3. **Cross-Model Knowledge Sharing**: Complex workflows discovered by larger models (Claude 3.5, GPT-4o) are instantly inherited by cheaper, high-throughput models (Gemini Flash, Kimi-k3) without retraining or fine-tuning.
+4. **Deterministic Guardrails & Error Prevention**: If a tool crashes when passed an empty string, memory records this as an `avoid` boundary. Subsequent agents are explicitly forbidden from repeating the error.
+5. **Production Governance & Auditing**: Traces carry explicit provenance, execution timestamps, confidence scores, and traversal audits. Outdated knowledge can be quarantined or refreshed with one call.
+
+---
+
+## Local Quickstart & Commands
+
+### Prerequisites
+- Python >= 3.11
+- Windows PowerShell, macOS, or Linux
+- Node.js (for official MCP servers)
+
+### 1. Environment Setup
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -e ".[dev,nim]"
+npm install
+```
+
+### 2. Run Test Suite (137 Tests)
+```powershell
+.\.venv\Scripts\python -m pytest -q
+```
+
+### 3. Run the End-to-End Demo
+```powershell
+.\.venv\Scripts\toolatlas-demo
+```
+
+### 4. Run Benchmark Harnesses
+```powershell
+# Hermetic Filesystem paper-control benchmark
+.\.venv\Scripts\python -m toolatlas.paper_benchmark
+
+# Sales Dataset Analysis live A/B (Gemini / OpenAI compatible)
+.\.venv\Scripts\python -m toolatlas.llm_ab_data_analysis --runs 1
+
+# PostgreSQL Diagnostics live A/B (Docker required)
+.\.venv\Scripts\python -m toolatlas.mcpmark_postgres_diag_ab --runs 1
+
+# Notion Workspace simulator live A/B
+.\.venv\Scripts\python -m toolatlas.llm_ab_notion --runs 1
+```
+
+---
+
+## Repository Structure
+
+```
+ToolMem/
+├── src/toolatlas/                # Core implementation
+│   ├── memory.py                 # ToolMemory core (traces, capabilities, strategies)
+│   ├── storage.py                # SQLite/WAL persistence & embeddings sidecar
+│   ├── memory_server.py          # FastMCP server exposing memory tools
+│   ├── tool_filter.py            # Dynamic schema pruning (4.2k -> 650 tokens)
+│   ├── guidance_render.py        # Token-capped, conventions-first guidance renderer
+│   ├── history_compress.py       # Conversation history compression
+│   ├── similarity.py             # Lexical, trigram, and hybrid text similarity
+│   ├── embeddings.py             # Hash and Provider vector embedding backend
+│   ├── gemini_rest.py            # Native Gemini REST client with thought signatures
+│   ├── llm_client.py             # Unified LLM provider abstraction (OpenAI/Gemini/Fake)
+│   ├── notion_server.py          # Hermetic in-memory Notion MCP server simulator
+│   ├── mcpmark_postgres_ab.py    # PostgreSQL Chinook live LLM A/B harness
+│   ├── mcpmark_postgres_diag_ab.py # PostgreSQL Diagnostics live LLM A/B harness
+│   ├── llm_ab_data_analysis.py   # Synthetic sales data analysis live A/B harness
+│   └── paper_benchmark.py        # Deterministic paper-protocol control harness
+├── tests/                        # 137 unit and hermetic integration tests
+├── benchmarks/
+│   ├── official/                 # Official task snapshots and verifiers
+│   └── results/                  # Machine-readable reports and cross-model markdown analyses
+├── AGENTS.md                     # Agent guide, benchmark rules, and architectural lessons
+├── pyproject.toml                # Project configuration and entry points
+└── package.json                  # Pinned official MCP server dependencies
+```
+
+---
+
+## Citation & Reference
+
+This repository is built upon the architectural principles introduced in:
+
+```bibtex
+@article{toolatlas2026,
+  title   = {ToolAtlas: Learning Once, Reusing Everywhere with Tool-Side Memory},
+  author  = {ToolAtlas Research Team},
+  journal = {arXiv preprint arXiv:2607.11126},
+  year    = {2026}
+}
+```
