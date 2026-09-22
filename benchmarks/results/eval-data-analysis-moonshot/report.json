@@ -1,0 +1,106 @@
+{
+  "benchmark": "filesystem_dataset_analysis_llm_ab",
+  "model": "moonshotai/kimi-k3",
+  "k": 1,
+  "summary": [
+    {
+      "task": "sales_dataset_analysis",
+      "arm": "baseline",
+      "passed": "0/1",
+      "avg_provider_calls": 3.0,
+      "avg_tokens": 15087.0
+    },
+    {
+      "task": "sales_dataset_analysis",
+      "arm": "toolatlas",
+      "passed": "0/1",
+      "avg_provider_calls": 1.0,
+      "avg_tokens": 5511.0
+    }
+  ],
+  "results": [
+    {
+      "task": "sales_dataset_analysis",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": false,
+      "verifier_msg": "report.md does not exist",
+      "provider_calls": 3,
+      "failed_provider_calls": 0,
+      "memory_calls": 0,
+      "total_mcp_calls": 3,
+      "tools_used": [
+        "read_text_file",
+        "get_file_info",
+        "read_text_file"
+      ],
+      "prompt_tokens": 13863,
+      "completion_tokens": 1224,
+      "total_tokens": 15087,
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 2101,
+      "elapsed_sec": 279.31,
+      "ground_truth": {
+        "total_rows": 100,
+        "completed_revenue": 212741.18,
+        "top_region": "Europe",
+        "region_breakdown": {
+          "North America": 49866.29,
+          "Europe": 72764.06,
+          "Asia-Pacific": 52229.61,
+          "Latin America": 37881.22
+        },
+        "refunded_count": 13,
+        "avg_discount_rate": 13.87
+      },
+      "guidance": null
+    },
+    {
+      "task": "sales_dataset_analysis",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": false,
+      "verifier_msg": "report.md does not exist",
+      "provider_calls": 1,
+      "failed_provider_calls": 0,
+      "memory_calls": 1,
+      "total_mcp_calls": 2,
+      "tools_used": [
+        "read_file"
+      ],
+      "prompt_tokens": 4431,
+      "completion_tokens": 1080,
+      "total_tokens": 5511,
+      "schema_tokens_before": 2101,
+      "schema_tokens_after": 242,
+      "elapsed_sec": 262.09,
+      "ground_truth": {
+        "total_rows": 100,
+        "completed_revenue": 212741.18,
+        "top_region": "Europe",
+        "region_breakdown": {
+          "North America": 49866.29,
+          "Europe": 72764.06,
+          "Asia-Pacific": 52229.61,
+          "Latin America": 37881.22
+        },
+        "refunded_count": 13,
+        "avg_discount_rate": 13.87
+      },
+      "guidance": [
+        {
+          "tool": "read_file",
+          "rationale": "read sales_analytics.csv to inspect columns and transaction data",
+          "confidence": 0.6667,
+          "source_trace": "sales_analysis_train_2"
+        },
+        {
+          "tool": "write_file",
+          "rationale": "write the computed business metrics and executive summary to report.md",
+          "confidence": 0.6667,
+          "source_trace": "sales_analysis_train_2"
+        }
+      ]
+    }
+  ]
+}

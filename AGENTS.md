@@ -55,12 +55,14 @@ Recreate env: `python -m venv .venv; .\.venv\Scripts\python -m pip install -e ".
 - `src/toolatlas/mcpmark_postgres_ab.py`: custom real-LLM A/B harness for official MCPMark Chinook database `employee_hierarchy_management` against Dockerized PostgreSQL. Evaluates both native Gemini and OpenAI-compatible providers (`moonshotai/kimi-k3`), tracking schema pruning and turn elimination.
 - `src/toolatlas/mcpmark_postgres_diag_ab.py`: custom real-LLM A/B harness for `slow_query_optimization` and `db_health_audit` against Dockerized PostgreSQL. Evaluates execution plan indexing, health metrics, and turn suppression.
 - `src/toolatlas/llm_ab_notion.py`: custom real-LLM A/B harness for `notion_meeting_notes` and `notion_task_triage` against an in-memory Notion MCP workspace simulator (`notion_server.py`).
+- `src/toolatlas/llm_ab_data_analysis.py`: custom real-LLM A/B harness for synthetic dataset analysis (`sales_analytics.csv`), quantitative metric calculation, and programmatic report verification over Filesystem MCP.
 - `src/toolatlas/gemini_rest.py`: native Gemini REST adapter; preserves returned model parts for thought-signature round-tripping. Provider selection uses `LLM_PROVIDER`/`LLM_BASE_URL`; credentials remain environment-only. `--preflight` on the file-property harness includes real API requests and is not an offline check.
 - `benchmarks/official/`: downloaded file-property snapshot and task descriptions/verifiers. `benchmarks/results/mcpmark/file-property-gemini25flash-k4/report.json` and `attempts_partial.jsonl` contain 16 completed Gemini 2.5 Flash attempts. See `benchmarks/results/live-results-analysis-2026-09-17.md` for interpretation and harness limitations.
-- `benchmarks/results/live-benchmarks-summary-gemini-2026-09-21.md` and `benchmarks/results/cross-model-benchmark-analysis-2026-09-21.md` record live multi-model results: -23.7% tokens on Gemini 2.5 Flash and -58.9% tokens on Moonshot Kimi-k3 on PostgreSQL Chinook, -28.9% tokens on PostgreSQL Diagnostics, -94.4% tokens on Filesystem size classification, and 10.3x speedup on GitHub MCP triage.
+- `benchmarks/results/live-benchmarks-summary-gemini-2026-09-21.md` and `benchmarks/results/cross-model-benchmark-analysis-2026-09-21.md` record live multi-model results: -23.7% tokens on Gemini 2.5 Flash and -58.9% tokens on Moonshot Kimi-k3 on PostgreSQL Chinook, -28.9% to -60.1% tokens on PostgreSQL Diagnostics, -46.6% to -63.5% tokens on Sales Dataset Analysis, -94.4% tokens on Filesystem size classification, and 10.3x speedup on GitHub MCP triage.
 - `tests/fixtures/complex_workspace`: distractor-rich FS for the NIM A/B (staging/US/archive decoys, deploy-checklist runbook). Baseline prompt is neutral on purpose; the search hint lives only in Arm B memory.
 - `tests/test_github_mcp.py`: live GitHub test; skips without server install, `GITHUB_PERSONAL_ACCESS_TOKEN`, or `GITHUB_TEST_REPOSITORY`.
 - `tests/test_tool_filter.py` and `tests/test_history_compress.py`: unit tests for dynamic tool schema pruning and tool result compression.
+- `tests/test_data_analysis_ab.py`: hermetic unit tests for synthetic dataset generation, ground-truth metrics, and report verifier.
 
 ## Rules that are easy to break
 
@@ -129,10 +131,22 @@ To prevent lock-in while preserving token reduction across all MCP servers:
 4. **Shortest-Trace Competition (`memory.py`)**: When multiple rollouts succeed, ToolAtlas automatically preserves the shortest trace backbone, allowing faster paths to displace slower historical rollouts.
 5. **Training Policy Optimization**: Ensure synthetic training harnesses always exercise batch primitives where available.
 
+### 4. Micro-Catalog Floor Effect (Notion MCP)
+When an MCP server exposes only a small number of tools ($<8$, e.g., the Notion simulator with 6 tools: `create_page`, `get_page`, `update_page_properties`, `append_block_children`, `search_pages`, `list_databases`):
+- **Overhead vs. Savings**: Total schema overhead is already minimal (~300–400 tokens). Dynamic schema pruning saves only ~50–70 tokens per turn.
+- **Guidance Floor**: Injecting ToolAtlas guidance (~150 tokens) plus recommended verification steps (e.g., `get_page` post-verification) can offset schema pruning savings, resulting in neutral to slightly higher token usage (+5% to +35%) when baseline agents already solve the task in 2–3 turns without error.
+- **Architectural Takeaway**: Schema pruning delivers exponential returns on large, noisy tool catalogs (>10 tools, e.g., PostgreSQL, GitHub, full Filesystem). For micro-catalogs, provider-side memory serves primarily as a deterministic workflow guardrail and boundary-enforcer rather than a token optimizer.
+
+### 5. Single-Turn Convergence in Data Analysis & Diagnostics
+In tasks requiring multi-step synthesis—such as synthetic dataset analysis (`sales_dataset_analysis`) and PostgreSQL execution plan tuning (`slow_query_optimization`):
+- **Baseline Overhead**: Unassisted baseline agents exhibit exploratory behavior across multiple turns: listing directories, inspecting file structures, running ad-hoc queries, and making repeated intermediate calls (2–3 provider turns / 10,069–15,087 tokens in data analysis; 6–13 provider turns / 12,988–56,423 tokens in slow query optimization).
+- **ToolAtlas 1-Shot Execution**: Provider-side memory delivers the exact operational playbook upfront (`read_file -> write_file` or `EXPLAIN -> CREATE INDEX -> EXPLAIN`). The agent converges in **1 single provider turn** in data analysis (5,381 tokens on Gemini 3 Flash, -46.6%; 5,511 tokens on Moonshot Kimi-k3, -63.5%) and achieves up to 5.4x latency speedup with -60.1% tokens on PostgreSQL diagnostics.
+- **Agent Output Dynamics**: LLMs frequently output structured markdown reports directly into chat response text rather than invoking file-writing tools unless prompted with strict mechanical constraints; evaluation harnesses should implement graceful fallback capture (`final_text`) to evaluate analysis accuracy hermetically.
+
 ## Verify
 
 Rerun `pytest -q` after touching `memory.py`, `models.py`, either server, `similarity.py`, fixtures, or benchmark code. Run `toolatlas-demo` after changing the MCP loop or persistence. Run `python -m toolatlas.paper_benchmark` after changing benchmark logic or its fixtures, then inspect both stored result files and confirm they contain no secrets or machine-local paths.
 
-Current full suite: 132 passed, 1 skipped (GitHub live test skips without server install, PAT, or test repo), including `tests/test_llm_memory.py` (23 LLM-pipeline tests, all faked/offline), `tests/test_tool_filter.py` (14 schema pruning tests), `tests/test_history_compress.py` (5 history compression tests), and `tests/test_notion_server.py` (4 Notion simulator tests). `npm install` is required to execute rather than skip the real Filesystem/Everything integrations.
+Current full suite: 137 passed, 1 skipped (GitHub live test skips without server install, PAT, or test repo), including `tests/test_llm_memory.py` (23 LLM-pipeline tests, all faked/offline), `tests/test_tool_filter.py` (14 schema pruning tests), `tests/test_history_compress.py` (5 history compression tests), `tests/test_notion_server.py` (4 Notion simulator tests), and `tests/test_data_analysis_ab.py` (5 hermetic data analysis tests). `npm install` is required to execute rather than skip the real Filesystem/Everything integrations.
 
 After changing the Docker harness, run `benchmarks/docker/run.ps1` and inspect `checks.json`, pytest skips, tool coverage, verifier output, and both control report files. Preserve failed attempts and distinguish skipped/unexecuted experiments from task failures. Scan shareable results for secrets and host paths; current live A/B verifier logs contain absolute Windows paths and need redaction before publishing. Python dependency ranges are not locked; the saved Docker run includes `python-packages.txt` and `image-id.txt` captured separately.

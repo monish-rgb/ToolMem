@@ -1,0 +1,101 @@
+transaction_id,date,customer_segment,region,product_category,revenue,discount_rate,status
+TXN-1001,2026-03-13,Enterprise,Asia-Pacific,Cloud Software,1504.45,0.2,Completed
+TXN-1002,2026-03-12,Consumer,Latin America,Cloud Software,634.09,0.09,Completed
+TXN-1003,2026-01-27,Enterprise,Latin America,Cloud Software,2521.44,0.11,Refunded
+TXN-1004,2026-01-23,SMB,Asia-Pacific,Cloud Software,1468.91,0.2,Completed
+TXN-1005,2026-02-13,SMB,Asia-Pacific,Consulting Services,1690.34,0.06,Completed
+TXN-1006,2026-01-22,Enterprise,Asia-Pacific,Consulting Services,3283.34,0.22,Completed
+TXN-1007,2026-03-12,Enterprise,Europe,Hardware,4933.5,0.22,Refunded
+TXN-1008,2026-02-18,SMB,Asia-Pacific,Cloud Software,2165.81,0.09,Completed
+TXN-1009,2026-03-12,Consumer,Europe,Consulting Services,3781.07,0.08,Completed
+TXN-1010,2026-03-27,Enterprise,Asia-Pacific,Cloud Software,1530.72,0.06,Completed
+TXN-1011,2026-02-12,Enterprise,Asia-Pacific,Cloud Software,3449.47,0.13,Pending
+TXN-1012,2026-02-14,SMB,Europe,Cloud Software,3852.45,0.16,Completed
+TXN-1013,2026-02-28,SMB,Asia-Pacific,Cloud Software,4987.97,0.08,Completed
+TXN-1014,2026-01-13,Enterprise,Europe,Consulting Services,2399.72,0.06,Completed
+TXN-1015,2026-02-26,SMB,North America,Consulting Services,3743.25,0.19,Completed
+TXN-1016,2026-02-20,Enterprise,Asia-Pacific,Hardware,1211.71,0.05,Completed
+TXN-1017,2026-03-18,Consumer,Europe,Consulting Services,4606.83,0.22,Completed
+TXN-1018,2026-03-26,Consumer,Europe,Cloud Software,2182.61,0.08,Pending
+TXN-1019,2026-03-10,Consumer,Asia-Pacific,Hardware,587.65,0.24,Refunded
+TXN-1020,2026-02-17,Enterprise,Europe,Consulting Services,4761.27,0.07,Completed
+TXN-1021,2026-01-27,Enterprise,Europe,Consulting Services,2638.77,0.16,Completed
+TXN-1022,2026-03-23,Enterprise,Europe,Consulting Services,1902.72,0.25,Completed
+TXN-1023,2026-02-26,SMB,North America,Cloud Software,1511.14,0.12,Completed
+TXN-1024,2026-01-28,Enterprise,North America,Cloud Software,3685.28,0.06,Completed
+TXN-1025,2026-01-20,Enterprise,Europe,Hardware,3510.4,0.09,Completed
+TXN-1026,2026-03-28,SMB,Europe,Hardware,4133.74,0.09,Completed
+TXN-1027,2026-02-21,SMB,Latin America,Hardware,4387.27,0.06,Completed
+TXN-1028,2026-03-13,Enterprise,Latin America,Consulting Services,2026.86,0.22,Completed
+TXN-1029,2026-01-27,SMB,Europe,Hardware,1325.7,0.14,Refunded
+TXN-1030,2026-01-24,Consumer,North America,Cloud Software,3434.65,0.16,Completed
+TXN-1031,2026-01-17,Enterprise,Latin America,Hardware,2666.11,0.22,Pending
+TXN-1032,2026-01-22,Enterprise,Latin America,Hardware,4669.33,0.21,Completed
+TXN-1033,2026-03-27,Consumer,Latin America,Cloud Software,1354.54,0.09,Completed
+TXN-1034,2026-03-27,Enterprise,Asia-Pacific,Cloud Software,725.64,0.15,Pending
+TXN-1035,2026-03-15,Enterprise,North America,Cloud Software,808.35,0.06,Refunded
+TXN-1036,2026-02-13,Consumer,Europe,Consulting Services,3175.34,0.17,Completed
+TXN-1037,2026-03-28,Consumer,Asia-Pacific,Hardware,1419.17,0.19,Completed
+TXN-1038,2026-02-14,Consumer,Asia-Pacific,Hardware,1922.8,0.2,Completed
+TXN-1039,2026-02-28,Enterprise,North America,Consulting Services,1459.19,0.1,Pending
+TXN-1040,2026-01-17,SMB,Asia-Pacific,Cloud Software,2471.83,0.16,Completed
+TXN-1041,2026-03-26,Enterprise,Asia-Pacific,Consulting Services,966.14,0.23,Completed
+TXN-1042,2026-01-27,Enterprise,Asia-Pacific,Hardware,3221.73,0.19,Completed
+TXN-1043,2026-03-18,Consumer,Latin America,Hardware,4574.01,0.22,Completed
+TXN-1044,2026-02-18,Enterprise,North America,Hardware,3970.04,0.18,Completed
+TXN-1045,2026-03-24,Consumer,Latin America,Consulting Services,543.51,0.07,Refunded
+TXN-1046,2026-01-27,Enterprise,Asia-Pacific,Consulting Services,2986.36,0.14,Completed
+TXN-1047,2026-02-11,SMB,Europe,Consulting Services,1622.88,0.07,Refunded
+TXN-1048,2026-02-14,Enterprise,Europe,Cloud Software,4466.37,0.05,Completed
+TXN-1049,2026-02-23,Consumer,Europe,Hardware,1216.39,0.19,Completed
+TXN-1050,2026-01-25,Enterprise,Europe,Hardware,2073.46,0.21,Refunded
+TXN-1051,2026-01-10,Consumer,Europe,Hardware,1977.18,0.22,Pending
+TXN-1052,2026-02-21,Consumer,Latin America,Consulting Services,4915.17,0.16,Pending
+TXN-1053,2026-01-18,Enterprise,Asia-Pacific,Cloud Software,987.81,0.14,Completed
+TXN-1054,2026-02-23,Consumer,North America,Hardware,4547.77,0.09,Completed
+TXN-1055,2026-02-10,Consumer,Europe,Hardware,2440.84,0.24,Pending
+TXN-1056,2026-03-20,Consumer,North America,Consulting Services,4550.21,0.15,Completed
+TXN-1057,2026-02-22,Consumer,Asia-Pacific,Consulting Services,1072.8,0.13,Pending
+TXN-1058,2026-03-15,Consumer,Asia-Pacific,Hardware,2965.72,0.05,Completed
+TXN-1059,2026-02-28,Consumer,Asia-Pacific,Hardware,2488.04,0.19,Completed
+TXN-1060,2026-03-15,Consumer,North America,Hardware,2819.53,0.18,Completed
+TXN-1061,2026-01-19,Enterprise,Europe,Cloud Software,609.91,0.1,Completed
+TXN-1062,2026-01-24,SMB,Europe,Consulting Services,3633.59,0.15,Completed
+TXN-1063,2026-03-10,Enterprise,Latin America,Cloud Software,1291.49,0.24,Completed
+TXN-1064,2026-01-27,Enterprise,North America,Hardware,1100.03,0.14,Completed
+TXN-1065,2026-03-20,SMB,Latin America,Consulting Services,2506.61,0.08,Refunded
+TXN-1066,2026-02-18,Enterprise,Asia-Pacific,Consulting Services,2680.69,0.1,Completed
+TXN-1067,2026-03-19,Enterprise,Asia-Pacific,Hardware,1938.69,0.16,Completed
+TXN-1068,2026-01-22,Consumer,Europe,Consulting Services,1462.79,0.13,Completed
+TXN-1069,2026-02-23,Enterprise,Europe,Hardware,2252.65,0.2,Pending
+TXN-1070,2026-01-28,SMB,Latin America,Cloud Software,4742.34,0.11,Completed
+TXN-1071,2026-02-27,Consumer,Europe,Hardware,1487.4,0.14,Completed
+TXN-1072,2026-02-22,Consumer,Europe,Hardware,4637.94,0.25,Completed
+TXN-1073,2026-02-28,Consumer,North America,Cloud Software,3392.37,0.08,Completed
+TXN-1074,2026-01-18,SMB,Asia-Pacific,Cloud Software,2546.15,0.12,Refunded
+TXN-1075,2026-02-23,SMB,North America,Hardware,587.22,0.16,Pending
+TXN-1076,2026-02-17,Consumer,North America,Consulting Services,681.16,0.06,Completed
+TXN-1077,2026-01-14,Enterprise,Europe,Hardware,3512.56,0.16,Completed
+TXN-1078,2026-03-18,SMB,Europe,Consulting Services,3232.61,0.2,Completed
+TXN-1079,2026-01-19,Enterprise,North America,Hardware,3091.09,0.23,Completed
+TXN-1080,2026-03-16,Enterprise,Europe,Cloud Software,3637.37,0.11,Completed
+TXN-1081,2026-01-28,Enterprise,Asia-Pacific,Consulting Services,2427.7,0.12,Completed
+TXN-1082,2026-02-10,SMB,Latin America,Cloud Software,2450.86,0.12,Refunded
+TXN-1083,2026-02-14,SMB,Europe,Consulting Services,2847.86,0.18,Completed
+TXN-1084,2026-03-25,SMB,Latin America,Consulting Services,3166.14,0.11,Completed
+TXN-1085,2026-01-18,SMB,Europe,Hardware,3064.32,0.18,Completed
+TXN-1086,2026-02-20,Enterprise,Latin America,Cloud Software,2096.71,0.1,Completed
+TXN-1087,2026-03-18,Consumer,North America,Consulting Services,4766.28,0.07,Completed
+TXN-1088,2026-02-27,Enterprise,Latin America,Consulting Services,3703.29,0.14,Completed
+TXN-1089,2026-02-17,SMB,Europe,Hardware,3487.82,0.12,Completed
+TXN-1090,2026-02-23,Consumer,Asia-Pacific,Hardware,3662.85,0.1,Completed
+TXN-1091,2026-01-16,SMB,North America,Consulting Services,2911.39,0.2,Completed
+TXN-1092,2026-01-25,SMB,Asia-Pacific,Cloud Software,4246.83,0.11,Completed
+TXN-1093,2026-02-10,Consumer,Europe,Hardware,704.82,0.06,Completed
+TXN-1094,2026-01-25,Enterprise,North America,Consulting Services,1779.53,0.15,Completed
+TXN-1095,2026-01-18,SMB,North America,Cloud Software,2303.18,0.06,Completed
+TXN-1096,2026-01-14,Enterprise,Asia-Pacific,Cloud Software,4972.63,0.07,Refunded
+TXN-1097,2026-03-17,Consumer,Latin America,Hardware,4588.27,0.11,Completed
+TXN-1098,2026-02-19,Consumer,North America,Consulting Services,4820.49,0.07,Refunded
+TXN-1099,2026-03-16,SMB,North America,Cloud Software,1579.39,0.16,Completed
+TXN-1100,2026-02-24,Consumer,Latin America,Hardware,646.88,0.11,Completed
