@@ -1,0 +1,215 @@
+{
+  "benchmark": "notion_workspace_llm_ab",
+  "model": "moonshotai/kimi-k3",
+  "k": 1,
+  "summary": [
+    {
+      "task": "notion_meeting_notes",
+      "arm": "baseline",
+      "passed": "0/1",
+      "avg_provider_calls": 3.0,
+      "avg_tokens": 4058.0
+    },
+    {
+      "task": "notion_meeting_notes",
+      "arm": "toolatlas",
+      "passed": "0/1",
+      "avg_provider_calls": 3.0,
+      "avg_tokens": 4284.0
+    },
+    {
+      "task": "notion_task_triage",
+      "arm": "baseline",
+      "passed": "1/1",
+      "avg_provider_calls": 3.0,
+      "avg_tokens": 3897.0
+    },
+    {
+      "task": "notion_task_triage",
+      "arm": "toolatlas",
+      "passed": "1/1",
+      "avg_provider_calls": 3.0,
+      "avg_tokens": 4124.0
+    }
+  ],
+  "results": [
+    {
+      "task": "notion_meeting_notes",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": false,
+      "verifier_msg": "page_created=False, blocks_appended=False, calls=['search', 'create_page', 'append_block_children']",
+      "provider_calls": 3,
+      "failed_provider_calls": 0,
+      "memory_calls": 0,
+      "total_mcp_calls": 3,
+      "tools_used": [
+        "search",
+        "create_page",
+        "append_block_children"
+      ],
+      "prompt_tokens": 3762,
+      "completion_tokens": 296,
+      "total_tokens": 4058,
+      "schema_tokens_before": 576,
+      "schema_tokens_after": 576,
+      "elapsed_sec": 321.95,
+      "guidance": null
+    },
+    {
+      "task": "notion_meeting_notes",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": false,
+      "verifier_msg": "page_created=False, blocks_appended=False, calls=['search', 'create_page', 'append_block_children']",
+      "provider_calls": 3,
+      "failed_provider_calls": 0,
+      "memory_calls": 1,
+      "total_mcp_calls": 4,
+      "tools_used": [
+        "search",
+        "create_page",
+        "append_block_children"
+      ],
+      "prompt_tokens": 3992,
+      "completion_tokens": 292,
+      "total_tokens": 4284,
+      "schema_tokens_before": 576,
+      "schema_tokens_after": 508,
+      "elapsed_sec": 296.65,
+      "guidance": [
+        {
+          "tool": "search",
+          "rationale": "search for the parent team workspace page",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "get_page",
+          "rationale": "verify parent page ID and properties",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "create_page",
+          "rationale": "create sub-page with valid parent page_id",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "append_block_children",
+          "rationale": "append typed block objects to the page",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "search",
+          "rationale": "search for the task tracker database",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        },
+        {
+          "tool": "query_database",
+          "rationale": "query database tasks and filter by priority",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        },
+        {
+          "tool": "update_page_properties",
+          "rationale": "update task status property",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        }
+      ]
+    },
+    {
+      "task": "notion_task_triage",
+      "arm": "baseline",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "status=In Progress, used_db=True, calls=['search', 'query_database', 'update_page_properties']",
+      "provider_calls": 3,
+      "failed_provider_calls": 0,
+      "memory_calls": 0,
+      "total_mcp_calls": 3,
+      "tools_used": [
+        "search",
+        "query_database",
+        "update_page_properties"
+      ],
+      "prompt_tokens": 3657,
+      "completion_tokens": 240,
+      "total_tokens": 3897,
+      "schema_tokens_before": 576,
+      "schema_tokens_after": 576,
+      "elapsed_sec": 280.03,
+      "guidance": null
+    },
+    {
+      "task": "notion_task_triage",
+      "arm": "toolatlas",
+      "attempt": 1,
+      "passed": true,
+      "verifier_msg": "status=In Progress, used_db=True, calls=['search', 'query_database', 'update_page_properties']",
+      "provider_calls": 3,
+      "failed_provider_calls": 0,
+      "memory_calls": 1,
+      "total_mcp_calls": 4,
+      "tools_used": [
+        "search",
+        "query_database",
+        "update_page_properties"
+      ],
+      "prompt_tokens": 3877,
+      "completion_tokens": 247,
+      "total_tokens": 4124,
+      "schema_tokens_before": 576,
+      "schema_tokens_after": 508,
+      "elapsed_sec": 312.71,
+      "guidance": [
+        {
+          "tool": "search",
+          "rationale": "search for the task tracker database",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        },
+        {
+          "tool": "query_database",
+          "rationale": "query database tasks and filter by priority",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        },
+        {
+          "tool": "update_page_properties",
+          "rationale": "update task status property",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_task_triage_train"
+        },
+        {
+          "tool": "search",
+          "rationale": "search for the parent team workspace page",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "get_page",
+          "rationale": "verify parent page ID and properties",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "create_page",
+          "rationale": "create sub-page with valid parent page_id",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        },
+        {
+          "tool": "append_block_children",
+          "rationale": "append typed block objects to the page",
+          "confidence": 0.6667,
+          "source_trace": "notion_notion_meeting_notes_train"
+        }
+      ]
+    }
+  ]
+}
